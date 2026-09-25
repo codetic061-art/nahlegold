@@ -1,0 +1,155 @@
+/* ============================================================
+   hero.css — Nahl Al Thahab Hero Section
+   
+   The generated honey video IS the hero: a full-bleed, fixed-height
+   background layer (height = 100svh - navbar). Content is layered
+   ABOVE it. The video is never cropped vertically (horizontal crop
+   is preferred), has no controls/borders/frame, and the footage
+   itself transitions seamlessly into the section below.
+   ============================================================ */
+
+main { position: relative; z-index: 1; }
+
+/* ---------- hero: fills the visible viewport below the navbar ----------
+   Background reuses the PRODUCTS-section honeycomb pattern EXACTLY
+   (url + tile size + soft amber glows, see sections.css .section--deco).
+   It sits behind the centered video, so the side areas left by
+   object-fit: contain show hexagons instead of plain ivory. */
+.hero {
+  position: relative;
+  z-index: 1;
+  height: calc(100svh - var(--nav-h));
+  min-height: 0;
+  overflow: hidden;
+  background-color: #F8F1DE;
+  background-image:
+    radial-gradient(ellipse 60% 40% at 90% 15%, rgba(240, 196, 106, 0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 35% at 10% 85%, rgba(214, 134, 30, 0.08) 0%, transparent 65%),
+    url("../img/honeycomb-pattern.svg");
+  background-repeat: no-repeat, no-repeat, repeat;
+  background-size: auto, auto, 120px 208px;
+  background-position: 90% 15%, 10% 85%, top center;
+}
+
+/* ---------- full-bleed video background layer ---------- */
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;             /* full composition, letterboxed, no crop */
+  object-position: center center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--t-cross) var(--ease-soft);
+}
+
+/* intro plays once, loop takes over seamlessly */
+.hero__video--intro { opacity: 1; z-index: 2; }
+.hero__video--loop  { opacity: 0; z-index: 1; }
+
+[data-video-hero].is-looping .hero__video--intro { opacity: 0; }
+[data-video-hero].is-looping .hero__video--loop  { opacity: 1; }
+
+/* still / reduced-motion fallback holds the resting frame */
+[data-video-hero].is-still .hero__video { transition: none; }
+[data-video-hero].is-still .hero__video--intro { opacity: 0; }
+[data-video-hero].is-still .hero__video--loop  { opacity: 1; }
+
+/* ---------- hero content: layered above the video ---------- */
+.hero__inner {
+  position: relative;
+  z-index: 3;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem var(--gutter) clamp(4rem, 8vw, 6rem);
+}
+
+.hero__inner .eyebrow {
+  color: var(--cream);
+  background: rgba(70, 38, 8, .55);
+  backdrop-filter: blur(4px);
+}
+
+.hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 6vw, 4.6rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--cream);
+  text-shadow: 0 3px 24px rgba(51, 28, 7, .45);
+  max-width: 18ch;
+  margin-inline: auto;
+}
+
+.hero__lead {
+  margin-top: 1rem;
+  max-width: 46ch;
+  color: #FFF7E8;
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  line-height: 1.7;
+  text-shadow: 0 2px 14px rgba(51, 28, 7, .4);
+}
+
+/* ---------- hero calls to action ---------- */
+.hero__actions {
+  position: absolute;
+  inset-inline: 0;
+  bottom: clamp(1.6rem, 3.5vw, 2.8rem);
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(.75rem, 1.6vw, 1.25rem);
+  padding-inline: var(--gutter);
+}
+
+.hero__actions .btn {
+  --btn-py: .85rem;
+  --btn-px: clamp(1.8rem, 3.2vw, 2.6rem);
+  font-size: 1.05rem;
+  box-shadow: 0 10px 30px -10px rgba(51, 28, 7, .7);
+}
+
+/* ============================================================
+   Breakpoints
+   ============================================================ */
+@media (max-width: 900px) {
+  .hero { height: calc(100svh - var(--nav-h)); }
+  .hero__inner {
+    padding: 1.5rem var(--gutter) clamp(3.5rem, 7vw, 4.5rem);
+  }
+  .hero__actions {
+    bottom: 1.2rem;
+    gap: .75rem;
+  }
+  .hero__actions .btn {
+    --btn-py: .72rem;
+    --btn-px: 1.6rem;
+    font-size: .96rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero__actions {
+    bottom: 1rem;
+    gap: .6rem;
+  }
+  .hero__actions .btn {
+    --btn-py: .66rem;
+    --btn-px: 1.35rem;
+    font-size: .9rem;
+  }
+}

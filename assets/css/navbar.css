@@ -1,0 +1,223 @@
+/* ============================================================
+   navbar.css — real HTML/CSS chrome, never part of the video.
+
+   Layout is taken from the reference: the brand lockup sits on the
+   visual LEFT and the navigation sits on the visual RIGHT. Since the
+   document is RTL, `flex-direction: row-reverse` is what puts the
+   first DOM child on the left — order in the markup stays semantic.
+   ============================================================ */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #FFFFFF;              /* solid white header */
+  box-shadow: var(--shadow-nav);
+  border-bottom: 1px solid rgba(60, 39, 18, .06);
+}
+
+.nav-shell {
+  display: flex;
+  flex-direction: row-reverse;       /* brand → left, nav → right */
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  height: var(--nav-h);
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* ---------- brand lockup (logo + تسوق pill) ---------- */
+.nav-brand {
+  display: flex;
+  flex-direction: row-reverse;       /* logo leftmost, pill beside it */
+  align-items: center;
+  gap: clamp(.85rem, 1.5vw, 1.6rem);
+  flex: 0 0 auto;
+}
+
+.brand { display: inline-flex; align-items: center; }
+
+.brand__logo {
+  height: clamp(34px, 3.1vw, 44px);
+  width: auto;
+}
+
+.nav-shop {
+  --btn-py: .5rem;
+  --btn-px: 1.55rem;
+  font-size: .95rem;
+}
+
+/* ---------- desktop navigation ---------- */
+.nav-links {
+  display: flex;
+  flex-direction: row-reverse;       /* links left of the discover CTA */
+  align-items: center;
+  gap: clamp(1.2rem, 2.4vw, 2.6rem);
+  flex: 0 1 auto;
+}
+
+.nav-links__list {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: clamp(1.2rem, 2.4vw, 2.4rem);
+}
+
+.nav-link {
+  position: relative;
+  display: inline-block;
+  padding-block: .4rem;
+  font-family: var(--font-display);
+  font-size: var(--fs-nav);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: var(--ls-ar);
+  color: var(--ink-soft);
+  transition: color var(--t-quick) var(--ease-soft);
+}
+.nav-link:hover { color: var(--ink); }
+
+/* hairline underline that grows from the Arabic start edge */
+.nav-link::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--honey);
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform var(--t-quick) var(--ease-soft);
+}
+.nav-link:hover::after,
+.nav-link:focus-visible::after { transform: scaleX(1); }
+
+.nav-discover {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-family: var(--font-display);
+  font-size: var(--fs-nav);
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--ink);
+  transition: color var(--t-quick) var(--ease-soft);
+}
+.nav-discover:hover { color: var(--honey-deep); }
+
+.nav-discover__arrow {
+  width: 1.05em;
+  height: 1.05em;
+  flex: 0 0 auto;
+  transition: transform var(--t-quick) var(--ease-soft);
+}
+.nav-discover:hover .nav-discover__arrow { transform: translateX(-3px); }
+
+/* ---------- mobile trigger ---------- */
+.nav-burger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-inline-end: -8px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.nav-burger__bars {
+  position: relative;
+  display: block;
+  width: 22px;
+  height: 15px;
+}
+.nav-burger__bars i {
+  position: absolute;
+  inset-inline: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ink);
+  transition: transform var(--t-quick) var(--ease-soft),
+              opacity   var(--t-quick) var(--ease-soft);
+}
+.nav-burger__bars i:nth-child(1) { top: 0; }
+.nav-burger__bars i:nth-child(2) { top: 6.5px; }
+.nav-burger__bars i:nth-child(3) { bottom: 0; }
+
+.nav-burger[aria-expanded="true"] .nav-burger__bars i:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+.nav-burger[aria-expanded="true"] .nav-burger__bars i:nth-child(2) { opacity: 0; }
+.nav-burger[aria-expanded="true"] .nav-burger__bars i:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+/* ---------- mobile panel ---------- */
+.mobile-nav {
+  position: fixed;
+  inset-inline: 0;
+  top: var(--nav-h);
+  z-index: 60;                       /* above the fixed background footage (z 0) */
+  max-height: calc(100svh - var(--nav-h));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--ivory);
+  border-top: 1px solid rgba(60, 39, 18, .09);
+  box-shadow: 0 24px 38px -26px rgba(60, 39, 18, .45);
+  padding: .35rem var(--gutter) calc(1.6rem + env(safe-area-inset-bottom));
+}
+.mobile-nav[hidden] { display: none; }
+
+/* A whisper of an entrance — the panel is chrome, not a spectacle.
+   Reduced-motion neutralises this via the global rule in base.css. */
+.mobile-nav:not([hidden]) {
+  animation: navPanelIn .22s var(--ease-soft) both;
+}
+@keyframes navPanelIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.mobile-nav__list {
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-nav__link {
+  display: block;
+  padding: 1rem .2rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--ink);
+  border-bottom: 1px solid rgba(60, 39, 18, .08);
+  transition: color var(--t-quick) var(--ease-soft);
+}
+.mobile-nav__link:hover { color: var(--honey-deep); }
+
+.mobile-nav__cta {
+  display: flex;
+  width: 100%;
+  margin-top: 1.3rem;
+}
+
+body.nav-open { overflow: hidden; }
+
+/* ---------- breakpoints ----------
+   Below 900px the desktop bar is replaced outright rather than
+   squeezed: links and the shop pill move into the panel, and the
+   hero keeps the whole first viewport to itself.
+   ---------------------------------- */
+@media (max-width: 900px) {
+  .nav-links,
+  .nav-shop { display: none; }
+
+  .nav-burger { display: inline-flex; }
+}
+
+@media (min-width: 901px) {
+  .mobile-nav { display: none !important; }
+}

@@ -1,0 +1,80 @@
+/* ============================================================
+   tokens.css — Nahl Al Thahab design system
+   Palette values sampled directly from the client's reference
+   design (Designing_Arabic_honey_landing_page_*.jpeg) and from
+   the hero videos, so the HTML chrome and the baked-in video
+   art share one continuous colour world.
+   ============================================================ */
+
+:root {
+  /* ---- surfaces --------------------------------------------------- */
+  --ivory:          #F8F1DE;   /* page / navbar warm creamy ivory (sampled) */
+  --ivory-soft:     #FBF7EA;
+  --ivory-deep:     #F1E6CD;
+  --tan:            #E4D8BE;   /* the hero video's own background */
+  --tan-deep:       #DACCB2;
+
+  /* ---- ink -------------------------------------------------------- */
+  --ink:            #3C2712;   /* deep warm brown — never pure black */
+  --ink-soft:       #6B5334;
+  --ink-mute:       #907B5B;
+
+  /* ---- brand browns ---------------------------------------------- */
+  --brown:          #492A0D;   /* shop button fill (sampled) */
+  --brown-deep:     #331C07;
+  --brown-lift:     #5C3A16;
+  --cream:          #FAEDDB;   /* label / button text on brown */
+
+  /* ---- honey ------------------------------------------------------ */
+  --honey:          #D6861E;   /* honey river (sampled) */
+  --honey-mid:      #C8821F;
+  --honey-deep:     #A3460A;   /* honeycomb shadow (sampled) */
+  --honey-light:    #E8A93C;
+  --honey-glow:     #F0C46A;
+
+  /* ---- type ------------------------------------------------------- */
+  --font-display: "Tajawal", "Almarai", "Segoe UI", system-ui, sans-serif;
+  --font-body:    "Almarai", "Tajawal", "Segoe UI", system-ui, sans-serif;
+
+  --fs-nav:     1.0625rem;   /* 17px */
+  --fs-btn:     1rem;
+  --fs-body:    1rem;
+  --lh-tight:   1.25;
+  --ls-ar:      0;           /* Arabic must never be letter-spaced */
+
+  /* ---- layout ----------------------------------------------------- */
+  --nav-h:          76px;
+  --gutter:         40px;
+  --container:      1240px;
+
+  /* honey separator */
+  --divider-h:      180px;   /* total band height */
+  --edge-h:         clamp(120px, 16.6vw, 240px);  /* honey edge overhang */
+
+  /* ---- motion ----------------------------------------------------- */
+  --ease-soft:  cubic-bezier(.22, .61, .36, 1);
+  --t-quick:    .18s;
+  --t-cross:    .42s;
+
+  --shadow-nav: 0 1px 0 rgba(60, 39, 18, .07), 0 10px 30px -18px rgba(60, 39, 18, .35);
+}
+
+@media (max-width: 1180px) {
+  :root { --gutter: 32px; --divider-h: 160px; }
+}
+
+@media (max-width: 900px) {
+  :root {
+    --nav-h: 68px;
+    --gutter: 24px;
+    --divider-h: 140px;
+  }
+}
+
+@media (max-width: 560px) {
+  :root {
+    --nav-h: 60px;
+    --fs-nav: 1rem;
+    --divider-h: 115px;
+  }
+}

@@ -1,0 +1,52 @@
+{
+ "primary": {
+  "keyword": "عسل طبيعي مصري",
+  "intent": "transactional/commercial",
+  "landing": "#products + H1"
+ },
+ "secondary": {
+  "عسل طبيعي": "commercial",
+  "عسل أصلي": "commercial",
+  "عسل نحل": "commercial",
+  "عسل برسيم": "commercial",
+  "عسل سدر": "commercial",
+  "عسل موالح": "commercial",
+  "عسل أعشاب جبلية": "commercial",
+  "عسل حبة البركة": "commercial",
+  "عسل بالمكسرات": "commercial",
+  "عسل خام": "commercial",
+  "زيت زيتون بكر": "commercial",
+  "شمع عسل": "commercial"
+ },
+ "long_tail": {
+  "شراء عسل طبيعي أصلي": "transactional",
+  "سعر عسل سدر في مصر": "transactional",
+  "عسل برسيم 1000 جرام": "transactional",
+  "عسل طبيعي بتوصيل لكل مصر": "transactional",
+  "عروض وباقات عسل": "transactional",
+  "عسل طبيعي مع مكسرات": "transactional",
+  "فوائد العسل الطبيعي": "informational",
+  "هل ينفع تناول العسل مع الماء": "informational",
+  "كيف أعرف أن العسل خالص": "informational",
+  "هل يتبلور العسل الطبيعي": "informational",
+  "لماذا يختلف لون العسل بين الأنواع": "informational",
+  "كيف أحفظ العسل الطبيعي": "informational",
+  "الفرق بين أنواع العسل": "informational",
+  "هل يؤكل العسل للرضّع": "informational",
+  "ما هو العسل الطبيعي": "informational"
+ },
+ "section_map": {
+  "H1 / categories": "عسل طبيعي مصري فاخر / عروض وباقات العسل (transactional)",
+  "products": "عسل برسيم، سدر، موالح، أعشاب جبلية، حبة البركة، مكسرات، زيت زيتون، شمع عسل (commercial)",
+  "story + why": "عسل خام، مناحل مختارة، فحص مخبري (commercial trust)",
+  "benefits": "غذاء متكامل، سكريات بسيطة، فيتامينات ومعادن (informational-light)",
+  "guide": "دليل العسل الطبيعي — 9 educational topics (informational)",
+  "faq": "8 long-tail informational questions (informational)"
+ },
+ "not_targeted": {
+  "عسل مانوكا": "not sold - would be irrelevant",
+  "أفضل عسل للعلاج": "unsafe medical framing",
+  "عسل一斤的中国价格": "wrong market",
+  "keyword stuffing": "avoided - keywords placed in headings/anchors/FAQ only"
+ }
+}

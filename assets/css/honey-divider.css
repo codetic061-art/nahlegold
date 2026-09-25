@@ -1,0 +1,36 @@
+/* ============================================================
+   honey-divider.css — presentation for the reusable
+   <honey-divider> element. The geometry itself is generated in
+   assets/js/honey-divider.js (see that file for why the path is
+   computed rather than authored as a fixed viewBox).
+   ============================================================ */
+
+honey-divider {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: var(--honey-h, 170px);
+  line-height: 0;                    /* no baseline gap under the svg */
+  pointer-events: none;              /* purely decorative */
+  user-select: none;
+}
+
+honey-divider svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Optional shorter cut, for tighter boundaries further down the page. */
+honey-divider[size="sm"] { height: calc(var(--honey-h, 170px) * .62); }
+honey-divider[size="xs"] { height: calc(var(--honey-h, 170px) * .42); }
+
+/* Default orientation: the honey pool occupies the TOP of the band and
+   drips hang DOWN out of it — honey → drip boundary → cream, used at
+   the foot of a section (the hero uses this).
+
+   `flip` mirrors it vertically: the honey sits at the BOTTOM of the
+   band and the drips reach UP, for the reverse boundary (cream → ramp
+   of honey rising into the next section). */
+honey-divider[flip] svg { transform: scaleY(-1); }

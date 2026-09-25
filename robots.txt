@@ -1,0 +1,19 @@
+# robots.txt — نحل الذهب
+# ⚠ LAUNCH: keep the Sitemap line in sync with the canonical domain in
+# index.html. Do not leave localhost or staging hosts anywhere.
+
+User-agent: *
+Allow: /
+
+# Assets and media are meant to be crawled and indexed.
+Allow: /assets/
+Allow: /assets/css/
+Allow: /assets/js/
+Allow: /assets/img/
+Allow: /assets/video/
+Allow: /assets/fonts/
+
+# Nothing on this site is private or account-gated, so there is
+# nothing to disallow. The cart is client-side only (no server routes).
+
+Sitemap: https://nahlalthahab.com/sitemap.xml

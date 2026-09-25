@@ -1,0 +1,23 @@
+# Dev / tooling scratch — not part of the site
+*.py
+*.ps1
+*.sh
+*.log
+*.out
+*.tmp
+*.bak
+*.map
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Local env
+.env
+.env.local
+.vercel
+
+# Design reference + generator scratch (not part of the shipped site)
+Designing_*.jpeg
+assets/img/logo-meta.json
+assets/img/favicon-source.png
