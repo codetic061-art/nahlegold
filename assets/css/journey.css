@@ -159,19 +159,51 @@
   display: block;
 }
 
+/* Subtle transparent peripheral accents tucked gently into wide outer corners */
+.nh-hero__decor {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.nh-hero-decor__item {
+  position: absolute;
+  pointer-events: none;
+}
+
+.nh-hero-decor__item--pollen {
+  top: 7%;
+  right: clamp(16px, 3vw, 48px);
+  width: clamp(92px, 8.5vw, 132px);
+  opacity: 0.72;
+}
+
+.nh-hero-decor__item--leaves {
+  bottom: 4%;
+  left: clamp(10px, 2vw, 32px);
+  width: clamp(78px, 6.8vw, 108px);
+  transform: rotate(-18deg);
+  opacity: 0.56;
+}
+
+@media (max-width: 1180px) {
+  .nh-hero__decor { display: none; }
+}
+
 .nh-hero__fallback-wrap {
   display: none;
   position: relative;
-  width: min(360px, 90%);
+  width: min(440px, 92%);
   text-align: center;
 }
 
 .nh-hero__fallback-img {
   width: 100%;
   height: auto;
-  border-radius: 20px;
-  border: 1px solid rgba(214, 134, 30, 0.35);
-  box-shadow: 0 18px 40px -20px rgba(73, 42, 13, 0.38);
+  display: block;
+  filter: drop-shadow(0 20px 28px rgba(73, 42, 13, 0.22));
 }
 
 .nh-hero--fallback .nh-hero__canvas { display: none; }
@@ -265,23 +297,40 @@
 
 .nh-jdecor {
   position: absolute;
-  width: clamp(190px, 23vw, 265px);
+  width: clamp(165px, 18vw, 225px);
   height: auto;
-  opacity: 0.92;
-  animation: nhJdecFloat 9s ease-in-out infinite;
+  opacity: 0.94;
 }
 
-.nh-jdecor svg {
+.nh-cutout-img {
   display: block;
   width: 100%;
   height: auto;
+  filter: drop-shadow(0 12px 18px rgba(73, 42, 13, 0.14));
 }
 
-.nh-jdecor--1 { top: 13%; left: clamp(16px, 4.5vw, 56px); animation-delay: 0s; }
-.nh-jdecor--2 { top: 32%; right: clamp(16px, 4.5vw, 56px); animation-delay: -2.4s; }
-.nh-jdecor--3 { top: 51%; left: clamp(20px, 5vw, 64px); animation-delay: -4.2s; }
-.nh-jdecor--4 { top: 69%; right: clamp(20px, 5vw, 64px); animation-delay: -1.8s; }
-.nh-jdecor--5 { top: 84%; left: clamp(20px, 5vw, 64px); animation-delay: -5.4s; }
+.nh-cutout-img--pollen {
+  filter: drop-shadow(0 6px 10px rgba(130, 82, 16, 0.12));
+}
+
+.nh-float-slow {
+  animation: nhJdecFloat 9s ease-in-out infinite;
+}
+
+.nh-float-alt {
+  animation: nhJdecFloatAlt 10.5s ease-in-out infinite;
+}
+
+@keyframes nhJdecFloatAlt {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(1.2deg); }
+}
+
+.nh-jdecor--1 { top: 13%; left: clamp(16px, 4.5vw, 56px); width: clamp(170px, 18vw, 225px); }
+.nh-jdecor--2 { top: 31%; right: clamp(16px, 4.5vw, 56px); width: clamp(120px, 13vw, 170px); }
+.nh-jdecor--3 { top: 50%; left: clamp(20px, 5vw, 64px); width: clamp(115px, 12.5vw, 162px); }
+.nh-jdecor--4 { top: 69%; right: clamp(20px, 5vw, 64px); width: clamp(165px, 17vw, 215px); }
+.nh-jdecor--5 { top: 83%; left: clamp(20px, 5vw, 64px); width: clamp(140px, 15vw, 190px); }
 
 /* Horizontal receiver dot anchored directly under Hero's open drum pour stream */
 .nh-journey__inlet {
@@ -568,7 +617,7 @@
 .nh-finale.is-jar-fallback .nh-jar-canvas { display: none; }
 .nh-finale.is-jar-fallback .nh-jar-fallback { display: block; }
 
-/* Tasteful 2D editorial decorations framing empty space around pinned Jar (left-emphasized) */
+/* Left-emphasized transparent honeycomb, wildflower & pollen cutouts framing the Pinned Jar */
 .nh-jar-decor {
   position: absolute;
   inset: 0;
@@ -580,49 +629,73 @@
 .nh-jar-decor__left,
 .nh-jar-decor__right {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 0;
+  bottom: 0;
   pointer-events: none;
 }
 
 .nh-jar-decor__left {
-  left: clamp(0.5rem, 3vw, 3.5rem);
-  width: clamp(240px, 28vw, 410px);
-  opacity: 0.96;
+  left: clamp(12px, 3vw, 48px);
+  width: clamp(240px, 27vw, 390px);
 }
 
 .nh-jar-decor__right {
-  right: clamp(0.5rem, 2.5vw, 2.8rem);
-  width: clamp(190px, 22vw, 300px);
+  right: clamp(12px, 2.5vw, 40px);
+  width: clamp(170px, 19vw, 270px);
+}
+
+.nh-jar-piece {
+  position: absolute;
+  pointer-events: none;
+}
+
+.nh-jar-piece--comb {
+  top: 15%;
+  left: 4%;
+  width: clamp(122px, 12.5vw, 174px);
+  transform: rotate(-12deg);
+}
+
+.nh-jar-piece--flower {
+  bottom: 12%;
+  left: 6%;
+  width: clamp(106px, 10.8vw, 152px);
+  transform: rotate(8deg);
+}
+
+.nh-jar-piece--frag {
+  top: 43%;
+  right: 4%;
+  width: clamp(108px, 10.5vw, 148px);
+  transform: rotate(15deg);
+}
+
+.nh-jar-piece--pollen {
+  top: 22%;
+  right: 6%;
+  width: clamp(104px, 10.5vw, 146px);
   opacity: 0.72;
 }
 
-.nh-jar-decor svg {
-  display: block;
-  width: 100%;
-  height: auto;
+.nh-jar-piece--leaves {
+  top: 24%;
+  right: 8%;
+  width: clamp(100px, 10vw, 140px);
+  transform: rotate(14deg);
+  opacity: 0.85;
 }
 
-.nh-jdec-float {
-  animation: nhJdecFloat 8s ease-in-out infinite;
-}
-
-.nh-jdec-float-alt {
-  animation: nhJdecFloat 9.5s ease-in-out infinite reverse;
-}
-
-.nh-jdec-pollen {
-  animation: nhJdecPollen 7s ease-in-out infinite;
+.nh-jar-piece--frag-r {
+  bottom: 18%;
+  left: 10%;
+  width: clamp(94px, 8.8vw, 126px);
+  transform: rotate(-16deg);
+  opacity: 0.84;
 }
 
 @keyframes nhJdecFloat {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-7px); }
-}
-
-@keyframes nhJdecPollen {
-  0%, 100% { transform: translate(0px, 0px); opacity: 0.45; }
-  50% { transform: translate(4px, -9px); opacity: 0.8; }
 }
 
 /* Soft edge veil gently harmonizing WebGL caustic portal dive into original #FAF5EA site */
@@ -718,13 +791,15 @@
   .nh-step--left .nh-step__cluster {
     margin-right: calc(54% - 24px);
   }
+  .nh-jdecor--1, .nh-jdecor--3, .nh-jdecor--5 { left: 16px; }
+  .nh-jdecor--2, .nh-jdecor--4 { right: 16px; }
   .nh-jar-decor__left {
-    width: clamp(190px, 24vw, 310px);
-    left: 0.25rem;
+    width: clamp(170px, 24vw, 270px);
+    left: 6px;
   }
   .nh-jar-decor__right {
-    width: clamp(150px, 19vw, 240px);
-    right: 0.25rem;
+    width: clamp(130px, 18vw, 210px);
+    right: 6px;
   }
 }
 
@@ -770,16 +845,25 @@
     text-align: right;
   }
 
-  .nh-jdecor {
-    width: 118px;
-    opacity: 0.42;
+  /* Keep Journey cutouts subtle in open outer gaps so mobile text remains completely unobstructed */
+  .nh-jdecor--1, .nh-jdecor--3, .nh-jdecor--5 { display: none; }
+  .nh-jdecor--2 {
+    top: 2%;
+    right: 10px;
+    width: 68px;
+    opacity: 0.65;
   }
-  .nh-jdecor--1, .nh-jdecor--3, .nh-jdecor--5 { left: -10px; right: auto; }
-  .nh-jdecor--2, .nh-jdecor--4 { right: -10px; left: auto; }
+  .nh-jdecor--4 {
+    bottom: 6px;
+    top: auto;
+    right: 12px;
+    width: 64px;
+    opacity: 0.62;
+  }
 
   .nh-steps {
     gap: 4.5rem;
-    padding-bottom: 4.5rem;
+    padding-bottom: 6.8rem;
   }
 
   /* Gentle winding snake layout on mobile: tube stays left (< 72px), clean RTL text fills right */
@@ -817,20 +901,21 @@
   }
 
   .nh-jar-decor__left {
-    width: 138px;
-    top: 4%;
-    left: -14px;
-    transform: none;
-    opacity: 0.75;
+    width: 110px;
+    left: 4px;
+    opacity: 0.78;
   }
+  .nh-jar-piece--comb { top: 8%; left: 2px; width: 82px; }
+  .nh-jar-piece--flower { bottom: 6%; left: 4px; width: 72px; }
+  .nh-jar-piece--frag, .nh-jar-piece--pollen { display: none; }
+
   .nh-jar-decor__right {
-    width: 128px;
-    top: auto;
-    bottom: 6%;
-    right: -12px;
-    transform: none;
-    opacity: 0.65;
+    width: 96px;
+    right: 4px;
+    opacity: 0.72;
   }
+  .nh-jar-piece--leaves { top: 14%; right: 2px; width: 68px; }
+  .nh-jar-piece--frag-r { bottom: 10%; left: 10px; width: 64px; }
 }
 
 @media (hover: none), (pointer: coarse) {
@@ -840,10 +925,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .nh-jdecor,
-  .nh-jdec-float,
-  .nh-jdec-float-alt,
-  .nh-jdec-pollen {
+  .nh-float-slow,
+  .nh-float-alt {
     animation: none !important;
   }
 }

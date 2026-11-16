@@ -1,7 +1,8 @@
 /**
  * honey-scenes.js — Focused Real-Time 3D Scenes for Nahl Al-Thahab:
- *  1) Hero 3D Wooden Beehive Honeycomb Frame with Hexagonal Beeswax Cells,
- *     Natural Dripping Honey & Honey-Catching Channel pouring into Section 2 (#journey).
+ *  1) Hero 3D Irregular Broken Honeycomb Composition with Yellow Wildflowers,
+ *     Soft GPU Bokeh Background Chunks, Multi-Piece Cascading Viscous Honey &
+ *     Underside Pour Stream feeding seamlessly into Section 2 (#journey).
  *  2) Stage 05 Crystal-Clear Octagonal "نحل الذهب" Jar Pinned with GSAP ScrollTrigger:
  *     Filling -> Full-Jar Appreciation Pause -> Gradual Over-Rim Dive -> Caustic Exit Reveal
  *     directly into the restored original website (#categories).
@@ -10,10 +11,11 @@ import * as THREE from './vendor/three.module.min.js';
 import {
   createLiquidHoneyMaterial,
   createCausticPortalMaterial,
+  createBokehBlurMaterial,
 } from './honey-shaders.js';
 import {
   createHoneyEnvironment,
-  createHoneycombFrameWithChannel,
+  createBrokenHoneycombComposition,
   createGravityPourGeometry,
   createHoneyJar,
   createContinuousPourGeometry,
@@ -27,7 +29,7 @@ function getNavH() {
 }
 
 /* =====================================================================
-   SCENE 1 — HERO 3D HONEYCOMB FRAME + COLLECTION CHANNEL + POUR STREAM
+   SCENE 1 — HERO 3D BROKEN HONEYCOMB COMPOSITION + CASCADING FLOW
    ===================================================================== */
 function initHeroScene() {
   const hero = document.getElementById('hero');
@@ -67,42 +69,81 @@ function initHeroScene() {
   const isMobile = mobileQuery.matches;
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.14;
+  renderer.toneMappingExposure = 1.02;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.autoClear = false;
 
-  const scene = new THREE.Scene();
   const envTex = createHoneyEnvironment(renderer);
+
+  // Foreground Scene (crisp broken chunks, 3D flowers, cascading streams & bottom pour)
+  const scene = new THREE.Scene();
   scene.environment = envTex;
 
-  const camera = new THREE.PerspectiveCamera(34, 1.6, 0.1, 45);
-  camera.position.set(0, 0.12, 7.8);
-
-  // Warm three-point daylight lighting tailored for natural beeswax, wood grain, and honey refraction
-  scene.add(new THREE.HemisphereLight('#FFFDF5', '#B08448', 1.0));
-  const key = new THREE.DirectionalLight('#FFFBF0', 2.45);
+  scene.add(new THREE.HemisphereLight('#FFF9EB', '#7A4F1A', 0.68));
+  const key = new THREE.DirectionalLight('#FFF6E0', 1.65);
   key.position.set(4.5, 6.5, 6.8);
   scene.add(key);
 
-  const rim = new THREE.DirectionalLight('#FFCE6B', 1.75);
+  const rim = new THREE.DirectionalLight('#FFD16D', 1.35);
   rim.position.set(-5.8, 3.2, -3.2);
   scene.add(rim);
 
-  const frontFill = new THREE.DirectionalLight('#FFF6E0', 1.05);
+  const frontFill = new THREE.DirectionalLight('#FFF4DC', 0.48);
   frontFill.position.set(-2.2, 0.8, 7.2);
   scene.add(frontFill);
 
-  const honeycomb = createHoneycombFrameWithChannel({ isMobile });
-  scene.add(honeycomb.group);
+  // Background Bokeh Depth Scene (same studio rig lighting for seamless 3D background chunks)
+  const bgScene = new THREE.Scene();
+  bgScene.environment = envTex;
+  bgScene.add(new THREE.HemisphereLight('#FFF8E8', '#8C5C22', 0.72));
+  const bgKey = key.clone();
+  const bgRim = rim.clone();
+  const bgFill = frontFill.clone();
+  bgScene.add(bgKey, bgRim, bgFill);
 
-  // Continuous 3D liquid stream flowing downward out of the collector channel spout into Section 2
-  const pourMat = createLiquidHoneyMaterial({ animatedFlow: true });
-  let pourMesh = new THREE.Mesh(
+  const camera = new THREE.PerspectiveCamera(34, 1.6, 0.1, 45);
+  camera.position.set(0, 0.08, 7.8);
+
+  const honeycomb = createBrokenHoneycombComposition({ isMobile });
+  scene.add(honeycomb.group);
+  bgScene.add(honeycomb.bgGroup);
+
+  // Offscreen half-res Bokeh Gaussian blur targets & fullscreen composite quad
+  const rtParams = {
+    minFilter: THREE.LinearFilter,
+    magFilter: THREE.LinearFilter,
+    format: THREE.RGBAFormat,
+  };
+  const rtA = new THREE.WebGLRenderTarget(320, 240, rtParams);
+  const rtB = new THREE.WebGLRenderTarget(320, 240, rtParams);
+
+  const postCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+  const postScene = new THREE.Scene();
+  const blurHMat = createBokehBlurMaterial();
+  blurHMat.blending = THREE.NoBlending;
+  const blurVMat = createBokehBlurMaterial();
+  blurVMat.blending = THREE.NormalBlending;
+  const postQuadGeo = new THREE.PlaneGeometry(2, 2);
+  const postQuad = new THREE.Mesh(postQuadGeo, blurHMat);
+  postQuad.frustumCulled = false;
+  postScene.add(postQuad);
+
+  // Continuous 3D liquid stream exiting downward from small underside collection opening into Section 2
+  const pourMat = createLiquidHoneyMaterial({
+    animatedFlow: true,
+    warmGolden: true,
+    flowAxis: 'uvy',
+    flowSpeed: 2.6,
+  });
+  const pourMesh = new THREE.Mesh(
     createGravityPourGeometry({ start: new THREE.Vector3(0, 0, 0), bottomY: -2.5 }),
     pourMat
   );
   scene.add(pourMesh);
 
   let lastSpoutClientX = null;
+  let bokehTexW = 320;
+  let bokehTexH = 240;
 
   function syncHeroLayout() {
     const hr = hero.getBoundingClientRect();
@@ -115,34 +156,50 @@ function initHeroScene() {
     camera.updateProjectionMatrix();
     renderer.setSize(w, h, false);
 
-    const camZ = w < 720 ? 8.5 : 7.8;
-    camera.position.set(0, 0.10, camZ);
+    bokehTexW = Math.max(160, Math.round(w * 0.5));
+    bokehTexH = Math.max(160, Math.round(h * 0.5));
+    rtA.setSize(bokehTexW, bokehTexH);
+    rtB.setSize(bokehTexW, bokehTexH);
+
+    const camZ = w < 720 ? 8.6 : 7.8;
+    camera.position.set(0, 0.08, camZ);
     camera.lookAt(0, 0.02, 0);
     camera.updateMatrixWorld(true);
 
     const halfH = Math.tan(THREE.MathUtils.degToRad(camera.fov * 0.5)) * camZ;
     const halfW = halfH * camera.aspect;
 
-    // Position 3D honeycomb frame & catching channel neatly inside `.nh-hero__stage`
-    const targetPxX = (sr.left - hr.left) + sr.width * (w < 720 ? 0.50 : 0.52);
+    // Center broken honeycomb composition directly inside `.nh-hero__stage`
+    const targetPxX = (sr.left - hr.left) + sr.width * (w < 720 ? 0.50 : 0.51);
     const targetPxY = (sr.top - hr.top) + sr.height * (w < 720 ? 0.45 : 0.44);
 
     const worldX = ((targetPxX / w) * 2 - 1) * halfW;
     const worldY = (1 - (targetPxY / h) * 2) * halfH + camera.position.y;
 
     const stageHFrac = sr.height / h;
+    const desiredScale = w < 720 ? stageHFrac * 1.48 : stageHFrac * 1.46;
+    const floorWorldY = camera.position.y - halfH;
+    const ceilWorldY = camera.position.y + halfH;
+    const maxScaleForFloor = Math.max(0.55, (worldY - (floorWorldY + 0.34)) / 1.32);
+    const maxScaleForCeil = Math.max(0.55, (ceilWorldY - 0.14 - worldY) / 1.66);
     const frameScale = THREE.MathUtils.clamp(
-      w < 720 ? Math.min(stageHFrac * 1.12, 0.78) : Math.min(stageHFrac * 1.08, 1.06),
-      0.66,
-      1.06
+      Math.min(desiredScale, maxScaleForFloor, maxScaleForCeil),
+      0.56,
+      1.18
     );
 
     honeycomb.group.scale.setScalar(frameScale);
-    honeycomb.group.position.set(worldX, worldY + 0.10, 0);
-    honeycomb.group.rotation.y = w < 720 ? 0.02 : 0.04;
+    honeycomb.group.position.set(worldX, worldY, 0);
+    honeycomb.group.rotation.y = w < 720 ? 0.01 : 0.03;
     honeycomb.group.updateMatrixWorld(true);
 
-    // Measure exact world position of collector channel spout mouth
+    // Mirror world layout to blurred 3D background honeycomb layer
+    honeycomb.bgGroup.scale.setScalar(frameScale);
+    honeycomb.bgGroup.position.set(worldX, worldY, 0);
+    honeycomb.bgGroup.rotation.y = honeycomb.group.rotation.y;
+    honeycomb.bgGroup.updateMatrixWorld(true);
+
+    // Measure exact world position of small underside collection aperture (`spoutAnchor`)
     const spoutWorld = new THREE.Vector3();
     honeycomb.spoutAnchor.getWorldPosition(spoutWorld);
 
@@ -151,7 +208,7 @@ function initHeroScene() {
     const bottomWorldY = camera.position.y - halfHAtSpout - 0.28;
 
     const dropX = spoutWorld.x;
-    const dropZ = spoutWorld.z + 0.015;
+    const dropZ = spoutWorld.z;
 
     if (pourMesh.geometry) pourMesh.geometry.dispose();
     pourMesh.position.set(dropX, 0, dropZ);
@@ -159,12 +216,12 @@ function initHeroScene() {
       start: new THREE.Vector3(0, spoutWorld.y, 0),
       dropX: 0,
       dropZ: 0,
-      bottomY: Math.min(spoutWorld.y - 0.45, bottomWorldY),
-      topRadius: 0.056 * frameScale,
-      waistRadius: 0.044 * frameScale,
-      bottomRadius: 0.052 * frameScale,
+      bottomY: Math.min(spoutWorld.y - 0.35, bottomWorldY),
+      topRadius: 0.042 * frameScale,
+      waistRadius: 0.029 * frameScale,
+      bottomRadius: 0.038 * frameScale,
       radialSegments: 24,
-      heightSegments: 54,
+      heightSegments: 48,
     });
 
     const bottomExitWorld = new THREE.Vector3(dropX, camera.position.y - halfHAtSpout, dropZ);
@@ -214,13 +271,43 @@ function initHeroScene() {
 
     pointerSmoothX += (pointerX - pointerSmoothX) * Math.min(1, dt * 4.5);
     pourMat.uniforms.uTime.value = t;
-    honeycomb.updateDrips(t);
+    honeycomb.updateCascade(t);
 
-    // Subtle breathing & hover angle on suspended honeycomb frame while keeping collector spout locked!
-    honeycomb.frameGroup.rotation.x = 0.11 + Math.sin(t * 0.50) * 0.01;
-    honeycomb.frameGroup.rotation.y = -0.40 + pointerSmoothX * 0.05 + Math.sin(t * 0.65) * 0.018;
-    honeycomb.frameGroup.rotation.z = -0.045 + Math.cos(t * 0.55) * 0.008;
+    // Gentle living float & mouse depth parallax on foreground chunks while preserving bottom spout X
+    honeycomb.upperChunk.rotation.y = (honeycomb.upperChunk.userData.baseRotY ?? 0.32) + pointerSmoothX * 0.045 + Math.sin(t * 0.7) * 0.014;
+    honeycomb.leftChunk.rotation.y = (honeycomb.leftChunk.userData.baseRotY ?? 0.32) + pointerSmoothX * 0.035 + Math.cos(t * 0.65) * 0.012;
+    honeycomb.mainChunk.rotation.y = (honeycomb.mainChunk.userData.baseRotY ?? -0.24) + pointerSmoothX * 0.030 + Math.sin(t * 0.55) * 0.010;
+    honeycomb.bgGroup.rotation.y = (honeycomb.group.rotation.y || 0) - pointerSmoothX * 0.045;
 
+    // 1. Render background 3D honeycomb pieces cleanly to half-res RT A (alpha = 0 background)
+    renderer.setRenderTarget(rtA);
+    renderer.setClearColor(0x000000, 0);
+    renderer.clear(true, true, true);
+    renderer.render(bgScene, camera);
+
+    // 2. Separable Horizontal Bokeh Blur Pass -> RT B (linear HDR retained)
+    blurHMat.uniforms.tDiffuse.value = rtA.texture;
+    blurHMat.uniforms.uTexelStep.value.set(0.68 / bokehTexW, 0);
+    blurHMat.uniforms.uOpacity.value = 1.0;
+    blurHMat.uniforms.uApplyGamma.value = 0.0;
+    postQuad.material = blurHMat;
+    renderer.setRenderTarget(rtB);
+    renderer.clear(true, false, false);
+    renderer.render(postScene, postCam);
+
+    // 3. Clear main Hero WebGL canvas, draw Vertically Blurred Bokeh layer w/ sRGB tone mapping, then Crisp 3D Foreground
+    renderer.setRenderTarget(null);
+    renderer.setClearColor(0x000000, 0);
+    renderer.clear(true, true, true);
+
+    blurVMat.uniforms.tDiffuse.value = rtB.texture;
+    blurVMat.uniforms.uTexelStep.value.set(0, 0.68 / bokehTexH);
+    blurVMat.uniforms.uOpacity.value = 0.74;
+    blurVMat.uniforms.uApplyGamma.value = 1.0;
+    postQuad.material = blurVMat;
+    renderer.render(postScene, postCam);
+
+    renderer.clearDepth();
     renderer.render(scene, camera);
   }
 
@@ -230,12 +317,19 @@ function initHeroScene() {
     cancelAnimationFrame(rafId);
     visObs.disconnect();
     window.removeEventListener('resize', syncHeroLayout);
-    scene.traverse((obj) => {
-      if (obj.geometry) obj.geometry.dispose();
-      if (obj.material) {
-        const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
-        mats.forEach((m) => m.dispose());
-      }
+    rtA.dispose();
+    rtB.dispose();
+    postQuadGeo.dispose();
+    blurHMat.dispose();
+    blurVMat.dispose();
+    [scene, bgScene].forEach((sc) => {
+      sc.traverse((obj) => {
+        if (obj.geometry) obj.geometry.dispose();
+        if (obj.material) {
+          const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+          mats.forEach((m) => m.dispose());
+        }
+      });
     });
     envTex.dispose();
     renderer.dispose();

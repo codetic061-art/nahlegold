@@ -237,11 +237,23 @@ export function createJarHoneyMaterial() {
 }
 
 /**
- * Glossy optical honey shader for continuous flowing 3D streams (from metal drum tap
- * and into Stage 05 jar mouth), falling ripples, and liquid meniscus caps.
- * Features live upward/downward liquid shear wave perturbations so streams look fluid & alive.
+ * Glossy optical honey shader for continuous flowing 3D streams (cascading honeycomb flows,
+ * curved bridges, bottom collection pocket, and Jar mouth pour), falling ripples, and liquid caps.
+ * Supports vertical streams (`flowAxis: 'uvy'`) and spline-curved tubes/sheets (`flowAxis: 'uvx'`).
  */
-export function createLiquidHoneyMaterial({ animatedFlow = false } = {}) {
+export function createLiquidHoneyMaterial({
+  animatedFlow = false,
+  warmGolden = false,
+  flowAxis = 'uvy',
+  flowSpeed = 2.5,
+  pulseAmp = 0.08,
+  swayAmp = 0.004,
+} = {}) {
+  const coreHex = warmGolden ? '#C87E08' : '#B24E04';
+  const midHex  = warmGolden ? '#F2B824' : '#E89314';
+  const goldHex = warmGolden ? '#FFF088' : '#FCE06E';
+  const specHex = warmGolden ? '#FFFDF5' : '#FFFBF0';
+
   return new THREE.ShaderMaterial({
     transparent: false,
     depthWrite: true,
@@ -250,15 +262,24 @@ export function createLiquidHoneyMaterial({ animatedFlow = false } = {}) {
       uTime:         { value: 0 },
       uLightDir:     { value: new THREE.Vector3(0.55, 0.78, 0.48).normalize() },
       uFillLightDir: { value: new THREE.Vector3(-0.65, 0.32, 0.58).normalize() },
-      uCoreColor:    { value: new THREE.Color('#B24E04') },
-      uMidColor:     { value: new THREE.Color('#E89314') },
-      uGoldColor:    { value: new THREE.Color('#FCE06E') },
-      uSpecColor:    { value: new THREE.Color('#FFFBF0') },
+      uCoreColor:    { value: new THREE.Color(coreHex) },
+      uMidColor:     { value: new THREE.Color(midHex) },
+      uGoldColor:    { value: new THREE.Color(goldHex) },
+      uSpecColor:    { value: new THREE.Color(specHex) },
       uAnimatedFlow: { value: animatedFlow ? 1.0 : 0.0 },
+      uFlowAxisX:    { value: flowAxis === 'uvx' ? 1.0 : 0.0 },
+      uFlowSpeed:    { value: flowSpeed },
+      uPulseAmp:     { value: pulseAmp },
+      uSwayAmp:      { value: swayAmp },
+      uWarmGolden:   { value: warmGolden ? 1.0 : 0.0 },
     },
     vertexShader: /* glsl */ `
       uniform float uTime;
       uniform float uAnimatedFlow;
+      uniform float uFlowAxisX;
+      uniform float uFlowSpeed;
+      uniform float uPulseAmp;
+      uniform float uSwayAmp;
 
       varying vec3 vWorldPos;
       varying vec3 vNormalW;
@@ -270,25 +291,34 @@ export function createLiquidHoneyMaterial({ animatedFlow = false } = {}) {
       void main() {
         vUv = uv;
         vec3 pos = position;
+        vec3 nrm = normal;
 
         if (uAnimatedFlow > 0.5) {
-          // Subtle viscous downward peristalsis thickness wave anchored cleanly at top/bottom ends
-          float vCoord = uv.y;
-          float n = snoise(vec3(pos.x * 3.5, vCoord * 3.4 + uTime * 1.9, pos.z * 3.5));
-          float endFade = smoothstep(0.0, 0.14, vCoord) * smoothstep(1.0, 0.86, vCoord);
-          float pulse = 1.0 + n * 0.08 * (0.35 + 0.65 * endFade);
-          pos.x *= pulse;
-          pos.z *= pulse;
-          // Delicate graceful micro-sway only along mid-column so bottom inlet alignment stays exact
-          float midSway = sin(vCoord * 3.14159);
-          pos.x += sin(uTime * 2.2 + vCoord * 4.2) * 0.004 * midSway;
-          pos.z += cos(uTime * 1.8 + vCoord * 3.6) * 0.003 * midSway;
+          float flowCoord = mix(uv.y, 1.0 - uv.x, uFlowAxisX);
+          float endFade = smoothstep(0.0, 0.14, flowCoord) * smoothstep(1.0, 0.86, flowCoord);
+
+          if (uFlowAxisX > 0.5) {
+            // Displace radially outward along tube/ribbon normal for traveling viscous honey droplets/bulges
+            float wave = sin(uv.x * 16.0 - uTime * uFlowSpeed * 1.45) * 0.5
+                       + sin(uv.x * 27.0 - uTime * uFlowSpeed * 2.15 + 1.2) * 0.5;
+            float n = snoise(vec3(pos.x * 4.2, pos.y * 4.2 + uTime * 1.1, pos.z * 4.2));
+            pos += nrm * ((wave * 0.55 + n * 0.45) * uPulseAmp * endFade);
+          } else {
+            // Vertical stream peristalsis wave anchored cleanly at top/bottom ends
+            float n = snoise(vec3(pos.x * 3.5, uv.y * 3.4 + uTime * 1.9, pos.z * 3.5));
+            float pulse = 1.0 + n * uPulseAmp * (0.35 + 0.65 * endFade);
+            pos.x *= pulse;
+            pos.z *= pulse;
+            float midSway = sin(uv.y * 3.14159);
+            pos.x += sin(uTime * 2.2 + uv.y * 4.2) * uSwayAmp * midSway;
+            pos.z += cos(uTime * 1.8 + uv.y * 3.6) * (uSwayAmp * 0.75) * midSway;
+          }
         }
 
         vLocalPos = pos;
         vec4 wp = modelMatrix * vec4(pos, 1.0);
         vWorldPos = wp.xyz;
-        vNormalW = normalize(mat3(modelMatrix) * normal);
+        vNormalW = normalize(mat3(modelMatrix) * nrm);
         gl_Position = projectionMatrix * viewMatrix * wp;
       }
     `,
@@ -301,6 +331,9 @@ export function createLiquidHoneyMaterial({ animatedFlow = false } = {}) {
       uniform vec3 uGoldColor;
       uniform vec3 uSpecColor;
       uniform float uAnimatedFlow;
+      uniform float uFlowAxisX;
+      uniform float uFlowSpeed;
+      uniform float uWarmGolden;
 
       varying vec3 vWorldPos;
       varying vec3 vNormalW;
@@ -313,22 +346,29 @@ export function createLiquidHoneyMaterial({ animatedFlow = false } = {}) {
         vec3 N = normalize(vNormalW);
         vec3 V = normalize(cameraPosition - vWorldPos);
 
-        float scrollSpeed = uAnimatedFlow > 0.5 ? 2.6 : 0.35;
-        float swirlA = snoise(vec3(vWorldPos.x * 5.0, vWorldPos.y * 5.2 + uTime * scrollSpeed, vWorldPos.z * 5.0));
-        float swirlB = snoise(vec3(vWorldPos.x * 11.0, vWorldPos.y * 11.0 + uTime * (scrollSpeed * 1.45), vWorldPos.z * 11.0));
-        N = normalize(N + vec3(swirlA * 0.06, swirlB * 0.03, swirlA * 0.06));
+        float scrollSpeed = uAnimatedFlow > 0.5 ? uFlowSpeed : 0.35;
+        vec3 flowCoordA = uFlowAxisX > 0.5
+          ? vec3(vUv.x * 9.0 - uTime * (scrollSpeed * 0.65), vUv.y * 6.0, vWorldPos.z * 3.2)
+          : vec3(vWorldPos.x * 5.0, vWorldPos.y * 5.2 + uTime * scrollSpeed, vWorldPos.z * 5.0);
+        vec3 flowCoordB = uFlowAxisX > 0.5
+          ? vec3(vUv.x * 18.0 - uTime * (scrollSpeed * 1.05), vUv.y * 10.0, vWorldPos.y * 4.0)
+          : vec3(vWorldPos.x * 11.0, vWorldPos.y * 11.0 + uTime * (scrollSpeed * 1.45), vWorldPos.z * 11.0);
 
-        float NdotV = clamp(dot(N, V), 0.0, 1.0);
-        float fresnel = pow(1.0 - NdotV, 2.15);
+        float swirlA = snoise(flowCoordA);
+        float swirlB = snoise(flowCoordB);
+        N = normalize(N + vec3(swirlA * 0.065, swirlB * 0.035, swirlA * 0.065));
 
-        float upward = smoothstep(0.45, 0.96, max(0.0, N.y));
-        float thickness = mix(pow(NdotV, 0.85), 0.85, upward * 0.72);
-        vec3 col = mix(uGoldColor, uMidColor, smoothstep(0.14, 0.72, thickness));
-        col = mix(col, uCoreColor, smoothstep(0.62, 1.0, thickness) * 0.62);
+        float NdotV = clamp(abs(dot(N, V)), 0.0, 1.0);
+        float fresnel = pow(1.0 - NdotV, 1.9);
 
-        // Internal luminous honey veins flowing downward
-        float streak = smoothstep(0.15, 0.78, swirlA * 0.65 + swirlB * 0.35);
-        col = mix(col, uGoldColor * 1.10, streak * (1.0 - thickness * 0.45) * 0.38);
+        float upward = smoothstep(0.38, 0.96, max(0.0, N.y));
+        float thickness = mix(pow(NdotV, 0.85), 0.72, upward * 0.55);
+        vec3 col = mix(uGoldColor, uMidColor, smoothstep(0.10, 0.72, thickness));
+        col = mix(col, uCoreColor, smoothstep(0.66, 1.0, thickness) * mix(0.56, 0.22, uWarmGolden));
+
+        // Internal luminous honey veins flowing continuously down/along stream
+        float streak = smoothstep(0.10, 0.76, swirlA * 0.65 + swirlB * 0.35);
+        col = mix(col, uGoldColor * 1.15, streak * (1.0 - thickness * 0.45) * 0.52);
 
         float diffKey = max(dot(N, uLightDir), 0.0);
         float diffFill = max(dot(N, uFillLightDir), 0.0);
@@ -336,16 +376,86 @@ export function createLiquidHoneyMaterial({ animatedFlow = false } = {}) {
         vec3 H1 = normalize(uLightDir + V);
         vec3 H2 = normalize(uFillLightDir + V);
         vec3 Htop = normalize(topDir + V);
-        float spec1 = pow(max(dot(N, H1), 0.0), 125.0) * 1.55;
-        float spec2 = pow(max(dot(N, H2), 0.0), 50.0) * 0.52;
-        float specTop = pow(max(dot(N, Htop), 0.0), 75.0) * 0.80 * upward;
-        float sheen = pow(max(dot(N, H1), 0.0), 16.0) * 0.32;
+        float spec1 = pow(max(dot(N, H1), 0.0), 115.0) * 1.45;
+        float spec2 = pow(max(dot(N, H2), 0.0), 48.0) * 0.50;
+        float specTop = pow(max(dot(N, Htop), 0.0), 70.0) * 0.78 * upward;
+        float sheen = pow(max(dot(N, H1), 0.0), 14.0) * 0.34;
 
-        col = col * (0.82 + diffKey * 0.42 + diffFill * 0.24);
-        col += mix(uGoldColor, uSpecColor, 0.56) * fresnel * 0.52;
+        col = col * (0.90 + diffKey * 0.42 + diffFill * 0.28);
+        col += mix(uGoldColor, uSpecColor, 0.58) * fresnel * 0.56;
         col += uSpecColor * (spec1 + spec2 + specTop + sheen);
 
         gl_FragColor = vec4(col, 1.0);
+      }
+    `,
+  });
+}
+
+/**
+ * Separable optical GPU Gaussian Bokeh Blur ShaderMaterial for softening real 3D
+ * background honeycomb chunks smoothly over transparency (premultiplied-alpha weight safe).
+ */
+export function createBokehBlurMaterial() {
+  return new THREE.ShaderMaterial({
+    transparent: true,
+    depthWrite: false,
+    depthTest: false,
+    uniforms: {
+      tDiffuse:    { value: null },
+      uTexelStep:  { value: new THREE.Vector2(1 / 512, 0) },
+      uOpacity:    { value: 0.78 },
+      uApplyGamma: { value: 0.0 },
+    },
+    vertexShader: /* glsl */ `
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;
+        gl_Position = vec4(position.xy, 0.0, 1.0);
+      }
+    `,
+    fragmentShader: /* glsl */ `
+      uniform sampler2D tDiffuse;
+      uniform vec2 uTexelStep;
+      uniform float uOpacity;
+      uniform float uApplyGamma;
+      varying vec2 vUv;
+
+      void main() {
+        float weights[7];
+        weights[0] = 0.162;
+        weights[1] = 0.142;
+        weights[2] = 0.112;
+        weights[3] = 0.076;
+        weights[4] = 0.046;
+        weights[5] = 0.025;
+        weights[6] = 0.012;
+
+        vec4 accumPremul = vec4(0.0);
+        float wSum = 0.0;
+
+        vec4 c0 = texture2D(tDiffuse, vUv);
+        accumPremul += vec4(c0.rgb * c0.a, c0.a) * weights[0];
+        wSum += weights[0];
+
+        for (int i = 1; i <= 6; i++) {
+          vec2 off = uTexelStep * float(i) * 1.15;
+          vec4 ca = texture2D(tDiffuse, vUv + off);
+          vec4 cb = texture2D(tDiffuse, vUv - off);
+          accumPremul += vec4(ca.rgb * ca.a, ca.a) * weights[i];
+          accumPremul += vec4(cb.rgb * cb.a, cb.a) * weights[i];
+          wSum += 2.0 * weights[i];
+        }
+
+        accumPremul /= wSum;
+        float outA = clamp(accumPremul.a * uOpacity, 0.0, 1.0);
+        vec3 outRgb = accumPremul.a > 0.004 ? accumPremul.rgb / accumPremul.a : vec3(0.0);
+        if (uApplyGamma > 0.5) {
+          // Soft studio highlight compression + Linear->sRGB encoding so bokeh hues stay golden cream, never burnt orange
+          outRgb = outRgb / (outRgb + vec3(0.85));
+          outRgb *= 1.55;
+          outRgb = pow(clamp(outRgb, 0.0, 1.0), vec3(1.0 / 2.2));
+        }
+        gl_FragColor = vec4(outRgb, outA);
       }
     `,
   });
