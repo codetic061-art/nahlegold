@@ -46,11 +46,7 @@
           document.body.classList.remove("nav-open");
           if (navBurger) navBurger.setAttribute("aria-expanded", "false");
         }
-        var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        targetEl.scrollIntoView({
-          behavior: reducedMotion ? "auto" : "smooth",
-          block: targetEl.classList.contains("journey-step") ? "center" : "start"
-        });
+        targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     });
   });

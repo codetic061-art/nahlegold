@@ -9,7 +9,7 @@
   const previewImg = document.getElementById('journeyPreviewImg');
   const previewTag = document.getElementById('journeyPreviewTag');
   const previewTitle = document.getElementById('journeyPreviewTitle');
-  const steps = Array.from(document.querySelectorAll('.journey-step'));
+  const steps = Array.from(document.querySelectorAll('.nh-step'));
   const triggers = Array.from(document.querySelectorAll('[data-preview-trigger]'));
 
   const STAGE_META = {
@@ -95,7 +95,7 @@
 
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-    const copyEl = triggerEl ? triggerEl.closest('.journey-step__cluster') : null;
+    const copyEl = triggerEl ? triggerEl.closest('.nh-step__cluster') : null;
     const copyRect = copyEl ? copyEl.getBoundingClientRect() : null;
     const trigRect = triggerEl ? triggerEl.getBoundingClientRect() : null;
     const avoidRect = copyRect || trigRect;
@@ -208,8 +208,8 @@
      ============================================================== */
   function toggleMobilePreview(stepEl, forceOpen) {
     if (!stepEl) return;
-    const box = stepEl.querySelector('.journey-step__mobile-preview');
-    const btn = stepEl.querySelector('.journey-step__preview-btn');
+    const box = stepEl.querySelector('.nh-step__mobile-preview');
+    const btn = stepEl.querySelector('.nh-step__preview-btn');
     if (!box) return;
 
     const currentlyOpen = stepEl.classList.contains('is-preview-open');
@@ -219,8 +219,8 @@
       steps.forEach((other) => {
         if (other !== stepEl) {
           other.classList.remove('is-preview-open');
-          const ob = other.querySelector('.journey-step__mobile-preview');
-          const obtn = other.querySelector('.journey-step__preview-btn');
+          const ob = other.querySelector('.nh-step__mobile-preview');
+          const obtn = other.querySelector('.nh-step__preview-btn');
           if (ob) ob.hidden = true;
           if (obtn) obtn.setAttribute('aria-expanded', 'false');
         }
@@ -234,7 +234,7 @@
 
   triggers.forEach((trigger) => {
     const stageId = trigger.getAttribute('data-stage');
-    const stepEl = trigger.closest('.journey-step');
+    const stepEl = trigger.closest('.nh-step');
 
     trigger.addEventListener('pointerenter', (e) => {
       if (e.pointerType === 'touch' || !hoverQuery.matches) return;
@@ -266,9 +266,9 @@
     });
   });
 
-  document.querySelectorAll('.journey-step__preview-btn').forEach((btn) => {
+  document.querySelectorAll('.nh-step__preview-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const stepEl = btn.closest('.journey-step');
+      const stepEl = btn.closest('.nh-step');
       toggleMobilePreview(stepEl);
     });
   });

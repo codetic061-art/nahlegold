@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#FFFFFF">
+<meta name="theme-color" content="#F8F1DE">
 <title>نحل الذهب | عسل طبيعي مصري فاخر - عسل سدر وبرسيم وموالح</title>
 <meta name="description" content="نحل الذهب: متجر عسل طبيعي مصري فاخر. عسل سدر وبرسيم وموالح وأعشاب جبلية وحبة البركة ومكسرات، وزيت زيتون بكر وشمع عسل أصلي. اطلب عبر واتساب مع شحن لكل محافظات مصر.">
 <link rel="canonical" href="https://nahlalthahab.com/">
@@ -684,8 +684,8 @@
 <link rel="stylesheet" href="assets/css/tokens.css">
 <link rel="stylesheet" href="assets/css/base.css">
 <link rel="stylesheet" href="assets/css/navbar.css">
-<link rel="stylesheet" href="assets/css/sections.css">
 <link rel="stylesheet" href="assets/css/journey.css">
+<link rel="stylesheet" href="assets/css/sections.css">
 <link rel="stylesheet" href="assets/css/cart.css">
 
   <!-- ============ FAVICON / APP ICONS (gold honey-bee identity) ============ -->
@@ -717,16 +717,16 @@
 </head>
 <body>
 
-<a class="skip-link" href="#products">تخطَّ إلى المحتوى</a>
+<a class="skip-link" href="#hero">تخطَّ إلى المحتوى</a>
 
 <!-- ==========================================================
-     Navbar — solid white editorial bar
+     Navbar — solid white HTML/CSS layer, never part of the video
      ========================================================== -->
 <header class="site-header" id="siteHeader">
   <div class="nav-shell">
 
     <div class="nav-brand">
-      <a class="brand" href="#products" aria-label="نحل الذهب — الصفحة الرئيسية">
+      <a class="brand" href="/" aria-label="نحل الذهب — الصفحة الرئيسية">
         <img class="brand__logo"
              src="assets/img/logo-nahl-al-thahab.png"
              alt="نحل الذهب"
@@ -737,15 +737,15 @@
 
     <nav class="nav-links" aria-label="التنقل الرئيسي">
       <ul class="nav-links__list">
-        <li><a class="nav-link" href="#products">المنتجات</a></li>
-        <li><a class="nav-link" href="#journey">رحلة العسل</a></li>
+        <li><a class="nav-link" href="#hero">الرئيسية</a></li>
         <li><a class="nav-link" href="#categories">العروض</a></li>
+        <li><a class="nav-link" href="#products">المنتجات</a></li>
         <li><a class="nav-link" href="#story">قصتنا</a></li>
         <li><a class="nav-link" href="#guide">دليل العسل</a></li>
         <li><a class="nav-link" href="#faq">الأسئلة الشائعة</a></li>
       </ul>
-      <a class="nav-discover" href="#journey">
-        <span>اكتشف الرحلة</span>
+      <a class="nav-discover" href="#story">
+        <span>اكتشف الآن</span>
         <svg class="nav-discover__arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <path d="M14 6l-6 6 6 6" fill="none" stroke="currentColor"
                 stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
@@ -773,11 +773,10 @@
   <div class="mobile-nav" id="mobileNav" hidden>
     <nav class="mobile-nav__inner" aria-label="التنقل للجوال">
       <ul class="mobile-nav__list">
-        <li><a class="mobile-nav__link" href="#products">المنتجات</a></li>
-        <li><a class="mobile-nav__link" href="#journey">رحلة العسل</a></li>
+        <li><a class="mobile-nav__link" href="#hero">الرئيسية</a></li>
         <li><a class="mobile-nav__link" href="#categories">العروض</a></li>
+        <li><a class="mobile-nav__link" href="#products">المنتجات</a></li>
         <li><a class="mobile-nav__link" href="#story">قصتنا</a></li>
-        <li><a class="mobile-nav__link" href="#guide">دليل العسل</a></li>
         <li><a class="mobile-nav__link" href="#contact">تواصل معنا</a></li>
       </ul>
       <a class="btn btn--dark mobile-nav__cta" href="#products">تسوق</a>
@@ -787,536 +786,251 @@
 
 <main>
   <!-- ==========================================================
-       OPENING SECTION: IMPROVED EDITORIAL PRODUCTS STOREFRONT
+       1. NEW HERO SECTION — Natural Botanical Backdrop + Realistic
+          3D Stainless Extraction Drum with Open Tap & Liquid Stream
        ========================================================== -->
-  <section class="section section--opening section--products" id="products" aria-labelledby="prod-heading">
-    <div class="container">
-      <header class="section__head">
-        <span class="eyebrow eyebrow--gold">متجر نحل الذهب · عسل مصري خام ١٠٠٪</span>
-        <h1 class="section__title section__title--hero" id="prod-heading">منتجات نحل الذهب — عسل طبيعي وزيت زيتون وشمع</h1>
-        <p class="section__sub">عسل برسيم وسدر وموالح وأعشاب جبلية وحبة البركة ومكسرات، بمقاسات 500 جرام و1000 جرام، مع زيت زيتون بكر وشمع عسل أصلي.</p>
+  <section class="nh-hero" id="hero" aria-labelledby="heroHeading">
+    <canvas class="nh-hero__canvas" id="heroDrumCanvas" aria-hidden="true"></canvas>
 
-        <div class="section__head-actions">
-          <a class="editorial-jump" href="#journey">تتبّع رحلة قطرة العسل (من المنحل للبرطمان) ↓</a>
+    <div class="nh-hero__inner">
+      <div class="nh-hero__copy">
+        <span class="nh-hero__badge">من قلب المناحل المصرية المختارة</span>
+        <h1 class="nh-hero__title" id="heroHeading">
+          من رحيق الزهور...<br>
+          <span class="nh-hero__title-accent">إلى قطرة الذهب النقية</span>
+        </h1>
+        <p class="nh-hero__sub">
+          عسل نحل طبيعي خام ١٠٠٪ يُفرز بعناية دون تسخين أو إضافات، لتصلك خيرات الطبيعة الصافية من الخلية مباشرة إلى مائدتك.
+        </p>
+        <div class="nh-hero__actions">
+          <a class="nh-hero__cta-primary" href="#journey">ابدأ رحلة العسل</a>
+          <a class="nh-hero__cta-secondary" href="#products">تصفح المنتجات</a>
         </div>
+      </div>
 
-        <div class="filter-row" role="group" aria-label="تصفية المنتجات">
-          <button class="chip is-active" type="button" data-filter="all">الكل</button>
-          <button class="chip" type="button" data-filter="raw">عسل طبيعي</button>
-          <button class="chip" type="button" data-filter="rare">خلطات فاخرة</button>
-          <button class="chip" type="button" data-filter="comb">شمع</button>
+      <div class="nh-hero__stage" id="heroStage">
+        <div class="nh-hero__fallback-wrap">
+          <img class="nh-hero__fallback-img"
+               src="assets/img/journey/honey-tank-tap.jpg"
+               alt="وعاء استخلاص عسل طبيعي بصنبور مفتوح ينساب منه العسل الذهبي"
+               width="900" height="675" decoding="async">
         </div>
-      </header>
-
-      <div class="prod-grid">
-        <article class="prod-card" data-cat="raw" data-name="عسل زهرة البرسيم" data-price="280">
-          <div class="prod-card__stage">
-            <img class="prod-card__img" src="assets/img/products/p01-clover-1kg.jpg" alt="عسل زهرة البرسيم - 1000 جرام من نحل الذهب" loading="eager" decoding="async" width="896" height="1195">
-          </div>
-          <div class="prod-card__body">
-            <div class="prod-card__top">
-              <h2 class="prod-card__title">عسل زهرة البرسيم</h2>
-              <p class="prod-card__meta">1000 جرام</p>
-            </div>
-            <p class="prod-card__desc">عسل طبيعي 100% من زهرة البرسيم — لون دهبي فاتح وطعم خفيف يحبه الكبار والصغار، ومع كل كيلو ملعقة خشب طبيعية وشهادة جودة.</p>
-            <div class="prod-card__foot">
-              <p class="prod-card__price">280 ج.م</p>
-              <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
-            </div>
-          </div>
-        </article>
-
-        <article class="prod-card" data-cat="raw" data-name="عسل زهرة البرسيم" data-price="150">
-          <div class="prod-card__stage">
-            <img class="prod-card__img" src="assets/img/products/p02-clover-500g.jpg" alt="عسل زهرة البرسيم - 500 جرام من نحل الذهب" loading="eager" decoding="async" width="896" height="1195">
-          </div>
-          <div class="prod-card__body">
-            <div class="prod-card__top">
-              <h2 class="prod-card__title">عسل زهرة البرسيم</h2>
-              <p class="prod-card__meta">500 جرام</p>
-            </div>
-            <p class="prod-card__desc">طبيعي 100% من زهرة البرسيم بدون سكر ولا إضافات — طعم خفيف ودهبي فاتح، مع ملعقة خشب مجانًا وشهادة جودة.</p>
-            <div class="prod-card__foot">
-              <p class="prod-card__price">150 ج.م</p>
-              <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
-            </div>
-          </div>
-        </article>
-
-        <article class="prod-card" data-cat="raw" data-name="عسل زهرة الموالح" data-price="325">
-          <div class="prod-card__stage">
-            <img class="prod-card__img" src="assets/img/products/p03-citrus-1kg.jpg" alt="عسل زهرة الموالح - 1000 جرام من نحل الذهب" loading="eager" decoding="async" width="896" height="1195">
-          </div>
-          <div class="prod-card__body">
-            <div class="prod-card__top">
-              <h2 class="prod-card__title">عسل زهرة الموالح</h2>
-              <p class="prod-card__meta">1000 جرام</p>
-            </div>
-            <p class="prod-card__desc">من رحيق أزهار البرتقال واليوسفي — ريحة موالح منعشة وغنى بفيتامين C، مع ملعقة خشب مجانًا وشهادة جودة.</p>
-            <div class="prod-card__foot">
-              <p class="prod-card__price">325 ج.م</p>
-              <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
-            </div>
-          </div>
-        </article>
-
-        <article class="prod-card" data-cat="raw" data-name="عسل زهرة الموالح" data-price="170">
-          <div class="prod-card__stage">
-            <img class="prod-card__img" src="assets/img/products/p04-citrus-500g.jpg" alt="عسل زهرة الموالح - 500 جرام من نحل الذهب" loading="eager" decoding="async" width="896" height="1195">
-          </div>
-          <div class="prod-card__body">
-            <div class="prod-card__top">
-              <h2 class="prod-card__title">عسل زهرة الموالح</h2>
-              <p class="prod-card__meta">500 جرام</p>
-            </div>
-            <p class="prod-card__desc">طبيعي 100% من زهرة البرتقال واليوسفي — غني بفيتامين C وطعم وريحة موالح مميزة.</p>
-            <div class="prod-card__foot">
-              <p class="prod-card__price">170 ج.م</p>
-              <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
-            </div>
-          </div>
-        </article>
-
-        <article class="prod-card" data-cat="raw" data-name="عسل الأعشاب الجبلية" data-price="350">
-          <div class="prod-card__stage">
-            <img class="prod-card__img" src="assets/img/products/p05-mountain-herbs-1kg.jpg" alt="عسل الأعشاب الجبلية - 1000 جرام من نحل الذهب" loading="eager" decoding="async" width="1048" height="1024">
-          </div>
-          <div class="prod-card__body">
-            <div class="prod-card__top">
-              <h2 class="prod-card__title">عسل الأعشاب الجبلية</h2>
-              <p class="prod-card__meta">1000 جرام</p>
-            </div>
-            <p class="prod-card__desc">من رحيق مئات الزهور والأعشاب الجبلية البرية — لون غامق وطعم قوي ومركّز.</p>
-            <div class="prod-card__foot">
-              <p class="prod-card__price">350 ج.م</p>
-              <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
-            </div>
-          </div>
-        </article>
-
-        <article class="prod-card" data-cat="raw" data-name="عسل الأعشاب الجبلية" data-price="180">
-          <div class="prod-card__stage">
-            <img class="prod-card__img" src="assets/img/products/p06-mountain-herbs-500g.jpg" alt="عسل الأعشاب الجبلية - 500 جرام من نحل الذهب" loading="eager" decoding="async" width="1048" height="1024">
-          </div>
-          <div class="prod-card__body">
-            <div class="prod-card__top">
-              <h2 class="prod-card__title">عسل الأعشاب الجبلية</h2>
-              <p class="prod-card__meta">500 جرام</p>
-            </div>
-            <p class="prod-card__desc">من رحيق أعشاب جبلية برية متنوعة — عسل غامق ومركّز المذاق.</p>
-            <div class="prod-card__foot">
-              <p class="prod-card__price">180 ج.م</p>
-              <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
-            </div>
-          </div>
-        </article>
-
-        <article class="prod-card" data-cat="rare" data-name="عسل بالمكسرات الفاخرة" data-price="400">
-          <div class="prod-card__stage">
-            <img class="prod-card__img" src="assets/img/products/p07-nuts-1kg.jpg" alt="عسل بالمكسرات الفاخرة - 1000 جرام من نحل الذهب" loading="lazy" decoding="async" width="896" height="1195">
-          </div>
-          <div class="prod-card__body">
-            <div class="prod-card__top">
-              <h2 class="prod-card__title">عسل بالمكسرات الفاخرة</h2>
-              <p class="prod-card__meta">1000 جرام</p>
-            </div>
-            <p class="prod-card__desc">عسل برسيم طبيعي 100% مع مكسرات فاخرة: كاجو، لوز، بندق، عين جمل، فستق — طاقة وقوة وطعم ملكي.</p>
-            <div class="prod-card__foot">
-              <p class="prod-card__price">400 ج.م</p>
-              <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
-            </div>
-          </div>
-        </article>
-
-        <article class="prod-card" data-cat="rare" data-name="عسل بالمكسرات الفاخرة" data-price="250">
-          <div class="prod-card__stage">
-            <img class="prod-card__img" src="assets/img/products/p08-nuts-500g.jpg" alt="عسل بالمكسرات الفاخرة - 500 جرام من نحل الذهب" loading="lazy" decoding="async" width="896" height="1195">
-          </div>
-          <div class="prod-card__body">
-            <div class="prod-card__top">
-              <h2 class="prod-card__title">عسل بالمكسرات الفاخرة</h2>
-              <p class="prod-card__meta">500 جرام</p>
-            </div>
-            <p class="prod-card__desc">عسل طبيعي 100% مع كاجو ولوز وبندق وعين جمل وفستق — سناك صحي مشبع وهدية فاخرة.</p>
-            <div class="prod-card__foot">
-              <p class="prod-card__price">250 ج.م</p>
-              <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
-            </div>
-          </div>
-        </article>
-
-        <article class="prod-card" data-cat="rare" data-name="زيت زيتون بكر ممتاز" data-price="420">
-          <div class="prod-card__stage">
-            <img class="prod-card__img" src="assets/img/products/p09-olive-oil-1l.jpg" alt="زيت زيتون بكر ممتاز - 1000 جرام من نحل الذهب" loading="lazy" decoding="async" width="896" height="1195">
-          </div>
-          <div class="prod-card__body">
-            <div class="prod-card__top">
-              <h2 class="prod-card__title">زيت زيتون بكر ممتاز</h2>
-              <p class="prod-card__meta">1000 جرام</p>
-            </div>
-            <p class="prod-card__desc">بكر ممتاز، عصرة أولى على البارد بحموضة أقل من 1% — من مزارع سيناء ومطروح، لون أخضر دهبي وريحة زيتون طازجة.</p>
-            <div class="prod-card__foot">
-              <p class="prod-card__price">420 ج.م</p>
-              <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
-            </div>
-          </div>
-        </article>
-
-        <article class="prod-card" data-cat="raw" data-name="عسل حبة البركة" data-price="350">
-          <div class="prod-card__stage">
-            <img class="prod-card__img" src="assets/img/products/p10-blackseed-1kg.jpg" alt="عسل حبة البركة - 1000 جرام من نحل الذهب" loading="lazy" decoding="async" width="896" height="1195">
-          </div>
-          <div class="prod-card__body">
-            <div class="prod-card__top">
-              <h2 class="prod-card__title">عسل حبة البركة</h2>
-              <p class="prod-card__meta">1000 جرام</p>
-            </div>
-            <p class="prod-card__desc">من رحيق زهرة حبة البركة النادرة — عسل غامق ذو نكهة قوية ومميزة، وبتاريخ حصاد موثّق.</p>
-            <div class="prod-card__foot">
-              <p class="prod-card__price">350 ج.م</p>
-              <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
-            </div>
-          </div>
-        </article>
-
-        <article class="prod-card" data-cat="raw" data-name="عسل حبة البركة" data-price="180">
-          <div class="prod-card__stage">
-            <img class="prod-card__img" src="assets/img/products/p11-blackseed-500g.jpg" alt="عسل حبة البركة - 500 جرام من نحل الذهب" loading="lazy" decoding="async" width="896" height="1195">
-          </div>
-          <div class="prod-card__body">
-            <div class="prod-card__top">
-              <h2 class="prod-card__title">عسل حبة البركة</h2>
-              <p class="prod-card__meta">500 جرام</p>
-            </div>
-            <p class="prod-card__desc">طبيعي 100% من زهرة حبة البركة النادرة — عسل غامق وقوي المذاق.</p>
-            <div class="prod-card__foot">
-              <p class="prod-card__price">180 ج.م</p>
-              <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
-            </div>
-          </div>
-        </article>
-
-        <article class="prod-card" data-cat="raw" data-name="عسل السدر المصري الأصلي" data-price="600">
-          <div class="prod-card__stage">
-            <img class="prod-card__img" src="assets/img/products/p12-sidr-1kg.jpg" alt="عسل السدر المصري الأصلي - 1000 جرام من نحل الذهب" loading="lazy" decoding="async" width="896" height="1195">
-          </div>
-          <div class="prod-card__body">
-            <div class="prod-card__top">
-              <h2 class="prod-card__title">عسل السدر المصري الأصلي</h2>
-              <p class="prod-card__meta">1000 جرام</p>
-            </div>
-            <p class="prod-card__desc">عسل الملوك — من رحيق شجرة السدر النادرة، إنتاج محدود جدًا سنويًا، طعم فاخر وريحة مميزة من مناحل صعيد مصر.</p>
-            <div class="prod-card__foot">
-              <p class="prod-card__price">600 ج.م</p>
-              <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
-            </div>
-          </div>
-        </article>
-
-        <article class="prod-card" data-cat="raw" data-name="عسل السدر المصري الأصلي" data-price="320">
-          <div class="prod-card__stage">
-            <img class="prod-card__img" src="assets/img/products/p13-sidr-500g.jpg" alt="عسل السدر المصري الأصلي - 500 جرام من نحل الذهب" loading="lazy" decoding="async" width="896" height="1195">
-          </div>
-          <div class="prod-card__body">
-            <div class="prod-card__top">
-              <h2 class="prod-card__title">عسل السدر المصري الأصلي</h2>
-              <p class="prod-card__meta">500 جرام</p>
-            </div>
-            <p class="prod-card__desc">سدر مصري أصلي 100% نادر وفاخر — طعم فاخر وريحة مميزة من مناحل صعيد مصر.</p>
-            <div class="prod-card__foot">
-              <p class="prod-card__price">320 ج.م</p>
-              <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
-            </div>
-          </div>
-        </article>
-
-        <article class="prod-card" data-cat="rare" data-name="عسل الطاقة الزوجية" data-price="600">
-          <div class="prod-card__stage">
-            <img class="prod-card__img" src="assets/img/products/p14-royal-energy-1kg.jpg" alt="عسل الطاقة الزوجية - 1000 جرام من نحل الذهب" loading="lazy" decoding="async" width="1008" height="1069">
-          </div>
-          <div class="prod-card__body">
-            <div class="prod-card__top">
-              <h2 class="prod-card__title">عسل الطاقة الزوجية</h2>
-              <p class="prod-card__meta">1000 جرام</p>
-            </div>
-            <p class="prod-card__desc">خلطة نحل الذهب الملكية: عسل سدر جبلي + غذاء ملكات + حبوب لقاح + جنسنج + حبة البركة + مكسرات — طبيعي 100% بدون أي إضافات صناعية.</p>
-            <div class="prod-card__foot">
-              <p class="prod-card__price">600 ج.م</p>
-              <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
-            </div>
-          </div>
-        </article>
-
-        <article class="prod-card" data-cat="rare" data-name="عسل الطاقة الزوجية" data-price="350">
-          <div class="prod-card__stage">
-            <img class="prod-card__img" src="assets/img/products/p15-royal-energy-500g.jpg" alt="عسل الطاقة الزوجية - 500 جرام من نحل الذهب" loading="lazy" decoding="async" width="1008" height="1069">
-          </div>
-          <div class="prod-card__body">
-            <div class="prod-card__top">
-              <h2 class="prod-card__title">عسل الطاقة الزوجية</h2>
-              <p class="prod-card__meta">500 جرام</p>
-            </div>
-            <p class="prod-card__desc">خلطة ملكية قوية: سدر جبلي + غذاء ملكات + جنسنج — طاقة ونشاط طبيعي 100%.</p>
-            <div class="prod-card__foot">
-              <p class="prod-card__price">350 ج.م</p>
-              <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
-            </div>
-          </div>
-        </article>
-
-        <article class="prod-card" data-cat="rare" data-name="المختوم الفلسطيني لزيادة الوزن" data-price="550">
-          <div class="prod-card__stage">
-            <img class="prod-card__img" src="assets/img/products/p16-palestinian-1kg.jpg" alt="المختوم الفلسطيني لزيادة الوزن - 1000 جرام من نحل الذهب" loading="lazy" decoding="async" width="1024" height="1039">
-          </div>
-          <div class="prod-card__body">
-            <div class="prod-card__top">
-              <h2 class="prod-card__title">المختوم الفلسطيني لزيادة الوزن</h2>
-              <p class="prod-card__meta">1000 جرام</p>
-            </div>
-            <p class="prod-card__desc">الخلطة الأصلية للتسمين الصحي وفتح الشهية: عسل مختوم فلسطيني + غذاء ملكات + حبوب لقاح + مكسرات وسمسم — طبيعي 100%.</p>
-            <div class="prod-card__foot">
-              <p class="prod-card__price">550 ج.م</p>
-              <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
-            </div>
-          </div>
-        </article>
-
-        <article class="prod-card" data-cat="rare" data-name="المختوم الفلسطيني لزيادة الوزن" data-price="300">
-          <div class="prod-card__stage">
-            <img class="prod-card__img" src="assets/img/products/p17-palestinian-500g.jpg" alt="المختوم الفلسطيني لزيادة الوزن - 500 جرام من نحل الذهب" loading="lazy" decoding="async" width="1024" height="1039">
-          </div>
-          <div class="prod-card__body">
-            <div class="prod-card__top">
-              <h2 class="prod-card__title">المختوم الفلسطيني لزيادة الوزن</h2>
-              <p class="prod-card__meta">500 جرام</p>
-            </div>
-            <p class="prod-card__desc">عسل مختوم فلسطيني + خلطة تسمين طبيعية + مكسرات — فاتح شهية قوي وزيادة وزن صحية.</p>
-            <div class="prod-card__foot">
-              <p class="prod-card__price">300 ج.م</p>
-              <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
-            </div>
-          </div>
-        </article>
-
-        <article class="prod-card" data-cat="comb" data-name="شمع عسل النحل الأصلي" data-price="250">
-          <div class="prod-card__stage">
-            <img class="prod-card__img" src="assets/img/products/p18-waxcomb-500g.jpg" alt="شمع عسل النحل الأصلي - 500 جرام من نحل الذهب" loading="lazy" decoding="async" width="896" height="1195">
-          </div>
-          <div class="prod-card__body">
-            <div class="prod-card__top">
-              <h2 class="prod-card__title">شمع عسل النحل الأصلي</h2>
-              <p class="prod-card__meta">500 جرام</p>
-            </div>
-            <p class="prod-card__desc">شمع خام 100% من الخلية مباشرة — قطع ذهبية بيضاء بطعم وريحة طبيعية، مضغ مفيد للثة والأسنان.</p>
-            <div class="prod-card__foot">
-              <p class="prod-card__price">250 ج.م</p>
-              <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
-            </div>
-          </div>
-        </article>
       </div>
     </div>
   </section>
 
   <!-- ==========================================================
-       STORYTELLING HONEY JOURNEY — 2D WINDING SVG PATH + SCOPED 3D
-       1) Metal drum + chrome tap with continuous 3D honey pour
-       2) 2D double-black-outlined winding S-curve & loop path (01..05)
-       3) Crystal-clear Stage 05 glass jar + aligned pour + dive portal
+       2. NEW HONEY JOURNEY SECTION — Soft Shaded 2D Winding Channel
+          Connected Seamlessly from Hero Drum Stream (No Black Lines)
        ========================================================== -->
-  <section class="journey" id="journey" aria-labelledby="journey-heading">
-    <header class="journey__head">
-      <span class="eyebrow eyebrow--gold">رحلة العسل · ٢D خطوة بخطوة</span>
-      <h2 class="section__title" id="journey-heading">تتبّع رحلة قطرة العسل</h2>
-      <p class="section__sub">من خزّان الفرز عبر مسارها الذهبي الخالص خطوةً بخطوة، وصولًا إلى التعبئة داخل برطمان نحل الذهب الزجاجي.</p>
-    </header>
+  <section class="nh-journey" id="journey" aria-labelledby="journeyHeading">
+    <div class="nh-journey__board" id="journeyBoard">
 
-    <div class="journey-board" id="journeyBoard">
-      <svg class="journey-svg" id="journeySvg" preserveAspectRatio="none" aria-hidden="true">
+      <svg class="nh-journey__svg" id="journeySvg" aria-hidden="true">
         <defs>
-          <linearGradient id="honeyChannelGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#FAD158"/>
-            <stop offset="52%" stop-color="#EC9E18"/>
-            <stop offset="100%" stop-color="#D47908"/>
+          <linearGradient id="nhHoneyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#F7C74B"/>
+            <stop offset="50%" stop-color="#E58C10"/>
+            <stop offset="100%" stop-color="#C96A04"/>
+          </linearGradient>
+          <linearGradient id="nhInletCupGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#E9D3A9" stop-opacity="0"/>
+            <stop offset="45%" stop-color="#E9D3A9" stop-opacity="0.85"/>
+            <stop offset="100%" stop-color="#E9D3A9" stop-opacity="1"/>
+          </linearGradient>
+          <linearGradient id="nhInletHoneyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#D47409"/>
+            <stop offset="55%" stop-color="#E89314"/>
+            <stop offset="100%" stop-color="#F7C74B"/>
           </linearGradient>
         </defs>
-        <path id="journeyPathOutline" class="journey-path-outline" d=""/>
-        <path id="journeyPathInterior" class="journey-path-interior" d=""/>
-        <path id="journeyPathBridgeOutline" class="journey-path-outline" d=""/>
-        <path id="journeyPathBridgeInterior" class="journey-path-interior" d=""/>
-        <path id="journeyPathHoney" class="journey-path-honey" d="" stroke="url(#honeyChannelGrad)"/>
-        <path id="journeyPathSheen" class="journey-path-sheen" d=""/>
-        <path id="journeyInletCollar" class="journey-inlet-cap" d=""/>
-        <path id="journeyOutletCollar" fill="#C8C4BB" d=""/>
-        <path id="journeyOutletHoneyFill" fill="url(#honeyChannelGrad)" d="" style="opacity:0"/>
-        <path id="journeyOutletBorders" fill="none" stroke="#111111" stroke-width="2" stroke-linejoin="round" d=""/>
+        <path class="nh-tube-cushion" id="journeyPathCushion" d=""/>
+        <path class="nh-tube-wall" id="journeyPathWall" d=""/>
+        <path class="nh-tube-core" id="journeyPathCore" d=""/>
+        <path class="nh-tube-trough" id="journeyPathTrough" d=""/>
+        <path class="nh-tube-honey" id="journeyPathHoney" d="" stroke="url(#nhHoneyGrad)"/>
+        <path class="nh-tube-sheen" id="journeyPathSheen" d=""/>
+        <path id="journeyInletCup" fill="url(#nhInletCupGrad)" d=""/>
+        <path id="journeyInletHoney" fill="url(#nhInletHoneyGrad)" d=""/>
       </svg>
 
-      <!-- TOP POURING ASSEMBLY: Stainless Settling Drum + Continuous 3D Pour -->
-      <div class="journey-pour" id="journeyPour">
-        <div class="journey-tank-wrap">
-          <img id="honeyTankImg" class="journey-tank-img"
-               src="assets/img/journey/honey-tank-tap.jpg"
-               alt="خزّان فرز العسل المصنوع من الاستانلس ستيل مع صنبور التعبئة"
-               width="960" height="720" loading="eager" decoding="async">
-        </div>
-        <canvas id="pourCanvas" class="pour-canvas" aria-hidden="true"></canvas>
-        <svg class="pour-fallback-svg" viewBox="0 0 1000 440" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-          <defs>
-            <linearGradient id="fallbackPourGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#FCE06E"/>
-              <stop offset="50%" stop-color="#E89314"/>
-              <stop offset="100%" stop-color="#D47908"/>
-            </linearGradient>
-          </defs>
-          <path d="M 544 232 C 540 288, 546 354, 544 416"
-                fill="none" stroke="url(#fallbackPourGrad)" stroke-width="14" stroke-linecap="round"/>
-          <ellipse cx="544" cy="416" rx="18" ry="6" fill="#E89314" stroke="#111111" stroke-width="1.5"/>
-        </svg>
-        <div class="journey-inlet-marker" id="journeyInletMarker" aria-hidden="true"></div>
+      <div class="nh-journey__inlet">
+        <div class="nh-journey__inlet-marker" id="journeyInletMarker" aria-hidden="true"></div>
       </div>
 
-      <!-- STAGES 01 .. 04 ALONG 2D CURVE + LOOP -->
-      <div class="journey-steps">
+      <header class="nh-journey__intro-strip">
+        <span class="nh-eyebrow">رحلة العسل الطبيعية</span>
+        <h2 class="nh-journey__intro-title" id="journeyHeading">خمس محطات من الزهرة إلى البرطمان</h2>
+        <p class="nh-journey__intro-sub">تتبّع انسياب العسل عبر القناة الذهبية، ومرّر المؤشر فوق أي محطة لمعاينة تفاصيلها.</p>
+      </header>
+
+      <div class="nh-steps">
+
         <!-- Stage 01 -->
-        <article class="journey-step journey-step--node-right" id="stage-01" data-stage-idx="1">
-          <div class="journey-step__cluster">
-            <button type="button" class="journey-step__node" id="node-01"
-                    data-preview-trigger data-stage="1" aria-label="معاينة المرحلة 01">01</button>
-            <div class="journey-step__copy">
-              <h3 class="journey-step__title" data-preview-trigger data-stage="1">من الزهور إلى النحل</h3>
-              <p class="journey-step__desc">
-                تبدأ الحكاية في المراعي المصرية المزهرة، حيث يتنقّل النحل بين
-                <span class="journey-highlight" data-preview-trigger data-stage="1">أزهار البرسيم والموالح</span>
-                والأعشاب الجبلية ليجمع
-                <span class="journey-highlight" data-preview-trigger data-stage="1">الرحيق النقي وحبوب اللقاح</span>
-                قطرةً بعد قطرة.
+        <article class="nh-step nh-step--right is-active" data-stage-idx="1">
+          <div class="nh-step__cluster">
+            <button type="button" class="nh-step__node" id="node-01"
+                    data-preview-trigger data-stage="1" aria-label="المرحلة 01: من الزهور إلى النحل">01</button>
+            <div class="nh-step__copy">
+              <span class="nh-step__stage-tag">المرحلة الأولى</span>
+              <h3 class="nh-step__title" data-preview-trigger data-stage="1">من الزهور إلى النحل</h3>
+              <p class="nh-step__desc">
+                يحلّق النحل مع إشراقة الصباح فوق حقول
+                <span class="nh-highlight" data-preview-trigger data-stage="1" tabindex="0">البرسيم والموالح والأعشاب البريّة</span>
+                ليجمع أنقى قطرات <span class="nh-highlight" data-preview-trigger data-stage="1" tabindex="0">الرحيق الطبيعي</span>
+                وحبوب اللقاح الغنية دون أي تغذية صناعية.
               </p>
-              <span class="journey-step__hint">مرّر المؤشر على العنوان أو الرقم للمعاينة</span>
-              <button type="button" class="journey-step__preview-btn" aria-expanded="false">معاينة المشهد بالصورة</button>
-              <div class="journey-step__mobile-preview" hidden>
-                <img src="assets/img/journey/stage-01-flowers-bees.jpg" alt="نحلة تجمع الرحيق من الزهور" loading="lazy" width="720" height="538">
+              <span class="nh-step__hint">مرّر على العنوان أو الرقم للمعاينة</span>
+              <button type="button" class="nh-step__preview-btn" aria-expanded="false" aria-controls="mobile-preview-01">معاينة المرحلة</button>
+              <div class="nh-step__mobile-preview" id="mobile-preview-01" hidden>
+                <img src="assets/img/journey/stage-01-flowers-bees.jpg" alt="نحلة تجمع الرحيق من أزهار البرسيم والموالح" loading="lazy" decoding="async" width="800" height="600">
               </div>
             </div>
           </div>
         </article>
 
-        <!-- Stage 02 (with 2D Teardrop Loop below!) -->
-        <article class="journey-step journey-step--node-left journey-step--has-loop" id="stage-02" data-stage-idx="2">
-          <div class="journey-step__cluster">
-            <button type="button" class="journey-step__node" id="node-02"
-                    data-preview-trigger data-stage="2" aria-label="معاينة المرحلة 02">02</button>
-            <div class="journey-step__copy">
-              <h3 class="journey-step__title" data-preview-trigger data-stage="2">داخل خلية النحل</h3>
-              <p class="journey-step__desc">
-                يعود النحل إلى عالمه الدافئ المنظّم، حيث تُودع قطرات الرحيق داخل
-                <span class="journey-highlight" data-preview-trigger data-stage="2">الخلايا الشمعية السداسية</span>
-                ليتراكم العسل الذهبي بانسجامٍ طبيعي تام داخل
-                <span class="journey-highlight" data-preview-trigger data-stage="2">أقراص الشمع</span>.
+        <!-- Stage 02 -->
+        <article class="nh-step nh-step--left" data-stage-idx="2">
+          <div class="nh-step__cluster">
+            <button type="button" class="nh-step__node" id="node-02"
+                    data-preview-trigger data-stage="2" aria-label="المرحلة 02: داخل خلية النحل">02</button>
+            <div class="nh-step__copy">
+              <span class="nh-step__stage-tag">المرحلة الثانية</span>
+              <h3 class="nh-step__title" data-preview-trigger data-stage="2">داخل خلية النحل</h3>
+              <p class="nh-step__desc">
+                تنبض <span class="nh-highlight" data-preview-trigger data-stage="2" tabindex="0">الأقراص السداسية الشمعية</span>
+                بنظام متقن داخل الخلية؛ يُستقبل الرحيق الطازج ليُوزّع بين العيون الشمعية بدقة تحفظ نقاء كل نوع زهرة.
               </p>
-              <span class="journey-step__hint">مرّر المؤشر على العنوان أو الرقم للمعاينة</span>
-              <button type="button" class="journey-step__preview-btn" aria-expanded="false">معاينة المشهد بالصورة</button>
-              <div class="journey-step__mobile-preview" hidden>
-                <img src="assets/img/journey/stage-02-beehive-comb.jpg" alt="أقراص شمع العسل السداسية داخل الخلية" loading="lazy" width="720" height="538">
+              <span class="nh-step__hint">مرّر على العنوان أو الرقم للمعاينة</span>
+              <button type="button" class="nh-step__preview-btn" aria-expanded="false" aria-controls="mobile-preview-02">معاينة المرحلة</button>
+              <div class="nh-step__mobile-preview" id="mobile-preview-02" hidden>
+                <img src="assets/img/journey/stage-02-beehive-comb.jpg" alt="أقراص شمع النحل السداسية مملوءة بالعسل الذهبي" loading="lazy" decoding="async" width="800" height="600">
               </div>
             </div>
           </div>
         </article>
 
         <!-- Stage 03 -->
-        <article class="journey-step journey-step--node-right" id="stage-03" data-stage-idx="3">
-          <div class="journey-step__cluster">
-            <button type="button" class="journey-step__node" id="node-03"
-                    data-preview-trigger data-stage="3" aria-label="معاينة المرحلة 03">03</button>
-            <div class="journey-step__copy">
-              <h3 class="journey-step__title" data-preview-trigger data-stage="3">فن صناعة العسل</h3>
-              <p class="journey-step__desc">
-                يتحوّل الرحيق الخفيف ببطءٍ داخل الخلية إلى
-                <span class="journey-highlight" data-preview-trigger data-stage="3">عسلٍ ذهبي كثيف</span>
-                غنيّ بالخواص الطبيعية، ثم يختم النحل كل خليةٍ بشمعه الصافي حفظًا لقوامه وطعمه الأصيل.
+        <article class="nh-step nh-step--right" data-stage-idx="3">
+          <div class="nh-step__cluster">
+            <button type="button" class="nh-step__node" id="node-03"
+                    data-preview-trigger data-stage="3" aria-label="المرحلة 03: فن صناعة العسل">03</button>
+            <div class="nh-step__copy">
+              <span class="nh-step__stage-tag">المرحلة الثالثة</span>
+              <h3 class="nh-step__title" data-preview-trigger data-stage="3">فن صناعة العسل</h3>
+              <p class="nh-step__desc">
+                برفرفة أجنحته ودفء الخلية الطبيعي، ينضج النحل الرحيق ببطء حتى يكتسب قوامه المخملي ونكهته العميقة، ثم
+                <span class="nh-highlight" data-preview-trigger data-stage="3" tabindex="0">يختمه بالشمع الطبيعي</span>.
               </p>
-              <span class="journey-step__hint">مرّر المؤشر على العنوان أو الرقم للمعاينة</span>
-              <button type="button" class="journey-step__preview-btn" aria-expanded="false">معاينة المشهد بالصورة</button>
-              <div class="journey-step__mobile-preview" hidden>
-                <img src="assets/img/journey/stage-03-honey-making.jpg" alt="تحوّل الرحيق إلى عسل ذهبي داخل الخلايا" loading="lazy" width="720" height="538">
+              <span class="nh-step__hint">مرّر على العنوان أو الرقم للمعاينة</span>
+              <button type="button" class="nh-step__preview-btn" aria-expanded="false" aria-controls="mobile-preview-03">معاينة المرحلة</button>
+              <div class="nh-step__mobile-preview" id="mobile-preview-03" hidden>
+                <img src="assets/img/journey/stage-03-honey-making.jpg" alt="النحل يختم خلايا الشمع الممتلئة بالعسل الذهبي" loading="lazy" decoding="async" width="800" height="600">
               </div>
             </div>
           </div>
         </article>
 
         <!-- Stage 04 -->
-        <article class="journey-step journey-step--node-left" id="stage-04" data-stage-idx="4">
-          <div class="journey-step__cluster">
-            <button type="button" class="journey-step__node" id="node-04"
-                    data-preview-trigger data-stage="4" aria-label="معاينة المرحلة 04">04</button>
-            <div class="journey-step__copy">
-              <h3 class="journey-step__title" data-preview-trigger data-stage="4">عملية الحصاد والعناية</h3>
-              <p class="journey-step__desc">
-                نرافق النحالين في مناحلنا المختارة لنحصد الأقراص الناضجة
-                <span class="journey-highlight" data-preview-trigger data-stage="4">يدويًا دون تسخين أو إضافات</span>،
-                ونفحص كل دفعة مخبريًا مع
-                <span class="journey-highlight" data-preview-trigger data-stage="4">توثيق اسم المنحل والتاريخ</span>
-                على كل عبوة.
+        <article class="nh-step nh-step--left" data-stage-idx="4">
+          <div class="nh-step__cluster">
+            <button type="button" class="nh-step__node" id="node-04"
+                    data-preview-trigger data-stage="4" aria-label="المرحلة 04: عملية الحصاد والعناية">04</button>
+            <div class="nh-step__copy">
+              <span class="nh-step__stage-tag">المرحلة الرابعة</span>
+              <h3 class="nh-step__title" data-preview-trigger data-stage="4">عملية الحصاد والعناية</h3>
+              <p class="nh-step__desc">
+                عند اكتمال النضج فقط تُقطف الإطارات الشمعية بـ
+                <span class="nh-highlight" data-preview-trigger data-stage="4" tabindex="0">فرز بارد وعناية يدوية</span>
+                تحفظ الإنزيمات النشطة ومضادات الأكسدة والرائحة الزهرية الأصلية من دون تسخين أو ترشيح قاسٍ.
               </p>
-              <span class="journey-step__hint">مرّر المؤشر على العنوان أو الرقم للمعاينة</span>
-              <button type="button" class="journey-step__preview-btn" aria-expanded="false">معاينة المشهد بالصورة</button>
-              <div class="journey-step__mobile-preview" hidden>
-                <img src="assets/img/journey/stage-04-harvest.jpg" alt="فرز العسل الطبيعي يدويًا في المنحل" loading="lazy" width="720" height="480">
+              <span class="nh-step__hint">مرّر على العنوان أو الرقم للمعاينة</span>
+              <button type="button" class="nh-step__preview-btn" aria-expanded="false" aria-controls="mobile-preview-04">معاينة المرحلة</button>
+              <div class="nh-step__mobile-preview" id="mobile-preview-04" hidden>
+                <img src="assets/img/journey/stage-04-harvest.jpg" alt="حصاد وفرز إطارات العسل الطبيعي يدوياً في المنحل" loading="lazy" decoding="async" width="800" height="600">
               </div>
             </div>
           </div>
         </article>
+
+        <!-- Stage 05 -->
+        <article class="nh-step nh-step--right" data-stage-idx="5">
+          <div class="nh-step__cluster">
+            <button type="button" class="nh-step__node" id="node-05"
+                    data-preview-trigger data-stage="5" aria-label="المرحلة 05: عسل نقي، معبّأ بعناية">05</button>
+            <div class="nh-step__copy">
+              <span class="nh-step__stage-tag">المرحلة الخامسة</span>
+              <h3 class="nh-step__title" data-preview-trigger data-stage="5">عسل نقي، معبّأ بعناية</h3>
+              <p class="nh-step__desc">
+                يستقر الذهب السائل داخل
+                <span class="nh-highlight" data-preview-trigger data-stage="5" tabindex="0">برطمان نحل الذهب الزجاجي</span>
+                المحكم الإغلاق؛ لتدخل معنا مباشرة إلى عالم متجرنا ومنتجاتنا المختارة بعناية.
+              </p>
+              <span class="nh-step__hint">مرّر على العنوان أو الرقم للمعاينة</span>
+              <button type="button" class="nh-step__preview-btn" aria-expanded="false" aria-controls="mobile-preview-05">معاينة المرحلة</button>
+              <div class="nh-step__mobile-preview" id="mobile-preview-05" hidden>
+                <img src="assets/img/journey/stage-05-bottled-jar.jpg" alt="برطمان زجاجي محكم الإغلاق مملوء بالعسل الذهبي" loading="lazy" decoding="async" width="800" height="600">
+              </div>
+            </div>
+          </div>
+        </article>
+
       </div>
-
-      <!-- STAGE 05 FINALE: 2D Tapered Nozzle -> Clear 3D Glass Jar -> Caustic Dive Portal -->
-      <article class="journey-step journey-stage-05" id="stage-05" data-stage-idx="5">
-        <div class="journey-stage-05__grid">
-          <div class="journey-stage-05__left">
-            <div class="journey-step__cluster">
-              <button type="button" class="journey-step__node" id="node-05"
-                      data-preview-trigger data-stage="5" aria-label="معاينة المرحلة 05">05</button>
-              <div class="journey-step__copy">
-                <h3 class="journey-step__title" data-preview-trigger data-stage="5">عسل نقي، معبّأ بعناية</h3>
-                <p class="journey-step__desc">
-                  تنساب الخيوط الذهبية أخيرًا من المسار مباشرةً إلى فوهة
-                  <span class="journey-highlight" data-preview-trigger data-stage="5">برطمان نحل الذهب</span>
-                  الزجاجي المحكم، ليصل إليك صافيًا كما أُنتج في الخلية تمامًا.
-                </p>
-                <span class="journey-step__hint">مرّر المؤشر للمعاينة — واسحب للأسفل للدخول إلى قلب العسل</span>
-                <button type="button" class="journey-step__preview-btn" aria-expanded="false">معاينة المشهد بالصورة</button>
-                <div class="journey-step__mobile-preview" hidden>
-                  <img src="assets/img/journey/stage-05-bottled-jar.jpg" alt="صب العسل الذهبي في برطمان نحل الذهب" loading="lazy" width="720" height="538">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="jar-finale-wrap" id="jarFinaleWrap">
-            <div class="jar-stage" id="jarStage">
-              <div class="jar-inlet-anchor" id="jarInletAnchor" aria-hidden="true"></div>
-              <canvas id="jarCanvas" class="jar-canvas" aria-label="نموذج ثلاثي الأبعاد لبرطمان عسل نحل الذهب يمتلئ بالعسل الصافي"></canvas>
-              <div class="jar-fallback-visual">
-                <img src="assets/img/journey/stage-05-bottled-jar.jpg" alt="برطمان عسل نحل الذهب الزجاجي" width="720" height="538" loading="lazy">
-              </div>
-              <span class="journey-finale__cue" id="journeyFinaleCue">ادخل إلى قلب العسل ثم استكشف العروض ↓</span>
-            </div>
-            <div id="jarPortalVeil" class="jar-portal-veil" aria-hidden="true"></div>
-          </div>
-        </div>
-      </article>
     </div>
   </section>
 
   <!-- ==========================================================
-       FEATURED CATEGORIES / OFFERS — three tall rounded premium cards
+       3. PINNED JAR FINALE & SLOW ENTER-THE-JAR TRANSITION
+       Smooth GSAP ScrollTrigger Sequence -> Original Website
        ========================================================== -->
-  <section class="section section--cream" id="categories" aria-labelledby="cat-heading">
+  <section class="nh-finale" id="nhJarFinale" aria-label="اكتمال تعبئة برطمان نحل الذهب">
+    <div class="nh-jar-pin" id="nhJarPin">
+      <div class="nh-jar-inlet-anchor" id="jarInletAnchor" aria-hidden="true"></div>
+      <canvas class="nh-jar-canvas" id="jarCanvas" aria-hidden="true"></canvas>
+
+      <div class="nh-jar-fallback">
+        <img src="assets/img/journey/stage-05-bottled-jar.jpg"
+             alt="برطمان نحل الذهب مملوء بالعسل الذهبي الصافي"
+             width="800" height="600" loading="lazy" decoding="async">
+      </div>
+
+      <div class="nh-jar-cue" id="journeyFinaleCue" aria-live="polite">يمتلئ البرطمان بالعسل الصافي…</div>
+    </div>
+  </section>
+
+  <div class="nh-portal-veil" id="nhPortalVeil" aria-hidden="true"></div>
+
+  <div class="nh-preview" id="journeyPreview" aria-hidden="true">
+    <div class="nh-preview__card">
+      <div class="nh-preview__media">
+        <img id="journeyPreviewImg" src="assets/img/journey/stage-01-flowers-bees.jpg" alt="" width="400" height="300" decoding="async">
+      </div>
+      <div class="nh-preview__caption">
+        <span class="nh-preview__tag" id="journeyPreviewTag">01 · من الزهور إلى النحل</span>
+        <strong class="nh-preview__title" id="journeyPreviewTitle">جمع الرحيق من المراعي الطبيعية</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       ORIGINAL WEBSITE RESTORED BELOW — FEATURED CATEGORIES
+ — three tall rounded premium cards
+       ========================================================== -->
+  <section class="section section--cream section--drip" id="categories" aria-labelledby="cat-heading">
+    <!-- honey edge: the hero's own footage melts into this section -->
+    <div class="honey-edge" aria-hidden="true">
+      <img class="honey-edge__svg"
+           src="assets/img/honey-divider.svg"
+           alt="" aria-hidden="true" decoding="async" width="1440" height="240">
+    </div>
     <div class="container">
       <header class="section__head">
         <span class="eyebrow">العروض والكومبوهات</span>
-        <h2 class="section__title" id="cat-heading">عسل طبيعي مصري فاخر — باقات وعروض نحل الذهب</h2>
+        <h2 class="section__title" id="cat-heading">عسل طبيعي مصري فاخر — منتجات نحل الذهب</h2>
         <p class="section__sub">باقات جاهزة تجمع أفضل منتجاتنا بسعر واحد أوفر، أو تصفّح عسلنا بحسب النوع: برسيم، سدر، موالح، أعشاب جبلية، ومكسرات.</p>
       </header>
+
+      <h2 class="sr-only">عروض وباقات العسل</h2>
 
       <div class="cat-grid">
         <article class="cat-card offer-card">
@@ -1354,9 +1068,284 @@
   </section>
 
   <!-- ==========================================================
+       PRODUCTS — premium RTL product grid
+       ========================================================== -->
+  <section class="section section--deco" id="products" aria-labelledby="prod-heading">
+    <div class="deco" aria-hidden="true"></div>
+    <div class="container">
+      <header class="section__head">
+        <span class="eyebrow">المتجر</span>
+        <h2 class="section__title" id="prod-heading">منتجات نحل الذهب — عسل طبيعي وزيت زيتون وشمع</h2>
+        <p class="section__sub">عسل برسيم وسدر وموالح وأعشاب جبلية وحبة البركة ومكسرات، بمقاسات 500 جرام و1000 جرام، مع زيت زيتون بكر وشمع عسل أصلي.</p>
+
+        <div class="filter-row" role="group" aria-label="تصفية المنتجات">
+          <button class="chip is-active" type="button" data-filter="all">الكل</button>
+          <button class="chip" type="button" data-filter="raw">عسل طبيعي</button>
+          <button class="chip" type="button" data-filter="rare">خلطات فاخرة</button>
+          <button class="chip" type="button" data-filter="comb">شمع</button>
+        </div>
+      </header>
+
+      <div class="prod-grid">
+        <article class="prod-card" data-cat="raw" data-name="عسل زهرة البرسيم" data-price="280">
+          <div class="prod-card__stage">
+            <span class="prod-card__blob" aria-hidden="true"></span>
+            <img class="prod-card__img" src="assets/img/products/p01-clover-1kg.jpg" alt="عسل زهرة البرسيم - 1000 جرام من نحل الذهب" loading="lazy" decoding="async" width="896" height="1195">
+          </div>
+          <div class="prod-card__body">
+            <h3 class="prod-card__title">عسل زهرة البرسيم</h3>
+            <p class="prod-card__desc">عسل طبيعي 100% من زهرة البرسيم — لون دهبي فاتح وطعم خفيف يحبه الكبار والصغار، ومع كل كيلو ملعقة خشب طبيعية وشهادة جودة.</p>
+            <p class="prod-card__meta">1000 جرام</p>
+            <p class="prod-card__price">280 ج.م</p>
+            <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
+          </div>
+        </article>
+
+        <article class="prod-card" data-cat="raw" data-name="عسل زهرة البرسيم" data-price="150">
+          <div class="prod-card__stage">
+            <span class="prod-card__blob" aria-hidden="true"></span>
+            <img class="prod-card__img" src="assets/img/products/p02-clover-500g.jpg" alt="عسل زهرة البرسيم - 500 جرام من نحل الذهب" loading="lazy" decoding="async" width="896" height="1195">
+          </div>
+          <div class="prod-card__body">
+            <h3 class="prod-card__title">عسل زهرة البرسيم</h3>
+            <p class="prod-card__desc">طبيعي 100% من زهرة البرسيم بدون سكر ولا إضافات — طعم خفيف ودهبي فاتح، مع ملعقة خشب مجانًا وشهادة جودة.</p>
+            <p class="prod-card__meta">500 جرام</p>
+            <p class="prod-card__price">150 ج.م</p>
+            <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
+          </div>
+        </article>
+
+        <article class="prod-card" data-cat="raw" data-name="عسل زهرة الموالح" data-price="325">
+          <div class="prod-card__stage">
+            <span class="prod-card__blob" aria-hidden="true"></span>
+            <img class="prod-card__img" src="assets/img/products/p03-citrus-1kg.jpg" alt="عسل زهرة الموالح - 1000 جرام من نحل الذهب" loading="lazy" decoding="async" width="896" height="1195">
+          </div>
+          <div class="prod-card__body">
+            <h3 class="prod-card__title">عسل زهرة الموالح</h3>
+            <p class="prod-card__desc">من رحيق أزهار البرتقال واليوسفي — ريحة موالح منعشة وغنى بفيتامين C، مع ملعقة خشب مجانًا وشهادة جودة.</p>
+            <p class="prod-card__meta">1000 جرام</p>
+            <p class="prod-card__price">325 ج.م</p>
+            <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
+          </div>
+        </article>
+
+        <article class="prod-card" data-cat="raw" data-name="عسل زهرة الموالح" data-price="170">
+          <div class="prod-card__stage">
+            <span class="prod-card__blob" aria-hidden="true"></span>
+            <img class="prod-card__img" src="assets/img/products/p04-citrus-500g.jpg" alt="عسل زهرة الموالح - 500 جرام من نحل الذهب" loading="lazy" decoding="async" width="896" height="1195">
+          </div>
+          <div class="prod-card__body">
+            <h3 class="prod-card__title">عسل زهرة الموالح</h3>
+            <p class="prod-card__desc">طبيعي 100% من زهرة البرتقال واليوسفي — غني بفيتامين C وطعم وريحة موالح مميزة.</p>
+            <p class="prod-card__meta">500 جرام</p>
+            <p class="prod-card__price">170 ج.م</p>
+            <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
+          </div>
+        </article>
+
+        <article class="prod-card" data-cat="raw" data-name="عسل الأعشاب الجبلية" data-price="350">
+          <div class="prod-card__stage">
+            <span class="prod-card__blob" aria-hidden="true"></span>
+            <img class="prod-card__img" src="assets/img/products/p05-mountain-herbs-1kg.jpg" alt="عسل الأعشاب الجبلية - 1000 جرام من نحل الذهب" loading="lazy" decoding="async" width="1048" height="1024">
+          </div>
+          <div class="prod-card__body">
+            <h3 class="prod-card__title">عسل الأعشاب الجبلية</h3>
+            <p class="prod-card__desc">من رحيق مئات الزهور والأعشاب الجبلية البرية — لون غامق وطعم قوي ومركّز.</p>
+            <p class="prod-card__meta">1000 جرام</p>
+            <p class="prod-card__price">350 ج.م</p>
+            <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
+          </div>
+        </article>
+
+        <article class="prod-card" data-cat="raw" data-name="عسل الأعشاب الجبلية" data-price="180">
+          <div class="prod-card__stage">
+            <span class="prod-card__blob" aria-hidden="true"></span>
+            <img class="prod-card__img" src="assets/img/products/p06-mountain-herbs-500g.jpg" alt="عسل الأعشاب الجبلية - 500 جرام من نحل الذهب" loading="lazy" decoding="async" width="1048" height="1024">
+          </div>
+          <div class="prod-card__body">
+            <h3 class="prod-card__title">عسل الأعشاب الجبلية</h3>
+            <p class="prod-card__desc">من رحيق أعشاب جبلية برية متنوعة — عسل غامق ومركّز المذاق.</p>
+            <p class="prod-card__meta">500 جرام</p>
+            <p class="prod-card__price">180 ج.م</p>
+            <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
+          </div>
+        </article>
+
+        <article class="prod-card" data-cat="rare" data-name="عسل بالمكسرات الفاخرة" data-price="400">
+          <div class="prod-card__stage">
+            <span class="prod-card__blob" aria-hidden="true"></span>
+            <img class="prod-card__img" src="assets/img/products/p07-nuts-1kg.jpg" alt="عسل بالمكسرات الفاخرة - 1000 جرام من نحل الذهب" loading="lazy" decoding="async" width="896" height="1195">
+          </div>
+          <div class="prod-card__body">
+            <h3 class="prod-card__title">عسل بالمكسرات الفاخرة</h3>
+            <p class="prod-card__desc">عسل برسيم طبيعي 100% مع مكسرات فاخرة: كاجو، لوز، بندق، عين جمل، فستق — طاقة وقوة وطعم ملكي.</p>
+            <p class="prod-card__meta">1000 جرام</p>
+            <p class="prod-card__price">400 ج.م</p>
+            <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
+          </div>
+        </article>
+
+        <article class="prod-card" data-cat="rare" data-name="عسل بالمكسرات الفاخرة" data-price="250">
+          <div class="prod-card__stage">
+            <span class="prod-card__blob" aria-hidden="true"></span>
+            <img class="prod-card__img" src="assets/img/products/p08-nuts-500g.jpg" alt="عسل بالمكسرات الفاخرة - 500 جرام من نحل الذهب" loading="lazy" decoding="async" width="896" height="1195">
+          </div>
+          <div class="prod-card__body">
+            <h3 class="prod-card__title">عسل بالمكسرات الفاخرة</h3>
+            <p class="prod-card__desc">عسل طبيعي 100% مع كاجو ولوز وبندق وعين جمل وفستق — سناك صحي مشبع وهدية فاخرة.</p>
+            <p class="prod-card__meta">500 جرام</p>
+            <p class="prod-card__price">250 ج.م</p>
+            <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
+          </div>
+        </article>
+
+        <article class="prod-card" data-cat="rare" data-name="زيت زيتون بكر ممتاز" data-price="420">
+          <div class="prod-card__stage">
+            <span class="prod-card__blob" aria-hidden="true"></span>
+            <img class="prod-card__img" src="assets/img/products/p09-olive-oil-1l.jpg" alt="زيت زيتون بكر ممتاز - 1000 جرام من نحل الذهب" loading="lazy" decoding="async" width="896" height="1195">
+          </div>
+          <div class="prod-card__body">
+            <h3 class="prod-card__title">زيت زيتون بكر ممتاز</h3>
+            <p class="prod-card__desc">بكر ممتاز، عصرة أولى على البارد بحموضة أقل من 1% — من مزارع سيناء ومطروح، لون أخضر دهبي وريحة زيتون طازجة.</p>
+            <p class="prod-card__meta">1000 جرام</p>
+            <p class="prod-card__price">420 ج.م</p>
+            <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
+          </div>
+        </article>
+
+        <article class="prod-card" data-cat="raw" data-name="عسل حبة البركة" data-price="350">
+          <div class="prod-card__stage">
+            <span class="prod-card__blob" aria-hidden="true"></span>
+            <img class="prod-card__img" src="assets/img/products/p10-blackseed-1kg.jpg" alt="عسل حبة البركة - 1000 جرام من نحل الذهب" loading="lazy" decoding="async" width="896" height="1195">
+          </div>
+          <div class="prod-card__body">
+            <h3 class="prod-card__title">عسل حبة البركة</h3>
+            <p class="prod-card__desc">من رحيق زهرة حبة البركة النادرة — عسل غامق ذو نكهة قوية ومميزة، وبتاريخ حصاد موثّق.</p>
+            <p class="prod-card__meta">1000 جرام</p>
+            <p class="prod-card__price">350 ج.م</p>
+            <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
+          </div>
+        </article>
+
+        <article class="prod-card" data-cat="raw" data-name="عسل حبة البركة" data-price="180">
+          <div class="prod-card__stage">
+            <span class="prod-card__blob" aria-hidden="true"></span>
+            <img class="prod-card__img" src="assets/img/products/p11-blackseed-500g.jpg" alt="عسل حبة البركة - 500 جرام من نحل الذهب" loading="lazy" decoding="async" width="896" height="1195">
+          </div>
+          <div class="prod-card__body">
+            <h3 class="prod-card__title">عسل حبة البركة</h3>
+            <p class="prod-card__desc">طبيعي 100% من زهرة حبة البركة النادرة — عسل غامق وقوي المذاق.</p>
+            <p class="prod-card__meta">500 جرام</p>
+            <p class="prod-card__price">180 ج.م</p>
+            <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
+          </div>
+        </article>
+
+        <article class="prod-card" data-cat="raw" data-name="عسل السدر المصري الأصلي" data-price="600">
+          <div class="prod-card__stage">
+            <span class="prod-card__blob" aria-hidden="true"></span>
+            <img class="prod-card__img" src="assets/img/products/p12-sidr-1kg.jpg" alt="عسل السدر المصري الأصلي - 1000 جرام من نحل الذهب" loading="lazy" decoding="async" width="896" height="1195">
+          </div>
+          <div class="prod-card__body">
+            <h3 class="prod-card__title">عسل السدر المصري الأصلي</h3>
+            <p class="prod-card__desc">عسل الملوك — من رحيق شجرة السدر النادرة، إنتاج محدود جدًا سنويًا، طعم فاخر وريحة مميزة من مناحل صعيد مصر.</p>
+            <p class="prod-card__meta">1000 جرام</p>
+            <p class="prod-card__price">600 ج.م</p>
+            <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
+          </div>
+        </article>
+
+        <article class="prod-card" data-cat="raw" data-name="عسل السدر المصري الأصلي" data-price="320">
+          <div class="prod-card__stage">
+            <span class="prod-card__blob" aria-hidden="true"></span>
+            <img class="prod-card__img" src="assets/img/products/p13-sidr-500g.jpg" alt="عسل السدر المصري الأصلي - 500 جرام من نحل الذهب" loading="lazy" decoding="async" width="896" height="1195">
+          </div>
+          <div class="prod-card__body">
+            <h3 class="prod-card__title">عسل السدر المصري الأصلي</h3>
+            <p class="prod-card__desc">سدر مصري أصلي 100% نادر وفاخر — طعم فاخر وريحة مميزة من مناحل صعيد مصر.</p>
+            <p class="prod-card__meta">500 جرام</p>
+            <p class="prod-card__price">320 ج.م</p>
+            <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
+          </div>
+        </article>
+
+        <article class="prod-card" data-cat="rare" data-name="عسل الطاقة الزوجية" data-price="600">
+          <div class="prod-card__stage">
+            <span class="prod-card__blob" aria-hidden="true"></span>
+            <img class="prod-card__img" src="assets/img/products/p14-royal-energy-1kg.jpg" alt="عسل الطاقة الزوجية - 1000 جرام من نحل الذهب" loading="lazy" decoding="async" width="1008" height="1069">
+          </div>
+          <div class="prod-card__body">
+            <h3 class="prod-card__title">عسل الطاقة الزوجية</h3>
+            <p class="prod-card__desc">خلطة نحل الذهب الملكية: عسل سدر جبلي + غذاء ملكات + حبوب لقاح + جنسنج + حبة البركة + مكسرات — طبيعي 100% بدون أي إضافات صناعية.</p>
+            <p class="prod-card__meta">1000 جرام</p>
+            <p class="prod-card__price">600 ج.م</p>
+            <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
+          </div>
+        </article>
+
+        <article class="prod-card" data-cat="rare" data-name="عسل الطاقة الزوجية" data-price="350">
+          <div class="prod-card__stage">
+            <span class="prod-card__blob" aria-hidden="true"></span>
+            <img class="prod-card__img" src="assets/img/products/p15-royal-energy-500g.jpg" alt="عسل الطاقة الزوجية - 500 جرام من نحل الذهب" loading="lazy" decoding="async" width="1008" height="1069">
+          </div>
+          <div class="prod-card__body">
+            <h3 class="prod-card__title">عسل الطاقة الزوجية</h3>
+            <p class="prod-card__desc">خلطة ملكية قوية: سدر جبلي + غذاء ملكات + جنسنج — طاقة ونشاط طبيعي 100%.</p>
+            <p class="prod-card__meta">500 جرام</p>
+            <p class="prod-card__price">350 ج.م</p>
+            <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
+          </div>
+        </article>
+
+        <article class="prod-card" data-cat="rare" data-name="المختوم الفلسطيني لزيادة الوزن" data-price="550">
+          <div class="prod-card__stage">
+            <span class="prod-card__blob" aria-hidden="true"></span>
+            <img class="prod-card__img" src="assets/img/products/p16-palestinian-1kg.jpg" alt="المختوم الفلسطيني لزيادة الوزن - 1000 جرام من نحل الذهب" loading="lazy" decoding="async" width="1024" height="1039">
+          </div>
+          <div class="prod-card__body">
+            <h3 class="prod-card__title">المختوم الفلسطيني لزيادة الوزن</h3>
+            <p class="prod-card__desc">الخلطة الأصلية للتسمين الصحي وفتح الشهية: عسل مختوم فلسطيني + غذاء ملكات + حبوب لقاح + مكسرات وسمسم — طبيعي 100%.</p>
+            <p class="prod-card__meta">1000 جرام</p>
+            <p class="prod-card__price">550 ج.م</p>
+            <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
+          </div>
+        </article>
+
+        <article class="prod-card" data-cat="rare" data-name="المختوم الفلسطيني لزيادة الوزن" data-price="300">
+          <div class="prod-card__stage">
+            <span class="prod-card__blob" aria-hidden="true"></span>
+            <img class="prod-card__img" src="assets/img/products/p17-palestinian-500g.jpg" alt="المختوم الفلسطيني لزيادة الوزن - 500 جرام من نحل الذهب" loading="lazy" decoding="async" width="1024" height="1039">
+          </div>
+          <div class="prod-card__body">
+            <h3 class="prod-card__title">المختوم الفلسطيني لزيادة الوزن</h3>
+            <p class="prod-card__desc">عسل مختوم فلسطيني + خلطة تسمين طبيعية + مكسرات — فاتح شهية قوي وزيادة وزن صحية.</p>
+            <p class="prod-card__meta">500 جرام</p>
+            <p class="prod-card__price">300 ج.م</p>
+            <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
+          </div>
+        </article>
+
+        <article class="prod-card" data-cat="comb" data-name="شمع عسل النحل الأصلي" data-price="250">
+          <div class="prod-card__stage">
+            <span class="prod-card__blob" aria-hidden="true"></span>
+            <img class="prod-card__img" src="assets/img/products/p18-waxcomb-500g.jpg" alt="شمع عسل النحل الأصلي - 500 جرام من نحل الذهب" loading="lazy" decoding="async" width="896" height="1195">
+          </div>
+          <div class="prod-card__body">
+            <h3 class="prod-card__title">شمع عسل النحل الأصلي</h3>
+            <p class="prod-card__desc">شمع خام 100% من الخلية مباشرة — قطع ذهبية بيضاء بطعم وريحة طبيعية، مضغ مفيد للثة والأسنان.</p>
+            <p class="prod-card__meta">500 جرام</p>
+            <p class="prod-card__price">250 ج.م</p>
+            <button type="button" class="btn btn--honey prod-card__cta js-add-cart">أضف إلى السلة</button>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================
        OUR STORY — image + narrative
        ========================================================== -->
-  <section class="section section--honey" id="story" aria-labelledby="story-heading">
+  <section class="section section--cream" id="story" aria-labelledby="story-heading">
     <div class="container">
       <div class="story-grid">
         <div class="story__media">
@@ -1599,9 +1588,9 @@
     <nav class="footer__nav" aria-label="روابط سريعة">
       <h4 class="footer__head">روابط سريعة</h4>
       <ul>
-        <li><a href="#products">المنتجات</a></li>
-        <li><a href="#journey">رحلة العسل</a></li>
+        <li><a href="#hero">الرئيسية</a></li>
         <li><a href="#categories">العروض</a></li>
+        <li><a href="#products">المنتجات</a></li>
         <li><a href="#story">قصتنا</a></li>
       </ul>
     </nav>
@@ -1663,19 +1652,8 @@
   </div>
 </aside>
 
-<!-- Floating Editorial Cursor Preview (Desktop hover) -->
-<div class="preview-float" id="journeyPreview" aria-hidden="true">
-  <div class="preview-float__card">
-    <div class="preview-float__media">
-      <img id="journeyPreviewImg" src="assets/img/journey/stage-01-flowers-bees.jpg" alt="" width="720" height="538">
-    </div>
-    <div class="preview-float__caption">
-      <span class="preview-float__tag" id="journeyPreviewTag">01 · من الزهور إلى النحل</span>
-      <span class="preview-float__title" id="journeyPreviewTitle">جمع الرحيق من المراعي الطبيعية</span>
-    </div>
-  </div>
-</div>
-
+<script src="assets/js/vendor/gsap.min.js"></script>
+<script src="assets/js/vendor/ScrollTrigger.min.js"></script>
 <script src="assets/js/navbar.js"></script>
 <script src="assets/js/journey-ui.js"></script>
 <script src="assets/js/journey-2d.js"></script>

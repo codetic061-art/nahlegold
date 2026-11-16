@@ -650,3 +650,385 @@ export function createHoneybee() {
   bee.userData = { leftWing, rightWing, phase: Math.random() * Math.PI * 2 };
   return bee;
 }
+
+/**
+ * Generates a fine brushed stainless steel texture for realistic anisotropic
+ * tank highlights on the Hero extraction drum.
+ */
+export function createBrushedSteelTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 256;
+  const ctx = canvas.getContext('2d');
+
+  const grad = ctx.createLinearGradient(0, 0, 512, 0);
+  grad.addColorStop(0.0, '#CDD2D6');
+  grad.addColorStop(0.22, '#E9EDF0');
+  grad.addColorStop(0.46, '#C4C9CE');
+  grad.addColorStop(0.72, '#F2F5F7');
+  grad.addColorStop(1.0, '#CDD2D6');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 512, 256);
+
+  for (let y = 0; y < 256; y += 2) {
+    const shade = 212 + Math.round(Math.sin(y * 0.7) * 18 + (Math.random() - 0.5) * 20);
+    ctx.strokeStyle = `rgba(${shade}, ${shade + 2}, ${shade + 5}, 0.22)`;
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(512, y);
+    ctx.stroke();
+  }
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.ClampToEdgeWrapping;
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+/**
+ * Generates an embossed warm gold/espresso crest badge for the Hero stainless extraction drum.
+ */
+function createDrumCrestTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 384;
+  const ctx = canvas.getContext('2d');
+
+  ctx.clearRect(0, 0, 512, 384);
+  ctx.save();
+  ctx.beginPath();
+  ctx.ellipse(256, 192, 232, 166, 0, 0, Math.PI * 2);
+  ctx.fillStyle = '#E09D2B';
+  ctx.fill();
+  ctx.lineWidth = 10;
+  ctx.strokeStyle = '#3C2712';
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.ellipse(256, 192, 214, 150, 0, 0, Math.PI * 2);
+  ctx.fillStyle = '#3C2712';
+  ctx.fill();
+
+  ctx.fillStyle = '#FBE8A6';
+  ctx.font = '800 60px "Tajawal", "Almarai", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('نحل الذهب', 256, 156);
+
+  ctx.fillStyle = '#E8A93C';
+  ctx.font = '700 26px "Tajawal", "Almarai", sans-serif';
+  ctx.fillText('فرز طبيعي صافي ١٠٠٪', 256, 224);
+
+  ctx.fillStyle = '#F7CA52';
+  ctx.beginPath();
+  ctx.moveTo(256, 255);
+  ctx.bezierCurveTo(272, 275, 275, 296, 256, 302);
+  ctx.bezierCurveTo(237, 296, 240, 275, 256, 255);
+  ctx.fill();
+  ctx.restore();
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+/**
+ * Realistic Stainless-Steel Honey Extraction Tank ("منضج / خزان عسل استانلس")
+ * fitted with an unmistakably OPEN front-left chrome dispensing valve & downward nozzle.
+ */
+export function createHoneyDrumWithOpenTap({ isMobile = false } = {}) {
+  const group = new THREE.Group();
+  const segs = isMobile ? 32 : 48;
+
+  const steelTex = createBrushedSteelTexture();
+  const steelMat = new THREE.MeshStandardMaterial({
+    map: steelTex,
+    color: new THREE.Color('#EAEFF2'),
+    metalness: 0.88,
+    roughness: 0.22,
+    envMapIntensity: 1.55,
+  });
+
+  const chromeMat = new THREE.MeshStandardMaterial({
+    color: new THREE.Color('#F5F7FA'),
+    metalness: 0.94,
+    roughness: 0.14,
+    envMapIntensity: 1.7,
+  });
+
+  const darkMetalMat = new THREE.MeshStandardMaterial({
+    color: new THREE.Color('#707780'),
+    metalness: 0.82,
+    roughness: 0.34,
+    envMapIntensity: 1.25,
+  });
+
+  const brassGripMat = new THREE.MeshStandardMaterial({
+    color: new THREE.Color('#C97A16'),
+    metalness: 0.35,
+    roughness: 0.30,
+    envMapIntensity: 1.2,
+  });
+
+  // Soft studio contact shadow underneath stainless tank base
+  const shadowGeo = new THREE.PlaneGeometry(2.75, 2.75);
+  shadowGeo.rotateX(-Math.PI / 2);
+  const shadowMat = new THREE.MeshBasicMaterial({
+    map: createContactShadowTexture(),
+    transparent: true,
+    opacity: 0.82,
+    depthWrite: false,
+  });
+  const shadowPlane = new THREE.Mesh(shadowGeo, shadowMat);
+  shadowPlane.position.y = -1.16;
+  group.add(shadowPlane);
+
+  // Main cylindrical brushed stainless extractor drum (lathe profile with rolled beads & base skirt)
+  const bodyPoints = [
+    new THREE.Vector2(0.0, -1.13),
+    new THREE.Vector2(0.87, -1.13),
+    new THREE.Vector2(0.89, -1.07),
+    new THREE.Vector2(0.86, -1.01),
+    new THREE.Vector2(0.86, -0.58),
+    new THREE.Vector2(0.888, -0.54),
+    new THREE.Vector2(0.86, -0.50),
+    new THREE.Vector2(0.86, 0.44),
+    new THREE.Vector2(0.888, 0.48),
+    new THREE.Vector2(0.86, 0.52),
+    new THREE.Vector2(0.86, 0.96),
+    new THREE.Vector2(0.905, 1.00),
+    new THREE.Vector2(0.905, 1.04),
+    new THREE.Vector2(0.86, 1.04),
+  ];
+  const bodyGeo = new THREE.LatheGeometry(bodyPoints, segs);
+  const bodyMesh = new THREE.Mesh(bodyGeo, steelMat);
+  group.add(bodyMesh);
+
+  // Domed mirror-chrome extractor lid + center brass/chrome finial knob + tension latches
+  const lidPoints = [
+    new THREE.Vector2(0.918, 0.99),
+    new THREE.Vector2(0.918, 1.09),
+    new THREE.Vector2(0.86, 1.13),
+    new THREE.Vector2(0.55, 1.18),
+    new THREE.Vector2(0.0, 1.21),
+  ];
+  const lidMesh = new THREE.Mesh(new THREE.LatheGeometry(lidPoints, segs), chromeMat);
+  group.add(lidMesh);
+
+  const knobPost = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.085, 0.11, 20), brassGripMat);
+  knobPost.position.y = 1.25;
+  group.add(knobPost);
+  const knobCap = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.11, 0.065, 24), chromeMat);
+  knobCap.position.y = 1.32;
+  group.add(knobCap);
+
+  // Side welded carry handles + latch ears
+  for (const side of [-1, 1]) {
+    const pad = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.16, 0.24), darkMetalMat);
+    pad.position.set(side * 0.87, 0.58, 0);
+    group.add(pad);
+
+    const handleCurve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(side * 0.87, 0.62, -0.09),
+      new THREE.Vector3(side * 1.02, 0.54, -0.07),
+      new THREE.Vector3(side * 1.02, 0.54, 0.07),
+      new THREE.Vector3(side * 0.87, 0.62, 0.09),
+    ]);
+    const handleMesh = new THREE.Mesh(new THREE.TubeGeometry(handleCurve, 18, 0.025, 10, false), chromeMat);
+    group.add(handleMesh);
+
+    const latch = new THREE.Mesh(new THREE.BoxGeometry(0.055, 0.14, 0.07), darkMetalMat);
+    latch.position.set(side * 0.905, 1.01, 0.12);
+    group.add(latch);
+  }
+
+  // Front crest plaque subtly connecting stainless drum to Nahl Al-Thahab brand
+  const crestTex = createDrumCrestTexture();
+  const crestGeo = new THREE.CylinderGeometry(0.876, 0.876, 0.44, 32, 1, true, -0.34, 0.68);
+  const crestMat = new THREE.MeshStandardMaterial({
+    map: crestTex,
+    transparent: true,
+    alphaTest: 0.18,
+    roughness: 0.35,
+    metalness: 0.12,
+    polygonOffset: true,
+    polygonOffsetFactor: -1,
+  });
+  const crestMesh = new THREE.Mesh(crestGeo, crestMat);
+  crestMesh.position.y = 0.04;
+  crestMesh.rotation.y = 0.18;
+  group.add(crestMesh);
+
+  // =====================================================================
+  // UNMISTAKABLY OPEN DISPENSING TAP (Lower Left-Front of Stainless Tank)
+  // Oriented cleanly toward screen LEFT-FRONT so bolted flange, valve bore,
+  // lifted chrome+amber lever (OPEN!), and flowing honey stream read crisply.
+  // =====================================================================
+  const tapGroup = new THREE.Group();
+  const tapAzimuth = -Math.PI * 0.36; // pointing left & slightly front
+  const wallR = 0.855;
+  tapGroup.position.set(Math.sin(tapAzimuth) * wallR, -0.78, Math.cos(tapAzimuth) * wallR);
+  tapGroup.rotation.y = tapAzimuth;
+  group.add(tapGroup);
+
+  // 1. Bolted diamond/oval wall flange + 4 hex bolts
+  const flangePlate = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.19, 0.045, 24), chromeMat);
+  flangePlate.rotation.x = Math.PI / 2;
+  flangePlate.scale.set(1.22, 1, 0.85);
+  flangePlate.position.z = 0.015;
+  tapGroup.add(flangePlate);
+
+  for (const bx of [-0.145, 0.145]) {
+    for (const by of [-0.075, 0.075]) {
+      const bolt = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.032, 6), darkMetalMat);
+      bolt.rotation.x = Math.PI / 2;
+      bolt.position.set(bx, by, 0.042);
+      tapGroup.add(bolt);
+    }
+  }
+
+  // 2. Hex coupling nut + horizontal stainless outlet barrel
+  const hexCoupler = new THREE.Mesh(new THREE.CylinderGeometry(0.115, 0.115, 0.08, 6), chromeMat);
+  hexCoupler.rotation.x = Math.PI / 2;
+  hexCoupler.position.z = 0.075;
+  tapGroup.add(hexCoupler);
+
+  const feedPipe = new THREE.Mesh(new THREE.CylinderGeometry(0.072, 0.072, 0.24, 24), steelMat);
+  feedPipe.rotation.x = Math.PI / 2;
+  feedPipe.position.z = 0.20;
+  tapGroup.add(feedPipe);
+
+  // 3. Heavy cylindrical valve chamber + raised chrome gland nut (OPEN stem extension)
+  const valveChamber = new THREE.Mesh(new THREE.CylinderGeometry(0.112, 0.112, 0.23, 24), chromeMat);
+  valveChamber.position.set(0, 0.015, 0.34);
+  tapGroup.add(valveChamber);
+
+  const glandNut = new THREE.Mesh(new THREE.CylinderGeometry(0.085, 0.085, 0.055, 6), darkMetalMat);
+  glandNut.position.set(0, 0.14, 0.34);
+  tapGroup.add(glandNut);
+
+  const brassStem = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 0.11, 16), brassGripMat);
+  brassStem.position.set(0, 0.20, 0.34);
+  tapGroup.add(brassStem);
+
+  // 4. OPEN LEVER HANDLE: rotated +54 deg upward & aligned PARALLEL with spout flow!
+  const leverPivot = new THREE.Group();
+  leverPivot.position.set(0, 0.245, 0.34);
+  // Negative X rotation lifts +Z end upward toward +Y cleanly -> unmistakably pulled OPEN!
+  leverPivot.rotation.x = -0.88;
+  tapGroup.add(leverPivot);
+
+  const pivotHub = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.06, 18), chromeMat);
+  leverPivot.add(pivotHub);
+
+  const leverBar = new THREE.Mesh(new THREE.BoxGeometry(0.038, 0.026, 0.30), chromeMat);
+  leverBar.position.z = 0.16;
+  leverPivot.add(leverBar);
+
+  // Ergonomic warm amber-copper grip sleeve makes open lever read starkly against silver/cream
+  const leverGrip = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.028, 0.19, 16), brassGripMat);
+  leverGrip.rotation.x = Math.PI / 2;
+  leverGrip.position.z = 0.27;
+  leverPivot.add(leverGrip);
+
+  const leverTip = new THREE.Mesh(new THREE.SphereGeometry(0.032, 12, 10), brassGripMat);
+  leverTip.position.z = 0.365;
+  leverPivot.add(leverTip);
+
+  // 5. Graceful 90-degree bent chrome dispensing spout pointing straight DOWN
+  const spoutCurve = new THREE.CubicBezierCurve3(
+    new THREE.Vector3(0, 0.0, 0.40),
+    new THREE.Vector3(0, 0.0, 0.56),
+    new THREE.Vector3(0, -0.05, 0.62),
+    new THREE.Vector3(0, -0.22, 0.62)
+  );
+  const spoutMesh = new THREE.Mesh(new THREE.TubeGeometry(spoutCurve, 20, 0.066, 18, false), chromeMat);
+  tapGroup.add(spoutMesh);
+
+  const nozzleLip = new THREE.Mesh(new THREE.TorusGeometry(0.066, 0.014, 10, 24), chromeMat);
+  nozzleLip.rotation.x = Math.PI / 2;
+  nozzleLip.position.set(0, -0.22, 0.62);
+  tapGroup.add(nozzleLip);
+
+  // Glistening honey bead brimming directly inside the open nozzle rim
+  const honeyBeadMat = createLiquidHoneyMaterial();
+  const honeyBead = new THREE.Mesh(new THREE.SphereGeometry(0.059, 16, 12), honeyBeadMat);
+  honeyBead.scale.set(1, 0.85, 1);
+  honeyBead.position.set(0, -0.23, 0.62);
+  tapGroup.add(honeyBead);
+
+  // Exact world anchor right below nozzle exit where the 3D viscous stream emerges
+  const tapSpoutAnchor = new THREE.Object3D();
+  tapSpoutAnchor.position.set(0, -0.225, 0.62);
+  tapGroup.add(tapSpoutAnchor);
+
+  return {
+    group,
+    tapSpoutAnchor,
+    leverPivot,
+    honeyBead,
+  };
+}
+
+/**
+ * Builds a single continuous gravity-curved viscous honey column starting cleanly inside
+ * a pouring spout (0, 0, 0), curving gently downward to align vertically along (dropX, y, dropZ)
+ * down to `dropBottomY` with smooth neck-thinning and helical uv.y mapping (1 at spout -> 0 at bottom).
+ */
+export function createGravityPourGeometry({
+  start = new THREE.Vector3(0, 0, 0),
+  dropX = -0.08,
+  dropZ = 0.04,
+  bottomY = -2.2,
+  topRadius = 0.056,
+  waistRadius = 0.040,
+  bottomRadius = 0.048,
+  radialSegments = 20,
+  heightSegments = 48,
+} = {}) {
+  const curve = new THREE.CubicBezierCurve3(
+    start.clone(),
+    new THREE.Vector3(dropX, start.y - 0.14, dropZ),
+    new THREE.Vector3(dropX, start.y - 0.36, dropZ),
+    new THREE.Vector3(dropX, bottomY, dropZ)
+  );
+
+  const geo = new THREE.CylinderGeometry(1, 1, 1, radialSegments, heightSegments, true);
+  const pos = geo.attributes.position;
+  const upVec = new THREE.Vector3(0, 1, 0);
+  const pt = new THREE.Vector3();
+  const tan = new THREE.Vector3();
+  const binormal = new THREE.Vector3();
+  const normal = new THREE.Vector3();
+
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i);
+    const y = pos.getY(i); // -0.5 .. +0.5
+    const z = pos.getZ(i);
+
+    const tDown = THREE.MathUtils.clamp(0.5 - y, 0, 1); // 0 top (spout) -> 1 bottom
+    const vUp = 1.0 - tDown; // 1 top -> 0 bottom
+
+    curve.getPointAt(tDown, pt);
+    curve.getTangentAt(tDown, tan).normalize();
+
+    // Stable perpendicular frame so stream cross-section stays circular
+    binormal.crossVectors(tan, new THREE.Vector3(0, 0, 1));
+    if (binormal.lengthSq() < 0.001) binormal.crossVectors(tan, upVec);
+    binormal.normalize();
+    normal.crossVectors(binormal, tan).normalize();
+
+    const neck = Math.pow(THREE.MathUtils.smoothstep(vUp, 0.72, 1.0), 1.3);
+    const flare = Math.pow(1.0 - THREE.MathUtils.smoothstep(vUp, 0.0, 0.25), 1.4);
+    const r = THREE.MathUtils.lerp(waistRadius, topRadius, neck) + (bottomRadius - waistRadius) * flare * 0.55;
+
+    const vx = pt.x + (binormal.x * x + normal.x * z) * r;
+    const vy = pt.y + (binormal.y * x + normal.y * z) * r;
+    const vz = pt.z + (binormal.z * x + normal.z * z) * r;
+    pos.setXYZ(i, vx, vy, vz);
+  }
+  geo.computeVertexNormals();
+  return geo;
+}
+

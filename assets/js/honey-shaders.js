@@ -71,9 +71,9 @@ export function createClearGlassMaterial({ backSide = false } = {}) {
       uKeyDir:   { value: new THREE.Vector3(0.58, 0.72, 0.45).normalize() },
       uFillDir:  { value: new THREE.Vector3(-0.68, 0.35, 0.48).normalize() },
       uTopDir:   { value: new THREE.Vector3(0.08, 0.94, 0.32).normalize() },
-      uRimDark:  { value: new THREE.Color('#1B1610') },
-      uRimCool:  { value: new THREE.Color('#473B2D') },
-      uGlassTint:{ value: new THREE.Color('#EBE6DD') },
+      uRimDark:  { value: new THREE.Color('#1E150B') },
+      uRimCool:  { value: new THREE.Color('#4F3A22') },
+      uGlassTint:{ value: new THREE.Color('#F3EDE0') },
       uSpecColor:{ value: new THREE.Color('#FFFFFF') },
       uIsBack:   { value: backSide ? 1.0 : 0.0 },
     },
@@ -272,16 +272,17 @@ export function createLiquidHoneyMaterial({ animatedFlow = false } = {}) {
         vec3 pos = position;
 
         if (uAnimatedFlow > 0.5) {
-          // Subtle helical coiling & peristalsis thickness pulse sliding downward continuously
+          // Subtle viscous downward peristalsis thickness wave anchored cleanly at top/bottom ends
           float vCoord = uv.y;
-          float n = snoise(vec3(pos.x * 4.0, vCoord * 5.0 + uTime * 2.1, pos.z * 4.0));
-          float pulse = 1.0 + n * 0.11;
+          float n = snoise(vec3(pos.x * 3.5, vCoord * 3.4 + uTime * 1.9, pos.z * 3.5));
+          float endFade = smoothstep(0.0, 0.14, vCoord) * smoothstep(1.0, 0.86, vCoord);
+          float pulse = 1.0 + n * 0.08 * (0.35 + 0.65 * endFade);
           pos.x *= pulse;
           pos.z *= pulse;
-          // Delicate viscous sway increases gently toward lower end
-          float lowerWeight = 1.0 - smoothstep(0.15, 1.0, vCoord);
-          pos.x += sin(uTime * 3.1 + vCoord * 8.0) * 0.012 * lowerWeight;
-          pos.z += cos(uTime * 2.5 + vCoord * 7.0) * 0.008 * lowerWeight;
+          // Delicate graceful micro-sway only along mid-column so bottom inlet alignment stays exact
+          float midSway = sin(vCoord * 3.14159);
+          pos.x += sin(uTime * 2.2 + vCoord * 4.2) * 0.004 * midSway;
+          pos.z += cos(uTime * 1.8 + vCoord * 3.6) * 0.003 * midSway;
         }
 
         vLocalPos = pos;
@@ -364,7 +365,7 @@ export function createCausticPortalMaterial() {
       uStrength: { value: 0.0 },
       uGoldA:    { value: new THREE.Color('#D6861E') },
       uGoldB:    { value: new THREE.Color('#F8CC5B') },
-      uCream:    { value: new THREE.Color('#FFFFFF') },
+      uCream:    { value: new THREE.Color('#FAF5EA') },
     },
     vertexShader: /* glsl */ `
       varying vec2 vUv;

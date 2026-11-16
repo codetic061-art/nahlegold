@@ -1,46 +1,206 @@
 /* ============================================================
-   journey.css — 2D Winding Honey Storytelling + Focused 3D Pour
-   & High-Contrast Clear-Glass Final Jar on #FFFFFF White
+   journey.css — Scoped Styles strictly (.nh-*) for:
+     1. New Hero Section (.nh-hero) with Botanical Meadow + 3D Drum Pour
+     2. Organic 2D Honey Journey (.nh-journey) — outline-free warm-shaded S-tube
+     3. Pinned GSAP ScrollTrigger Jar Finale & Caustic Reveal (.nh-finale)
+     4. Floating Editorial Stage Preview (.nh-preview)
+
+   Zero global selectors or token overrides so the restored original
+   Nahl Al-Thahab website below (#categories .. #footer) stays untouched.
    ============================================================ */
-
-main { position: relative; z-index: 1; }
-
-.journey {
-  position: relative;
-  background: #FFFFFF;
-  border-top: 1px solid var(--hairline, rgba(17, 17, 17, 0.14));
-  padding-top: clamp(3.5rem, 6vw, 5.5rem);
-  padding-bottom: 0;
-  overflow-x: clip;
-}
-
-.journey__head {
-  text-align: center;
-  max-width: 660px;
-  margin-inline: auto;
-  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
-  padding-inline: var(--gutter);
-}
 
 /* ============================================================
-   1. MASTER 2D EDITORIAL BOARD
-   Contains the stainless honey drum at top, the single continuous
-   2D SVG winding path (2 black outlines + darker interior + golden
-   scroll-driven honey), nodes 01..05, and Stage 05 3D jar finale.
+   1. NEW BOTANICAL HERO SECTION (#hero)
+   Left: clean editorial RTL Arabic copy over bright cream light
+   Right: clover/citrus floral atmosphere + 3D Stainless Drum w/ OPEN tap
    ============================================================ */
-.journey-board {
+.nh-hero {
   position: relative;
   width: 100%;
-  max-width: 1120px;
+  min-height: clamp(600px, calc(100svh - var(--nav-h, 76px)), 824px);
+  background-color: #FAF4E4;
+  background-image:
+    linear-gradient(180deg, rgba(250, 244, 228, 0) 76%, rgba(250, 244, 228, 0.72) 91%, #FAF4E4 100%),
+    linear-gradient(90deg, rgba(251, 246, 234, 0.90) 0%, rgba(251, 246, 234, 0.56) 44%, rgba(251, 246, 234, 0.08) 78%, rgba(251, 246, 234, 0) 100%),
+    url("../img/hero-botanical-bg.jpg");
+  background-size: 100% 100%, 100% 100%, cover;
+  background-position: center bottom, center, right center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding-block: clamp(2.5rem, 5vw, 4rem) clamp(3.5rem, 6.5vw, 5.25rem);
+  isolation: isolate;
+}
+
+.nh-hero__inner {
+  position: relative;
+  z-index: 6;
+  width: 100%;
+  max-width: var(--container, 1240px);
   margin-inline: auto;
-  padding-inline: var(--gutter);
-  /* LTR geometry coordinate system inside for deterministic SVG node sync;
-     individual Arabic text columns stay true RTL! */
+  padding-inline: var(--gutter, 40px);
+  /* LTR column ordering locks text strictly on screen LEFT & stainless tank on RIGHT */
+  direction: ltr;
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.nh-hero__copy {
+  direction: rtl;
+  text-align: right;
+  max-width: 560px;
+  justify-self: start;
+}
+
+.nh-hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--honey-deep, #A3460A);
+  background: rgba(255, 251, 240, 0.88);
+  border: 1px solid rgba(214, 134, 30, 0.28);
+  padding: 0.34rem 1rem;
+  border-radius: 999px;
+  margin-bottom: 1.05rem;
+  box-shadow: 0 6px 20px -14px rgba(73, 42, 13, 0.35);
+}
+
+.nh-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.15rem, 4.15vw, 3.55rem);
+  font-weight: 800;
+  line-height: 1.22;
+  letter-spacing: 0;
+  color: var(--ink, #3C2712);
+  margin-bottom: 1.05rem;
+}
+
+.nh-hero__title-accent {
+  color: var(--honey-deep, #A3460A);
+}
+
+.nh-hero__sub {
+  font-family: var(--font-body);
+  font-size: clamp(1.02rem, 1.32vw, 1.18rem);
+  line-height: 1.85;
+  color: var(--ink-soft, #6B5334);
+  margin-bottom: 1.85rem;
+  max-width: 495px;
+}
+
+.nh-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem 1.05rem;
+}
+
+.nh-hero__cta-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 2.1rem;
+  border-radius: 999px;
+  background: var(--brown, #492A0D);
+  color: var(--cream, #FAEDDB);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  box-shadow: 0 12px 28px -12px rgba(51, 28, 7, 0.65);
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.nh-hero__cta-primary:hover {
+  background: var(--brown-lift, #5C3A16);
+  transform: translateY(-2px);
+}
+
+.nh-hero__cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.82rem 1.7rem;
+  border-radius: 999px;
+  background: rgba(255, 252, 245, 0.88);
+  color: var(--brown, #492A0D);
+  border: 1px solid rgba(73, 42, 13, 0.24);
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  font-weight: 700;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.nh-hero__cta-secondary:hover {
+  background: #FFFFFF;
+  border-color: var(--honey, #D6861E);
+  transform: translateY(-2px);
+}
+
+.nh-hero__stage {
+  position: relative;
+  min-height: clamp(380px, 56vh, 560px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Full-hero transparent WebGL canvas spanning cleanly down to Hero foot seam */
+.nh-hero__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 4;
+  pointer-events: none;
+  display: block;
+}
+
+.nh-hero__fallback-wrap {
+  display: none;
+  position: relative;
+  width: min(360px, 90%);
+  text-align: center;
+}
+
+.nh-hero__fallback-img {
+  width: 100%;
+  height: auto;
+  border-radius: 22px;
+  mix-blend-mode: multiply;
+}
+
+.nh-hero--fallback .nh-hero__canvas { display: none; }
+.nh-hero--fallback .nh-hero__fallback-wrap { display: block; }
+
+/* ============================================================
+   2. NEW ORGANIC 2D HONEY JOURNEY SECTION (#journey)
+   Warm cream ground (#FAF4E4), zero black borders/strokes, shaded
+   multi-tone golden amber channel, bright scrolling honey interior,
+   clean art-directed S-curves and unboxed RTL editorial typography.
+   ============================================================ */
+.nh-journey {
+  position: relative;
+  background: #FAF4E4;
+  padding-top: 0;
+  padding-bottom: clamp(1rem, 2.5vw, 2rem);
+  overflow: visible;
+  z-index: 2;
+}
+
+.nh-journey__board {
+  position: relative;
+  width: 100%;
+  max-width: 1180px;
+  margin-inline: auto;
+  padding-inline: var(--gutter, 40px);
   direction: ltr;
 }
 
-/* Continuous 2D SVG Path layer sitting behind nodes & cards cleanly */
-.journey-svg {
+.nh-journey__svg {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -50,274 +210,260 @@ main { position: relative; z-index: 1; }
   overflow: visible;
 }
 
-.journey-path-outline {
+/* Soft recessed warm channel defined purely via amber-cream tonal shading (ZERO BLACK STROKES!) */
+.nh-tube-cushion {
   fill: none;
-  stroke: #111111;
-  stroke-linecap: butt;
+  stroke: #E9D3A9;
+  stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-.journey-path-interior {
+.nh-tube-wall {
   fill: none;
-  stroke: var(--channel-fill, #C8C4BB);
-  stroke-linecap: butt;
+  stroke: #D29E51;
+  stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-.journey-path-honey {
+.nh-tube-core {
+  fill: none;
+  stroke: #B37224;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.nh-tube-trough {
+  fill: none;
+  stroke: rgba(112, 54, 10, 0.28);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.nh-tube-honey {
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-.journey-path-sheen {
+.nh-tube-sheen {
   fill: none;
-  stroke: rgba(255, 245, 204, 0.45);
+  stroke: rgba(255, 249, 221, 0.56);
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-.journey-inlet-cap {
-  fill: #111111;
-}
-
-.journey-inlet-rim {
-  fill: #FFFFFF;
-  stroke: #111111;
-  stroke-width: 2;
-}
-
-/* ============================================================
-   2. TOP POURING ASSEMBLY (Metal Honey Drum + Tap + 3D Stream)
-   ============================================================ */
-.journey-pour {
+/* Horizontal receiver dot anchored directly under Hero's open drum pour stream */
+.nh-journey__inlet {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 0.5rem;
-  padding-bottom: clamp(150px, 16vw, 210px);
-  z-index: 3;
-}
-
-.journey-tank-wrap {
-  position: relative;
-  width: min(360px, 84%);
-  margin-inline: auto;
-  /* Shift tank gently left so chrome tap (73.2% of image width) sits near board X ~ 52% */
-  transform: translateX(-11%);
+  height: clamp(68px, 7.5vw, 104px);
   z-index: 2;
 }
 
-.journey-tank-img {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 4 / 3;
-  object-fit: contain;
-  mix-blend-mode: multiply;
-  user-select: none;
-}
-
-/* Focused 3D WebGL canvas for ONLY continuous pouring liquid honey stream */
-.pour-canvas {
+.nh-journey__inlet-marker {
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 4;
-}
-
-/* Static SVG stream shown only if WebGL disabled or prefers-reduced-motion */
-.pour-fallback-svg {
-  display: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 4;
-}
-
-.journey-board.is-pour-fallback .pour-canvas {
-  display: none;
-}
-.journey-board.is-pour-fallback .pour-fallback-svg {
-  display: block;
-}
-
-/* Subtle horizontal anchor just below tank where 3D pour enters 2D channel */
-.journey-inlet-marker {
-  position: absolute;
-  bottom: clamp(12px, 2vw, 24px);
-  left: 51.5%;
-  width: 30px;
-  height: 14px;
+  left: 66%;
+  width: 36px;
+  height: 12px;
   transform: translateX(-50%);
   pointer-events: none;
 }
 
-/* ============================================================
-   3. STORYTELLING STAGES (01 .. 04 ON THE 2D WINDING PATH)
-   Reference Image B / user image.png style: clean editorial
-   black typography on white, circular dark numbered node ON path.
-   ============================================================ */
-.journey-steps {
+.nh-journey__intro-strip {
+  position: relative;
+  z-index: 3;
+  max-width: 470px;
+  margin-inline-start: 0;
+  margin-top: -1.5rem;
+  margin-bottom: clamp(2.5rem, 5vw, 4.2rem);
+  direction: rtl;
+  text-align: right;
+}
+
+.nh-eyebrow {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--honey-deep, #A3460A);
+  background: rgba(214, 134, 30, 0.12);
+  padding: 0.28rem 0.9rem;
+  border-radius: 999px;
+  margin-bottom: 0.7rem;
+}
+
+.nh-journey__intro-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 2.8vw, 2.35rem);
+  font-weight: 800;
+  line-height: 1.28;
+  color: var(--ink, #3C2712);
+  margin-bottom: 0.45rem;
+}
+
+.nh-journey__intro-sub {
+  font-family: var(--font-body);
+  font-size: clamp(0.96rem, 1.15vw, 1.06rem);
+  line-height: 1.78;
+  color: var(--ink-soft, #6B5334);
+}
+
+/* Alternating Editorial Steps — Typography sits cleanly directly on #FAF4E4 cream (no boxed cards!) */
+.nh-steps {
   position: relative;
   z-index: 4;
   display: flex;
   flex-direction: column;
-  gap: clamp(9rem, 15vw, 15.5rem);
-  padding-top: clamp(4.2rem, 6.5vw, 6rem);
-  padding-bottom: clamp(4rem, 7vw, 6.5rem);
+  gap: clamp(7.5rem, 11vw, 11.5rem);
+  padding-top: clamp(1.2rem, 2.5vw, 2rem);
+  padding-bottom: clamp(5rem, 8vw, 7.5rem);
 }
 
-.journey-step {
+.nh-step {
   position: relative;
   width: 100%;
 }
 
-.journey-step__cluster {
+.nh-step__cluster {
   display: flex;
   align-items: flex-start;
-  gap: clamp(1rem, 2vw, 1.65rem);
-  width: min(500px, 100%);
+  gap: clamp(0.95rem, 1.8vw, 1.5rem);
 }
 
-/* Position nodes cleanly around the 2D curve on desktop */
-.journey-step--node-right .journey-step__cluster {
-  margin-left: auto;
-  margin-right: 12%;
-  flex-direction: row-reverse; /* circle node on RIGHT sitting cleanly on curve, RTL text to its LEFT */
+/* Stages 01, 03, 05: node rides right curve peak (~58%), RTL copy expands cleanly into right clear lane [61%..100%] */
+.nh-step--right .nh-step__cluster {
+  margin-left: calc(58% - 27px);
+  margin-right: 0;
+  width: auto;
+  max-width: none;
+  flex-direction: row;
 }
 
-.journey-step--node-left .journey-step__cluster {
-  margin-left: 25%;
-  margin-right: auto;
-  flex-direction: row; /* circle node on LEFT sitting cleanly on curve, RTL text to its RIGHT */
+/* Stages 02, 04: node rides left curve peak (~42%), RTL copy fills cleanly into left clear lane [0..39%] */
+.nh-step--left .nh-step__cluster {
+  margin-left: 0;
+  margin-right: calc(58% - 27px);
+  width: auto;
+  max-width: none;
+  flex-direction: row-reverse;
 }
 
-/* Extra breathing room under Stage 02 for the signature left-side SVG loop */
-.journey-step--has-loop {
-  padding-bottom: clamp(7rem, 11vw, 11rem);
-}
-
-.journey-step__node {
+.nh-step__node {
   position: relative;
   z-index: 5;
   flex: 0 0 auto;
-  width: 56px;
-  height: 56px;
+  width: 54px;
+  height: 54px;
   border-radius: 999px;
   display: grid;
   place-items: center;
-  background: #111111;
-  color: #FAD56F;
+  background: #492A0D;
+  color: #FAF1D8;
   font-family: var(--font-display);
-  font-size: 1.15rem;
+  font-size: 1.12rem;
   font-weight: 800;
-  border: 2.5px solid #111111;
-  box-shadow: 0 0 0 4px #FFFFFF;
+  box-shadow: 0 0 0 5px #FAF4E4, 0 8px 20px -10px rgba(73, 42, 13, 0.45);
   cursor: pointer;
-  transition: transform 0.22s var(--ease-soft),
-              background-color 0.22s var(--ease-soft),
-              color 0.22s var(--ease-soft);
+  transition: transform 0.24s ease, background-color 0.24s ease, color 0.24s ease, box-shadow 0.24s ease;
 }
 
-.journey-step__node:hover,
-.journey-step.is-active .journey-step__node {
-  transform: scale(1.08);
-  background: #E39617;
-  color: #111111;
-  border-color: #111111;
+.nh-step__node:hover,
+.nh-step.is-active .nh-step__node {
+  transform: scale(1.09);
+  background: #D6861E;
+  color: #FFFFFF;
+  box-shadow: 0 0 0 5px #FAF4E4, 0 10px 24px -8px rgba(214, 134, 30, 0.55);
 }
 
-.journey-step__copy {
+.nh-step__copy {
   direction: rtl;
   text-align: right;
   flex: 1 1 auto;
   min-width: 0;
-  background: rgba(255, 255, 255, 0.92);
-  padding: 0.25rem 0.4rem;
-  border-radius: 12px;
+  /* Explicitly pure unboxed background per user request */
+  background: transparent;
+  padding: 0.1rem 0;
 }
 
-.journey-step__title {
+.nh-step__stage-tag {
+  display: inline-block;
   font-family: var(--font-display);
-  font-size: clamp(1.5rem, 2.5vw, 2.15rem);
-  font-weight: 800;
-  line-height: 1.25;
-  color: var(--ink, #111111);
-  margin-bottom: 0.55rem;
-  cursor: pointer;
-  transition: color 0.18s var(--ease-soft);
-}
-
-.journey-step__title:hover {
-  color: var(--honey-deep, #A95B08);
-}
-
-.journey-step__desc {
-  font-family: var(--font-body);
-  font-size: clamp(0.95rem, 1.12vw, 1.04rem);
-  line-height: 1.82;
-  color: var(--ink-soft, #404040);
-}
-
-.journey-highlight {
-  color: #111111;
+  font-size: 0.8rem;
   font-weight: 700;
-  border-bottom: 1.5px solid #111111;
+  color: var(--honey-deep, #A3460A);
+  margin-bottom: 0.28rem;
+}
+
+.nh-step__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.42rem, 2.25vw, 1.98rem);
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--ink, #3C2712);
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.nh-step__title:hover {
+  color: var(--honey-deep, #A3460A);
+}
+
+.nh-step__desc {
+  font-family: var(--font-body);
+  font-size: clamp(0.95rem, 1.08vw, 1.03rem);
+  line-height: 1.82;
+  color: var(--ink-soft, #6B5334);
+}
+
+.nh-highlight {
+  color: var(--ink, #3C2712);
+  font-weight: 700;
+  border-bottom: 1.5px solid rgba(214, 134, 30, 0.7);
   padding-bottom: 1px;
   cursor: pointer;
   transition: color 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
 }
-
-.journey-highlight:hover {
-  color: var(--honey-deep, #A95B08);
-  border-bottom-color: var(--honey, #E39617);
-  background: rgba(227, 150, 23, 0.10);
+.nh-highlight:hover {
+  color: var(--honey-deep, #A3460A);
+  border-bottom-color: var(--honey, #D6861E);
+  background: rgba(214, 134, 30, 0.11);
 }
 
-.journey-step__hint {
-  margin-top: 0.65rem;
+.nh-step__hint {
+  margin-top: 0.55rem;
   display: inline-block;
   font-size: 0.78rem;
   font-weight: 700;
-  color: var(--ink-mute, #6E6E6E);
+  color: var(--ink-mute, #907B5B);
 }
 
-.journey-step__preview-btn {
+.nh-step__preview-btn {
   display: none;
-  margin-top: 0.75rem;
+  margin-top: 0.7rem;
   padding: 0.42rem 1rem;
   border-radius: 999px;
   font-family: var(--font-display);
   font-size: 0.84rem;
   font-weight: 700;
-  color: #111111;
-  background: #FFFFFF;
-  border: 1.2px solid #111111;
+  color: var(--brown, #492A0D);
+  background: rgba(255, 253, 247, 0.9);
+  border: 1px solid rgba(73, 42, 13, 0.25);
   cursor: pointer;
 }
-.journey-step__preview-btn:hover {
-  background: #111111;
-  color: #FFFFFF;
+.nh-step__preview-btn:hover {
+  background: var(--brown, #492A0D);
+  color: var(--cream, #FAEDDB);
 }
 
-.journey-step__mobile-preview {
+.nh-step__mobile-preview {
   margin-top: 0.85rem;
-  border-radius: 14px;
+  border-radius: 16px;
   overflow: hidden;
-  border: 1.2px solid #111111;
+  border: 1px solid rgba(214, 134, 30, 0.35);
+  box-shadow: 0 12px 26px -14px rgba(60, 39, 18, 0.3);
 }
-
-.journey-step__mobile-preview[hidden] { display: none; }
-
-.journey-step__mobile-preview img {
+.nh-step__mobile-preview[hidden] { display: none; }
+.nh-step__mobile-preview img {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
@@ -325,64 +471,42 @@ main { position: relative; z-index: 1; }
 }
 
 /* ============================================================
-   4. STAGE 05 + 3D HIGH-CONTRAST GLASS JAR + ENTER-HONEY FINALE
+   3. PINNED STAGE 05 CRYSTAL JAR + SLOW ENTER-THE-JAR TRANSITION
    ============================================================ */
-.journey-stage-05 {
+.nh-finale {
   position: relative;
-  z-index: 4;
-  padding-top: clamp(2.5rem, 5vw, 4rem);
-}
-
-.journey-stage-05__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 470px);
-  gap: clamp(1.5rem, 4vw, 3.5rem);
-  align-items: start;
-}
-
-.journey-stage-05__left {
-  padding-top: 0;
-}
-
-.journey-stage-05 .journey-step__cluster {
-  margin: 0;
   width: 100%;
-  flex-direction: row-reverse;
+  background: transparent;
+  margin-bottom: calc(-1 * (100svh - var(--nav-h, 76px)));
+  overflow: visible;
+  z-index: auto;
 }
 
-/* Scoped sticky Finale Wrapper strictly around the Final 3D Jar;
-   offset downward so Stage 05 node 05 sits cleanly above the jar mouth inlet */
-.jar-finale-wrap {
+.nh-jar-pin {
   position: relative;
-  margin-top: clamp(135px, 14vw, 185px);
-  height: clamp(640px, 145svh, 1180px);
-}
-
-.jar-stage {
-  position: sticky;
-  top: var(--nav-h);
-  height: min(620px, calc(100svh - var(--nav-h) - 16px));
   width: 100%;
+  height: calc(100svh - var(--nav-h, 76px));
+  min-height: 460px;
+  background: linear-gradient(180deg, #FAF4E4 0%, #FAF5EA 100%);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  overflow: visible;
+  overflow: hidden;
 }
 
-/* Anchor point right at top-center of Jar canvas where 2D SVG path cleanly connects */
-.jar-inlet-anchor {
+/* Exact centerline anchor where Journey 2D channel feeds straight into 3D jar pour stream */
+.nh-jar-inlet-anchor {
   position: absolute;
   top: 0;
   left: 50%;
-  width: 12px;
-  height: 6px;
+  width: 16px;
+  height: 8px;
   transform: translateX(-50%);
   pointer-events: none;
-  z-index: 3;
+  z-index: 4;
 }
 
-.jar-canvas {
+.nh-jar-canvas {
   position: relative;
   z-index: 2;
   display: block;
@@ -390,216 +514,239 @@ main { position: relative; z-index: 1; }
   height: 100%;
 }
 
-.jar-fallback-visual {
+.nh-jar-fallback {
   display: none;
-  width: min(360px, 90%);
-  border-radius: 20px;
+  width: min(340px, 86%);
+  border-radius: 24px;
   overflow: hidden;
-  border: 1.25px solid #111111;
-  background: #FFFFFF;
+  border: 1px solid rgba(214, 134, 30, 0.35);
+  background: #FFFDF7;
+  box-shadow: 0 18px 42px -18px rgba(60, 39, 18, 0.25);
 }
-
-.jar-fallback-visual img {
+.nh-jar-fallback img {
   width: 100%;
   height: auto;
   display: block;
 }
 
-.jar-finale-wrap.is-jar-fallback {
+.nh-finale.is-jar-fallback .nh-jar-pin {
   height: auto;
-  padding-bottom: 2rem;
+  min-height: 0;
+  padding-block: 2.5rem;
 }
-.jar-finale-wrap.is-jar-fallback .jar-stage {
-  position: static;
-  height: auto;
-}
-.jar-finale-wrap.is-jar-fallback .jar-canvas {
-  display: none;
-}
-.jar-finale-wrap.is-jar-fallback .jar-fallback-visual {
-  display: block;
-}
+.nh-finale.is-jar-fallback .nh-jar-canvas { display: none; }
+.nh-finale.is-jar-fallback .nh-jar-fallback { display: block; }
 
-.journey-finale__cue {
+.nh-jar-cue {
   position: absolute;
-  bottom: 1rem;
+  bottom: clamp(1rem, 3vw, 2rem);
   left: 50%;
   transform: translateX(-50%);
-  z-index: 5;
-  padding: 0.55rem 1.25rem;
+  z-index: 6;
+  padding: 0.55rem 1.35rem;
   border-radius: 999px;
-  background: #FFFFFF;
-  border: 1.25px solid #111111;
+  background: rgba(255, 252, 245, 0.92);
+  border: 1px solid rgba(214, 134, 30, 0.38);
+  box-shadow: 0 10px 26px -14px rgba(60, 39, 18, 0.35);
   font-family: var(--font-display);
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--ink, #3C2712);
   white-space: nowrap;
   pointer-events: none;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
-/* Portal caustic immersion overlay triggered ONLY on final Enter-the-Honey scroll dive */
-.jar-portal-veil {
+.nh-jar-cue.is-full {
+  background: rgba(214, 134, 30, 0.14);
+  border-color: rgba(214, 134, 30, 0.72);
+  color: var(--honey-deep, #A3460A);
+}
+
+/* Soft edge veil gently harmonizing WebGL caustic portal dive into original #FAF5EA site */
+.nh-portal-veil {
   position: fixed;
   inset: 0;
-  z-index: 40;
+  z-index: 38;
   opacity: 0;
   pointer-events: none;
   background: radial-gradient(circle at 50% 48%,
-    rgba(255, 246, 214, 0.96) 0%,
-    rgba(243, 188, 60, 0.94) 48%,
-    rgba(214, 134, 30, 0.90) 86%,
-    rgba(255, 255, 255, 0.98) 100%);
+    #FFF3C8 0%,
+    #F4BC3E 44%,
+    #E59922 78%,
+    #FAF5EA 100%);
 }
 
 /* ============================================================
-   5. FLOATING CURSOR-FOLLOWING EDITORIAL PREVIEW (Desktop Hover)
-   Clean white frame + crisp thin black outline
+   4. FLOATING CURSOR EDITORIAL PREVIEW (.nh-preview)
    ============================================================ */
-.preview-float {
+.nh-preview {
   position: fixed;
   top: 0;
   left: 0;
   z-index: 80;
-  width: 268px;
+  width: 264px;
   pointer-events: none;
   opacity: 0;
   will-change: transform, opacity;
-  transition: opacity 0.20s var(--ease-soft);
+  transition: opacity 0.2s ease;
 }
 
-.preview-float__card {
-  border-radius: 16px;
+.nh-preview.is-visible { opacity: 1; }
+
+.nh-preview__card {
+  border-radius: 18px;
   overflow: hidden;
-  background: #FFFFFF;
-  border: 1.5px solid #111111;
-  box-shadow: var(--shadow-preview);
+  background: #FFFDF7;
+  border: 1px solid rgba(214, 134, 30, 0.45);
+  box-shadow: 0 22px 44px -18px rgba(60, 39, 18, 0.38);
   transform: scale(0.92);
-  transform-origin: center center;
-  transition: transform 0.24s var(--ease-soft);
+  transition: transform 0.24s ease;
 }
 
-.preview-float.is-visible {
-  opacity: 1;
-}
-.preview-float.is-visible .preview-float__card {
+.nh-preview.is-visible .nh-preview__card {
   transform: scale(1);
 }
 
-.preview-float__media {
+.nh-preview__media {
   width: 100%;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  background: var(--surface-soft, #F8F8F7);
-  border-bottom: 1px solid #111111;
+  background: #F4EAD4;
+  border-bottom: 1px solid rgba(214, 134, 30, 0.22);
 }
 
-.preview-float__media img {
+.nh-preview__media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.preview-float__caption {
+.nh-preview__caption {
   direction: rtl;
-  padding: 0.65rem 0.9rem 0.75rem;
+  text-align: right;
+  padding: 0.65rem 0.9rem 0.78rem;
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 0.16rem;
 }
 
-.preview-float__tag {
+.nh-preview__tag {
   font-family: var(--font-display);
   font-size: 0.74rem;
   font-weight: 700;
-  color: var(--honey-deep, #A95B08);
+  color: var(--honey-deep, #A3460A);
 }
 
-.preview-float__title {
+.nh-preview__title {
   font-family: var(--font-display);
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   font-weight: 800;
-  color: var(--ink, #111111);
+  color: var(--ink, #3C2712);
 }
 
 /* ============================================================
-   6. RESPONSIVE BREAKPOINTS (Tablet & 390px Mobile)
+   5. RESPONSIVE BREAKPOINTS (Tablet & 390px Mobile)
    ============================================================ */
-@media (max-width: 1020px) {
-  .journey-step--node-right .journey-step__cluster {
-    margin-right: 4%;
+@media (max-width: 1040px) {
+  .nh-step--right .nh-step__cluster {
+    margin-left: calc(54% - 24px);
   }
-  .journey-step--node-left .journey-step__cluster {
-    margin-left: 16%;
-  }
-  .journey-stage-05__grid {
-    grid-template-columns: minmax(0, 1fr) minmax(290px, 400px);
+  .nh-step--left .nh-step__cluster {
+    margin-right: calc(54% - 24px);
   }
 }
 
 @media (max-width: 840px) {
-  .journey-tank-wrap {
-    width: min(300px, 84%);
-    transform: translateX(-8%);
+  .nh-hero {
+    min-height: clamp(640px, 92svh, 820px);
+    padding-block: 2rem 2.25rem;
+    background-image:
+      linear-gradient(180deg, rgba(251, 246, 234, 0.92) 0%, rgba(251, 246, 234, 0.72) 48%, rgba(250, 244, 228, 0.16) 80%, #FAF4E4 100%),
+      url("../img/hero-botanical-bg.jpg");
+    background-position: center bottom, right center;
   }
 
-  .journey-pour {
-    padding-bottom: 120px;
+  .nh-hero__inner {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    text-align: center;
   }
 
-  .journey-steps {
-    gap: 5.5rem;
-    padding-bottom: 2.5rem;
+  .nh-hero__copy {
+    justify-self: center;
+    text-align: center;
+    max-width: 100%;
   }
 
-  /* Clean mobile editorial layout: 2D channel runs cleanly along the LEFT side (X ~ 34px),
-     with all nodes docked directly on the rail and crisp RTL copy on the right! */
-  .journey-step--node-right .journey-step__cluster,
-  .journey-step--node-left .journey-step__cluster,
-  .journey-stage-05 .journey-step__cluster {
-    margin-left: 8px;
+  .nh-hero__actions {
+    justify-content: center;
+  }
+
+  .nh-hero__stage {
+    min-height: clamp(290px, 42svh, 360px);
+  }
+
+  .nh-journey__inlet {
+    height: 96px;
+  }
+
+  .nh-journey__intro-strip {
+    margin-left: 70px;
+    margin-right: 0;
+    margin-top: 0.25rem;
+    margin-bottom: 2.25rem;
+    text-align: right;
+  }
+
+  .nh-steps {
+    gap: 4.5rem;
+    padding-bottom: 4.5rem;
+  }
+
+  /* Gentle winding snake layout on mobile: tube stays left (< 72px), clean RTL text fills right */
+  .nh-step--right .nh-step__cluster,
+  .nh-step--left .nh-step__cluster {
+    margin-left: 16px;
     margin-right: 0;
     flex-direction: row;
-    width: calc(100% - 8px);
+    width: calc(100% - 16px);
     gap: 1rem;
   }
 
-  .journey-step--has-loop {
-    padding-bottom: 5.5rem;
+  .nh-step--left .nh-step__cluster {
+    margin-left: 34px;
+    width: calc(100% - 34px);
   }
 
-  .journey-step__node {
+  .nh-step__node {
     width: 44px;
     height: 44px;
-    font-size: 0.98rem;
+    font-size: 0.96rem;
+    box-shadow: 0 0 0 4px #FAF4E4, 0 6px 16px -8px rgba(73, 42, 13, 0.45);
   }
 
-  .journey-step__hint { display: none; }
-  .journey-step__preview-btn { display: inline-flex; }
-  .preview-float { display: none !important; }
+  .nh-step__hint { display: none; }
+  .nh-step__preview-btn { display: inline-flex; }
+  .nh-preview { display: none !important; }
 
-  .journey-stage-05__grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+  .nh-finale {
+    margin-bottom: calc(-1 * (100svh - var(--nav-h, 60px)));
   }
 
-  .journey-stage-05__left {
-    padding-top: 0;
+  .nh-jar-pin {
+    min-height: 420px;
   }
 
-  .jar-finale-wrap {
-    margin-top: 2.25rem;
-    height: clamp(500px, 115svh, 760px);
-  }
-
-  .jar-stage {
-    height: min(460px, calc(100svh - var(--nav-h) - 16px));
+  .nh-jar-cue {
+    font-size: 0.82rem;
+    padding: 0.48rem 1rem;
   }
 }
 
 @media (hover: none), (pointer: coarse) {
-  .journey-step__hint { display: none; }
-  .journey-step__preview-btn { display: inline-flex; }
-  .preview-float { display: none !important; }
+  .nh-step__hint { display: none; }
+  .nh-step__preview-btn { display: inline-flex; }
+  .nh-preview { display: none !important; }
 }
