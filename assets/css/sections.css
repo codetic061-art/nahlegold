@@ -346,12 +346,13 @@
 .section--deco {
   background-color: #FFFFFF;
   background-image:
-    radial-gradient(ellipse 60% 40% at 90% 15%, rgba(240, 196, 106, 0.12) 0%, transparent 70%),
+    linear-gradient(180deg, #FAF4E6 0%, rgba(250, 244, 230, 0.48) 12%, rgba(255, 255, 255, 0) 26%),
+    radial-gradient(ellipse 60% 40% at 90% 18%, rgba(240, 196, 106, 0.14) 0%, transparent 70%),
     radial-gradient(ellipse 50% 35% at 10% 85%, rgba(214, 134, 30, 0.08) 0%, transparent 65%),
     url("../img/honeycomb-pattern.svg");
-  background-repeat: no-repeat, no-repeat, repeat;
-  background-size: auto, auto, 120px 208px;
-  background-position: 90% 15%, 10% 85%, top center;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat;
+  background-size: auto, auto, auto, 120px 208px;
+  background-position: top center, 90% 18%, 10% 85%, top center;
 }
 
 /* ---------- PRODUCT FILTER CHIPS ---------- */

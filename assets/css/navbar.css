@@ -55,15 +55,18 @@
   display: flex;
   flex-direction: row-reverse;       /* links left of the discover CTA */
   align-items: center;
-  gap: clamp(1.2rem, 2.4vw, 2.6rem);
+  flex-wrap: nowrap;
+  gap: clamp(0.85rem, 1.5vw, 1.85rem);
   flex: 0 1 auto;
+  min-width: 0;
 }
 
 .nav-links__list {
   display: flex;
   flex-direction: row-reverse;
   align-items: center;
-  gap: clamp(1.2rem, 2.4vw, 2.4rem);
+  flex-wrap: nowrap;
+  gap: clamp(0.75rem, 1.45vw, 1.75rem);
 }
 
 .nav-link {
@@ -71,10 +74,11 @@
   display: inline-block;
   padding-block: .4rem;
   font-family: var(--font-display);
-  font-size: var(--fs-nav);
+  font-size: clamp(0.9rem, 1.05vw, var(--fs-nav));
   font-weight: 500;
   line-height: 1.4;
   letter-spacing: var(--ls-ar);
+  white-space: nowrap;
   color: var(--ink-soft);
   transition: color var(--t-quick) var(--ease-soft);
 }
@@ -101,9 +105,11 @@
   align-items: center;
   gap: .4rem;
   font-family: var(--font-display);
-  font-size: var(--fs-nav);
+  font-size: clamp(0.9rem, 1.05vw, var(--fs-nav));
   font-weight: 700;
   line-height: 1.4;
+  white-space: nowrap;
+  flex: 0 0 auto;
   color: var(--ink);
   transition: color var(--t-quick) var(--ease-soft);
 }
@@ -116,6 +122,15 @@
   transition: transform var(--t-quick) var(--ease-soft);
 }
 .nav-discover:hover .nav-discover__arrow { transform: translateX(-3px); }
+
+@media (max-width: 1120px) {
+  .nav-shell { gap: .65rem; }
+  .nav-brand { gap: .65rem; }
+  .nav-shop { --btn-px: 1.15rem; font-size: .88rem; }
+  .nav-links { gap: .75rem; }
+  .nav-links__list { gap: .7rem; }
+  .nav-link, .nav-discover { font-size: .88rem; }
+}
 
 /* ---------- mobile trigger ---------- */
 .nav-burger {

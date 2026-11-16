@@ -57,6 +57,10 @@
   --t-cross:    .42s;
 
   --shadow-nav: 0 1px 0 rgba(60, 39, 18, .07), 0 10px 30px -18px rgba(60, 39, 18, .35);
+  --surface-glass: rgba(251, 247, 234, .82);
+  --surface-glass-strong: rgba(251, 247, 234, .92);
+  --border-gold: rgba(214, 134, 30, .26);
+  --shadow-preview: 0 24px 50px -18px rgba(45, 24, 6, .38), 0 4px 16px -6px rgba(214, 134, 30, .28);
 }
 
 @media (max-width: 1180px) {
