@@ -1,5 +1,6 @@
 /**
- * honey-shaders.js — Custom GLSL materials for physically believable liquid honey
+ * honey-shaders.js — Custom GLSL materials for crystal-clear glass on white (#FFFFFF),
+ * liquid honey streams, jar interior amber depth, and the Stage 05 caustic portal.
  * Built for Three.js r172+
  */
 import * as THREE from './vendor/three.module.min.js';
@@ -55,167 +56,33 @@ const SIMPLEX_NOISE_GLSL = /* glsl */ `
 `;
 
 /**
- * Viscous flowing honey stream material for the 3D winding TubeGeometry.
- * Uses vertex attribute `aCurveT` (0..1 along the spline) and `aCenter` (spine center point)
- * so the tube tapers smoothly into a rounded droplet head at `uFlowProgress` without
- * rebuilding geometry every scroll frame!
+ * High-contrast architectural clear glass shader specifically engineered to read
+ * unmistakably against a pure #FFFFFF white backdrop:
+ * - Strong charcoal/espresso Fresnel grazing edges (like real thick refractive glass on white paper)
+ * - Sharp studio specular reflections along shoulder curve & octagonal bevel ribs
+ * - Nearly invisible interior window so inner honey color & brand label shine cleanly
  */
-export function createHoneyStreamMaterial() {
-  return new THREE.ShaderMaterial({
-    transparent: true,
-    depthWrite: true,
-    side: THREE.FrontSide,
-    uniforms: {
-      uTime:         { value: 0 },
-      uFlowProgress: { value: 0.02 },
-      uLightDir:     { value: new THREE.Vector3(0.55, 0.78, 0.45).normalize() },
-      uFillLightDir: { value: new THREE.Vector3(-0.6, 0.25, 0.65).normalize() },
-      uCoreColor:    { value: new THREE.Color('#B55206') },
-      uAmberColor:   { value: new THREE.Color('#E38E16') },
-      uGoldColor:    { value: new THREE.Color('#F9CC5E') },
-      uSpecColor:    { value: new THREE.Color('#FFF8E4') },
-      uOpacity:      { value: 1.0 },
-    },
-    vertexShader: /* glsl */ `
-      attribute float aCurveT;
-      attribute vec3 aCenter;
-
-      uniform float uTime;
-      uniform float uFlowProgress;
-
-      varying float vCurveT;
-      varying vec2 vUv;
-      varying vec3 vNormalW;
-      varying vec3 vWorldPos;
-      varying float vTipMask;
-
-      ${SIMPLEX_NOISE_GLSL}
-
-      void main() {
-        vCurveT = aCurveT;
-        vUv = uv;
-
-        vec3 radial = position - aCenter;
-
-        // Subtle viscous peristalsis bulge traveling along the stream
-        float pulse = snoise(vec3(aCurveT * 14.0 - uTime * 0.55, uv.y * 2.0, uTime * 0.22));
-        float thickWave = 1.0 + 0.12 * pulse;
-
-        // Smooth organic taper at the traveling droplet tip while flowing;
-        // once settled into Stage 05 jar mouth (uFlowProgress -> 1.0), keep continuous pour column
-        float headDist = uFlowProgress - aCurveT;
-        float settle = smoothstep(0.94, 0.995, uFlowProgress);
-        float rawTipScale = smoothstep(-0.002, 0.024, headDist);
-        float tipScale = mix(rawTipScale, 1.0, settle);
-        float bulb = exp(-pow((headDist - 0.016) / 0.013, 2.0)) * 0.28 * step(0.0, headDist) * (1.0 - settle);
-
-        // Gentle taper leaving dipper and narrowing naturally as a pouring ribbon into jar
-        float startTaper = mix(0.24, 1.0, smoothstep(0.0, 0.055, aCurveT));
-        float endTaper   = mix(1.0, 0.72, smoothstep(0.90, 1.0, aCurveT));
-
-        float finalScale = max(0.0001, tipScale * (thickWave * startTaper * endTaper + bulb));
-        vTipMask = mix(smoothstep(-0.003, 0.006, headDist), 1.0, settle);
-
-        vec3 displaced = aCenter + radial * finalScale;
-        vec4 worldPos = modelMatrix * vec4(displaced, 1.0);
-        vWorldPos = worldPos.xyz;
-        vNormalW = normalize(mat3(modelMatrix) * normal);
-
-        gl_Position = projectionMatrix * viewMatrix * worldPos;
-      }
-    `,
-    fragmentShader: /* glsl */ `
-      uniform float uTime;
-      uniform float uFlowProgress;
-      uniform vec3 uLightDir;
-      uniform vec3 uFillLightDir;
-      uniform vec3 uCoreColor;
-      uniform vec3 uAmberColor;
-      uniform vec3 uGoldColor;
-      uniform vec3 uSpecColor;
-      uniform float uOpacity;
-
-      varying float vCurveT;
-      varying vec2 vUv;
-      varying vec3 vNormalW;
-      varying vec3 vWorldPos;
-      varying float vTipMask;
-
-      ${SIMPLEX_NOISE_GLSL}
-
-      void main() {
-        if (vCurveT > uFlowProgress + 0.002 || vTipMask < 0.02) discard;
-
-        vec3 N = normalize(vNormalW);
-        vec3 V = normalize(cameraPosition - vWorldPos);
-
-        // Micro surface viscosity normal perturbation
-        float swirlA = snoise(vec3(vCurveT * 18.0 - uTime * 0.6, vUv.y * 4.0, uTime * 0.15));
-        float swirlB = snoise(vec3(vCurveT * 32.0 - uTime * 0.9, vUv.y * 7.0 + 3.1, uTime * 0.25));
-        N = normalize(N + vec3(swirlA * 0.07, swirlB * 0.07, swirlA * 0.05));
-
-        float NdotV = clamp(dot(N, V), 0.0, 1.0);
-        float fresnel = pow(1.0 - NdotV, 2.5);
-
-        // Beer-Lambert optical thickness: bright backlit gold rims + glowing amber core
-        float thickness = pow(NdotV, 0.85);
-        vec3 bodyColor = mix(uGoldColor, uAmberColor, smoothstep(0.15, 0.72, thickness));
-        bodyColor = mix(bodyColor, uCoreColor, smoothstep(0.68, 1.0, thickness) * 0.58);
-
-        // Internal flowing honey ribbons
-        float ribbons = smoothstep(-0.1, 0.65, swirlA * 0.65 + swirlB * 0.35);
-        bodyColor = mix(bodyColor, uGoldColor * 1.12, ribbons * (1.0 - thickness * 0.50) * 0.48);
-
-        // Tiny suspended golden air bubbles flowing down the stream
-        float bNoise = snoise(vec3(vCurveT * 58.0 - uTime * 1.15, vUv.y * 14.0, 2.4));
-        float bubbles = smoothstep(0.73, 0.88, bNoise);
-        bodyColor += uSpecColor * bubbles * 0.42;
-
-        // Primary studio key light + soft fill + crisp specular reflections
-        float diffKey  = max(dot(N, uLightDir), 0.0);
-        float diffFill = max(dot(N, uFillLightDir), 0.0);
-        vec3 H1 = normalize(uLightDir + V);
-        vec3 H2 = normalize(uFillLightDir + V);
-        float spec1 = pow(max(dot(N, H1), 0.0), 110.0) * 1.38;
-        float spec2 = pow(max(dot(N, H2), 0.0), 42.0) * 0.48;
-        float broadSheen = pow(max(dot(N, H1), 0.0), 14.0) * 0.28;
-
-        // Subsurface backlighting warmth
-        float backLight = pow(clamp(dot(-uLightDir, V), 0.0, 1.0), 2.5) * 0.38;
-
-        vec3 color = bodyColor * (0.74 + diffKey * 0.46 + diffFill * 0.24 + backLight);
-        color += mix(uGoldColor, uSpecColor, 0.65) * fresnel * 0.64;
-        color += uSpecColor * (spec1 + spec2 + broadSheen);
-
-        // Subtle translucent edge alpha so it feels truly liquid, denser in core
-        float alpha = mix(0.86, 0.98, thickness) * vTipMask * uOpacity;
-
-        gl_FragColor = vec4(color, alpha);
-      }
-    `,
-  });
-}
-
-/**
- * Faint ivory-gold trace filament showing the winding curve path gently ahead
- * of the active golden stream (echoing Reference Image B's soft future path).
- */
-export function createPathGuideMaterial() {
+export function createClearGlassMaterial({ backSide = false } = {}) {
   return new THREE.ShaderMaterial({
     transparent: true,
     depthWrite: false,
+    side: backSide ? THREE.BackSide : THREE.FrontSide,
     uniforms: {
-      uFlowProgress: { value: 0.02 },
-      uColor:        { value: new THREE.Color('#B59A72') },
-      uOpacity:      { value: 0.16 },
+      uKeyDir:   { value: new THREE.Vector3(0.58, 0.72, 0.45).normalize() },
+      uFillDir:  { value: new THREE.Vector3(-0.68, 0.35, 0.48).normalize() },
+      uTopDir:   { value: new THREE.Vector3(0.08, 0.94, 0.32).normalize() },
+      uRimDark:  { value: new THREE.Color('#1B1610') },
+      uRimCool:  { value: new THREE.Color('#473B2D') },
+      uGlassTint:{ value: new THREE.Color('#EBE6DD') },
+      uSpecColor:{ value: new THREE.Color('#FFFFFF') },
+      uIsBack:   { value: backSide ? 1.0 : 0.0 },
     },
     vertexShader: /* glsl */ `
-      attribute float aCurveT;
-      varying float vCurveT;
-      varying vec3 vNormalW;
       varying vec3 vWorldPos;
+      varying vec3 vNormalW;
+      varying vec3 vLocalPos;
       void main() {
-        vCurveT = aCurveT;
+        vLocalPos = position;
         vec4 wp = modelMatrix * vec4(position, 1.0);
         vWorldPos = wp.xyz;
         vNormalW = normalize(mat3(modelMatrix) * normal);
@@ -223,19 +90,56 @@ export function createPathGuideMaterial() {
       }
     `,
     fragmentShader: /* glsl */ `
-      uniform float uFlowProgress;
-      uniform vec3 uColor;
-      uniform float uOpacity;
-      varying float vCurveT;
-      varying vec3 vNormalW;
+      uniform vec3 uKeyDir;
+      uniform vec3 uFillDir;
+      uniform vec3 uTopDir;
+      uniform vec3 uRimDark;
+      uniform vec3 uRimCool;
+      uniform vec3 uGlassTint;
+      uniform vec3 uSpecColor;
+      uniform float uIsBack;
+
       varying vec3 vWorldPos;
+      varying vec3 vNormalW;
+      varying vec3 vLocalPos;
+
       void main() {
-        if (vCurveT < uFlowProgress - 0.01) discard;
+        vec3 N = normalize(vNormalW);
+        if (uIsBack > 0.5) N = -N;
         vec3 V = normalize(cameraPosition - vWorldPos);
-        float rim = 1.0 - abs(dot(normalize(vNormalW), V));
-        float aheadFade = smoothstep(uFlowProgress - 0.01, uFlowProgress + 0.05, vCurveT);
-        float tailFade = 1.0 - smoothstep(0.88, 1.0, vCurveT);
-        gl_FragColor = vec4(uColor, uOpacity * (0.45 + rim * 0.55) * aheadFade * tailFade);
+
+        float NdotV = clamp(abs(dot(N, V)), 0.0, 1.0);
+        float rim = pow(1.0 - NdotV, 1.9);
+        float hardEdge = pow(1.0 - NdotV, 3.6);
+
+        // Thicker glass accumulation at bottom punt, jar neck/lip, and upper shoulder
+        float puntBand = 1.0 - smoothstep(-1.04, -0.74, vLocalPos.y);
+        float neckBand = smoothstep(0.68, 0.98, vLocalPos.y);
+        float thickMass = max(puntBand * 0.65, neckBand * 0.45);
+
+        // Dark negative-fill edge refraction so glass perimeter stands out clearly on #FFFFFF white
+        vec3 col = mix(uGlassTint, uRimCool, rim * 0.72 + thickMass * 0.35);
+        col = mix(col, uRimDark, hardEdge * 0.88 + puntBand * rim * 0.35);
+
+        // Vertical facet highlight bands & sharp studio softbox reflections
+        vec3 H1 = normalize(uKeyDir + V);
+        vec3 H2 = normalize(uFillDir + V);
+        vec3 Htop = normalize(uTopDir + V);
+        float spec1 = pow(max(dot(N, H1), 0.0), 150.0) * 1.45;
+        float spec2 = pow(max(dot(N, H2), 0.0), 90.0) * 0.85;
+        float specTop = pow(max(dot(N, Htop), 0.0), 120.0) * 0.70;
+        float strip = smoothstep(0.86, 0.96, abs(N.x + N.z * 0.28)) * 0.22;
+
+        float totalSpec = (spec1 + spec2 + specTop + strip) * (1.0 - uIsBack * 0.68);
+        col = mix(col, uSpecColor, clamp(totalSpec, 0.0, 1.0));
+
+        // Transparency: clear window in center face, opaque dark silhouette along refractive walls
+        float baseAlpha = uIsBack > 0.5 ? 0.07 : 0.09;
+        float alpha = baseAlpha + rim * (uIsBack > 0.5 ? 0.32 : 0.48) + hardEdge * 0.32 + thickMass * 0.16;
+        alpha += clamp(totalSpec * 0.78, 0.0, 0.72);
+        alpha = clamp(alpha, 0.0, 0.94);
+
+        gl_FragColor = vec4(col, alpha);
       }
     `,
   });
@@ -244,8 +148,6 @@ export function createPathGuideMaterial() {
 /**
  * Liquid honey inside the glass jar with scroll-controlled fill level (`uFillLevel`),
  * realistic capillary meniscus, surface ripple, and warm golden amber absorption.
- * Kept opaque (`transparent: false`) so it renders reliably inside the clear outer
- * glass shell without transmission background bleed-through.
  */
 export function createJarHoneyMaterial() {
   return new THREE.ShaderMaterial({
@@ -254,13 +156,13 @@ export function createJarHoneyMaterial() {
     side: THREE.DoubleSide,
     uniforms: {
       uTime:       { value: 0 },
-      uFillLevel:  { value: 0.88 },  // 0..1 height inside jar body
-      uMinY:       { value: -0.95 },
-      uMaxY:       { value: 0.85 },
+      uFillLevel:  { value: 0.72 },
+      uMinY:       { value: -0.94 },
+      uMaxY:       { value: 0.84 },
       uRipple:     { value: 0.0 },
-      uCoreColor:  { value: new THREE.Color('#7B2C02') },
-      uMidColor:   { value: new THREE.Color('#D57B0E') },
-      uBrightGold: { value: new THREE.Color('#F8CB5C') },
+      uCoreColor:  { value: new THREE.Color('#7C2D03') },
+      uMidColor:   { value: new THREE.Color('#D97E0F') },
+      uBrightGold: { value: new THREE.Color('#FAD05E') },
       uSpecColor:  { value: new THREE.Color('#FFF8E4') },
       uLightDir:   { value: new THREE.Vector3(0.58, 0.72, 0.42).normalize() },
     },
@@ -297,9 +199,8 @@ export function createJarHoneyMaterial() {
       void main() {
         float fillY = mix(uMinY, uMaxY, clamp(uFillLevel, 0.0, 1.0));
         float distFromCenter = length(vLocalPos.xz);
-        // Subtle upward capillary meniscus near the glass edge + gentle pour wave
-        float wave = sin(distFromCenter * 9.0 - uTime * 3.8) * 0.016 * (0.25 + uRipple);
-        float meniscus = smoothstep(0.45, 0.85, distFromCenter) * 0.032;
+        float wave = sin(distFromCenter * 10.0 - uTime * 4.2) * 0.015 * (0.25 + uRipple);
+        float meniscus = smoothstep(0.42, 0.84, distFromCenter) * 0.032;
         float surfaceY = fillY + wave + meniscus;
 
         if (vLocalPos.y > surfaceY || uFillLevel <= 0.01) discard;
@@ -307,32 +208,27 @@ export function createJarHoneyMaterial() {
         vec3 N = normalize(vNormalW);
         vec3 V = normalize(cameraPosition - vWorldPos);
         float NdotV = clamp(abs(dot(N, V)), 0.0, 1.0);
-        float fresnel = pow(1.0 - NdotV, 2.1);
+        float fresnel = pow(1.0 - NdotV, 2.0);
 
-        // Height gradient + optical core depth (rich warm amber at center, sunlit gold toward rims)
         float hNorm = clamp((vLocalPos.y - uMinY) / max(0.001, (surfaceY - uMinY)), 0.0, 1.0);
         vec3 col = mix(uCoreColor, uMidColor, 0.30 + 0.58 * hNorm);
-        col = mix(col, uBrightGold, fresnel * 0.82 + smoothstep(0.76, 1.0, hNorm) * 0.38);
+        col = mix(col, uBrightGold, fresnel * 0.85 + smoothstep(0.75, 1.0, hNorm) * 0.36);
 
-        // Sunlit subsurface side bounce so jar glows like Reference Image A
-        float sideGlow = pow(max(0.0, N.x * -0.5 + N.z * 0.3), 1.6);
-        col += uBrightGold * sideGlow * 0.28;
+        float sideGlow = pow(max(0.0, N.x * -0.45 + N.z * 0.35), 1.5);
+        col += uBrightGold * sideGlow * 0.25;
 
-        // Slow rising micro-bubbles inside the honey jar
-        float b = snoise(vec3(vLocalPos.x * 10.5, vLocalPos.y * 10.5 - uTime * 0.22, vLocalPos.z * 10.5));
-        float bubble = smoothstep(0.74, 0.88, b);
-        col += uSpecColor * bubble * 0.32;
+        float b = snoise(vec3(vLocalPos.x * 11.0, vLocalPos.y * 11.0 - uTime * 0.28, vLocalPos.z * 11.0));
+        float bubble = smoothstep(0.72, 0.88, b);
+        col += uSpecColor * bubble * 0.34;
 
-        // Crisp vertical studio speculars
         float diff = max(dot(N, uLightDir), 0.0);
         vec3 H = normalize(uLightDir + V);
-        float spec = pow(max(dot(N, H), 0.0), 96.0) * 1.15;
-        col *= (0.85 + diff * 0.35);
-        col += uSpecColor * (spec + fresnel * 0.22);
+        float spec = pow(max(dot(N, H), 0.0), 105.0) * 1.2;
+        col *= (0.86 + diff * 0.34);
+        col += uSpecColor * (spec + fresnel * 0.18);
 
-        // Top meniscus golden highlight line
-        float topEdge = smoothstep(surfaceY - 0.05, surfaceY, vLocalPos.y);
-        col += uBrightGold * topEdge * 0.42;
+        float topEdge = smoothstep(surfaceY - 0.055, surfaceY, vLocalPos.y);
+        col += uBrightGold * topEdge * 0.40;
 
         gl_FragColor = vec4(col, 1.0);
       }
@@ -341,11 +237,11 @@ export function createJarHoneyMaterial() {
 }
 
 /**
- * Glossy optical honey shader for drips, teardrops, honey puddle, dipper glaze,
- * and filled honeycomb cells — delivers warm golden amber translucency & crisp
- * studio speculars without milky WebGL transmission wash-out.
+ * Glossy optical honey shader for continuous flowing 3D streams (from metal drum tap
+ * and into Stage 05 jar mouth), falling ripples, and liquid meniscus caps.
+ * Features live upward/downward liquid shear wave perturbations so streams look fluid & alive.
  */
-export function createLiquidHoneyMaterial() {
+export function createLiquidHoneyMaterial({ animatedFlow = false } = {}) {
   return new THREE.ShaderMaterial({
     transparent: false,
     depthWrite: true,
@@ -354,18 +250,42 @@ export function createLiquidHoneyMaterial() {
       uTime:         { value: 0 },
       uLightDir:     { value: new THREE.Vector3(0.55, 0.78, 0.48).normalize() },
       uFillLightDir: { value: new THREE.Vector3(-0.65, 0.32, 0.58).normalize() },
-      uCoreColor:    { value: new THREE.Color('#B85605') },
-      uMidColor:     { value: new THREE.Color('#EA9418') },
+      uCoreColor:    { value: new THREE.Color('#B24E04') },
+      uMidColor:     { value: new THREE.Color('#E89314') },
       uGoldColor:    { value: new THREE.Color('#FCE06E') },
-      uSpecColor:    { value: new THREE.Color('#FFF8E4') },
+      uSpecColor:    { value: new THREE.Color('#FFFBF0') },
+      uAnimatedFlow: { value: animatedFlow ? 1.0 : 0.0 },
     },
     vertexShader: /* glsl */ `
+      uniform float uTime;
+      uniform float uAnimatedFlow;
+
       varying vec3 vWorldPos;
       varying vec3 vNormalW;
       varying vec3 vLocalPos;
+      varying vec2 vUv;
+
+      ${SIMPLEX_NOISE_GLSL}
+
       void main() {
-        vLocalPos = position;
-        vec4 wp = modelMatrix * vec4(position, 1.0);
+        vUv = uv;
+        vec3 pos = position;
+
+        if (uAnimatedFlow > 0.5) {
+          // Subtle helical coiling & peristalsis thickness pulse sliding downward continuously
+          float vCoord = uv.y;
+          float n = snoise(vec3(pos.x * 4.0, vCoord * 5.0 + uTime * 2.1, pos.z * 4.0));
+          float pulse = 1.0 + n * 0.11;
+          pos.x *= pulse;
+          pos.z *= pulse;
+          // Delicate viscous sway increases gently toward lower end
+          float lowerWeight = 1.0 - smoothstep(0.15, 1.0, vCoord);
+          pos.x += sin(uTime * 3.1 + vCoord * 8.0) * 0.012 * lowerWeight;
+          pos.z += cos(uTime * 2.5 + vCoord * 7.0) * 0.008 * lowerWeight;
+        }
+
+        vLocalPos = pos;
+        vec4 wp = modelMatrix * vec4(pos, 1.0);
         vWorldPos = wp.xyz;
         vNormalW = normalize(mat3(modelMatrix) * normal);
         gl_Position = projectionMatrix * viewMatrix * wp;
@@ -379,10 +299,12 @@ export function createLiquidHoneyMaterial() {
       uniform vec3 uMidColor;
       uniform vec3 uGoldColor;
       uniform vec3 uSpecColor;
+      uniform float uAnimatedFlow;
 
       varying vec3 vWorldPos;
       varying vec3 vNormalW;
       varying vec3 vLocalPos;
+      varying vec2 vUv;
 
       ${SIMPLEX_NOISE_GLSL}
 
@@ -390,17 +312,22 @@ export function createLiquidHoneyMaterial() {
         vec3 N = normalize(vNormalW);
         vec3 V = normalize(cameraPosition - vWorldPos);
 
-        float swirl = snoise(vec3(vWorldPos * 3.5 - vec3(0.0, uTime * 0.25, 0.0)));
-        N = normalize(N + vec3(swirl * 0.04, swirl * 0.03, swirl * 0.04));
+        float scrollSpeed = uAnimatedFlow > 0.5 ? 2.6 : 0.35;
+        float swirlA = snoise(vec3(vWorldPos.x * 5.0, vWorldPos.y * 5.2 + uTime * scrollSpeed, vWorldPos.z * 5.0));
+        float swirlB = snoise(vec3(vWorldPos.x * 11.0, vWorldPos.y * 11.0 + uTime * (scrollSpeed * 1.45), vWorldPos.z * 11.0));
+        N = normalize(N + vec3(swirlA * 0.06, swirlB * 0.03, swirlA * 0.06));
 
         float NdotV = clamp(dot(N, V), 0.0, 1.0);
-        float fresnel = pow(1.0 - NdotV, 2.2);
+        float fresnel = pow(1.0 - NdotV, 2.15);
 
-        // Beer-Lambert optical golden core to sunlit amber rim (deepens toward horizontal pool centers too)
         float upward = smoothstep(0.45, 0.96, max(0.0, N.y));
-        float thickness = mix(pow(NdotV, 0.82), 0.86, upward * 0.72);
+        float thickness = mix(pow(NdotV, 0.85), 0.85, upward * 0.72);
         vec3 col = mix(uGoldColor, uMidColor, smoothstep(0.14, 0.72, thickness));
-        col = mix(col, uCoreColor, smoothstep(0.64, 1.0, thickness) * 0.58);
+        col = mix(col, uCoreColor, smoothstep(0.62, 1.0, thickness) * 0.62);
+
+        // Internal luminous honey veins flowing downward
+        float streak = smoothstep(0.15, 0.78, swirlA * 0.65 + swirlB * 0.35);
+        col = mix(col, uGoldColor * 1.10, streak * (1.0 - thickness * 0.45) * 0.38);
 
         float diffKey = max(dot(N, uLightDir), 0.0);
         float diffFill = max(dot(N, uFillLightDir), 0.0);
@@ -408,13 +335,13 @@ export function createLiquidHoneyMaterial() {
         vec3 H1 = normalize(uLightDir + V);
         vec3 H2 = normalize(uFillLightDir + V);
         vec3 Htop = normalize(topDir + V);
-        float spec1 = pow(max(dot(N, H1), 0.0), 120.0) * 1.48;
-        float spec2 = pow(max(dot(N, H2), 0.0), 48.0) * 0.52;
-        float specTop = pow(max(dot(N, Htop), 0.0), 72.0) * 0.78 * upward;
-        float sheen = pow(max(dot(N, H1), 0.0), 16.0) * 0.30;
+        float spec1 = pow(max(dot(N, H1), 0.0), 125.0) * 1.55;
+        float spec2 = pow(max(dot(N, H2), 0.0), 50.0) * 0.52;
+        float specTop = pow(max(dot(N, Htop), 0.0), 75.0) * 0.80 * upward;
+        float sheen = pow(max(dot(N, H1), 0.0), 16.0) * 0.32;
 
-        col = col * (0.80 + diffKey * 0.42 + diffFill * 0.24);
-        col += mix(uGoldColor, uSpecColor, 0.58) * fresnel * 0.54;
+        col = col * (0.82 + diffKey * 0.42 + diffFill * 0.24);
+        col += mix(uGoldColor, uSpecColor, 0.56) * fresnel * 0.52;
         col += uSpecColor * (spec1 + spec2 + specTop + sheen);
 
         gl_FragColor = vec4(col, 1.0);
@@ -424,8 +351,8 @@ export function createLiquidHoneyMaterial() {
 }
 
 /**
- * Full-screen golden caustic shader used on the portal dome during the final
- * "Enter the Honey Jar" transition (`t = 0.90 -> 1.00`).
+ * Full-screen golden caustic shader used during the Stage 05 finale
+ * "Enter the Honey Jar" transition.
  */
 export function createCausticPortalMaterial() {
   return new THREE.ShaderMaterial({
@@ -436,8 +363,8 @@ export function createCausticPortalMaterial() {
       uTime:     { value: 0 },
       uStrength: { value: 0.0 },
       uGoldA:    { value: new THREE.Color('#D6861E') },
-      uGoldB:    { value: new THREE.Color('#F7CA63') },
-      uCream:    { value: new THREE.Color('#F8F1DE') },
+      uGoldB:    { value: new THREE.Color('#F8CC5B') },
+      uCream:    { value: new THREE.Color('#FFFFFF') },
     },
     vertexShader: /* glsl */ `
       varying vec2 vUv;
@@ -461,23 +388,20 @@ export function createCausticPortalMaterial() {
         vec2 p = vUv * 2.0 - 1.0;
         float r = length(p);
 
-        // Swirling honey caustics as camera plunges through the golden surface
         float angle = atan(p.y, p.x);
-        float n1 = snoise(vec3(p * 2.4 + vec2(cos(angle), sin(angle)) * 0.35, uTime * 0.32));
-        float n2 = snoise(vec3(p * 4.8 - vec2(0.0, uTime * 0.22), uTime * 0.45));
+        float n1 = snoise(vec3(p * 2.4 + vec2(cos(angle), sin(angle)) * 0.35, uTime * 0.36));
+        float n2 = snoise(vec3(p * 4.8 - vec2(0.0, uTime * 0.24), uTime * 0.48));
         float caustic = smoothstep(0.05, 0.72, n1 * 0.65 + n2 * 0.35 + 0.32);
 
-        // Tunnel radial glow
         float centerBright = 1.0 - smoothstep(0.0, 1.15, r);
         vec3 col = mix(uGoldA, uGoldB, caustic);
-        col = mix(col, uCream, clamp(centerBright * 0.65 + smoothstep(0.55, 1.0, uStrength) * 0.75, 0.0, 1.0));
+        col = mix(col, uCream, clamp(centerBright * 0.58 + smoothstep(0.55, 1.0, uStrength) * 0.80, 0.0, 1.0));
 
-        // Soft luminous bubbles
         float b = smoothstep(0.74, 0.9, snoise(vec3(p * 7.5, uTime * 0.4)));
-        col += vec3(1.0, 0.96, 0.84) * b * 0.4;
+        col += vec3(1.0, 0.96, 0.84) * b * 0.42;
 
-        float alpha = smoothstep(0.0, 0.35, uStrength) * (1.0 - smoothstep(0.84, 1.0, uStrength));
-        gl_FragColor = vec4(col, alpha * 0.92);
+        float alpha = smoothstep(0.0, 0.32, uStrength) * (1.0 - smoothstep(0.84, 1.0, uStrength));
+        gl_FragColor = vec4(col, alpha * 0.94);
       }
     `,
   });

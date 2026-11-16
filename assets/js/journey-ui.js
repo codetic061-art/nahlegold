@@ -1,6 +1,6 @@
 /**
- * journey-ui.js — Editorial Storytelling Stage Sync, Desktop Cursor-Following
- * Image Previews (non-occluding, clamped, zero-flicker), and Touch Tap-to-Preview.
+ * journey-ui.js — 2D Editorial Stage Highlighting, Non-Occluding Desktop
+ * Cursor-Following Image Previews, and Mobile Tap-to-Preview.
  */
 (function initJourneyUI() {
   'use strict';
@@ -10,7 +10,6 @@
   const previewTag = document.getElementById('journeyPreviewTag');
   const previewTitle = document.getElementById('journeyPreviewTitle');
   const steps = Array.from(document.querySelectorAll('.journey-step'));
-  const railDots = Array.from(document.querySelectorAll('.journey-rail__dot'));
   const triggers = Array.from(document.querySelectorAll('[data-preview-trigger]'));
 
   const STAGE_META = {
@@ -46,7 +45,7 @@
     },
   };
 
-  // Preload optimized local stage images cleanly once DOM settles
+  // Preload local editorial preview images cleanly once browser is idle
   const preloaded = new Set();
   function preloadStageImages() {
     Object.values(STAGE_META).forEach((m) => {
@@ -85,21 +84,21 @@
 
   function getNavHeight() {
     const raw = getComputedStyle(document.documentElement).getPropertyValue('--nav-h');
-    return parseFloat(raw) || 76;
+    return parseFloat(raw) || 74;
   }
 
   function computeNonOccludingPosition(clientX, clientY, triggerEl) {
-    const cardW = previewEl ? previewEl.offsetWidth || 276 : 276;
-    const cardH = previewEl ? previewEl.offsetHeight || 228 : 228;
+    const cardW = previewEl ? previewEl.offsetWidth || 268 : 268;
+    const cardH = previewEl ? previewEl.offsetHeight || 220 : 220;
     const navH = getNavHeight();
     const pad = 16;
 
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-    const cardEl = triggerEl ? triggerEl.closest('.journey-step__card') : null;
-    const cardRect = cardEl ? cardEl.getBoundingClientRect() : null;
+    const copyEl = triggerEl ? triggerEl.closest('.journey-step__cluster') : null;
+    const copyRect = copyEl ? copyEl.getBoundingClientRect() : null;
     const trigRect = triggerEl ? triggerEl.getBoundingClientRect() : null;
-    const avoidRect = cardRect || trigRect;
+    const avoidRect = copyRect || trigRect;
 
     let x = clientX + 26;
     let y = clientY - cardH * 0.45;
@@ -107,33 +106,23 @@
     if (avoidRect) {
       const spaceLeft = avoidRect.left - pad;
       const spaceRight = vw - pad - avoidRect.right;
-      const cardCenter = avoidRect.left + avoidRect.width * 0.5;
-      const preferLeft = cardCenter > vw * 0.5;
+      const center = avoidRect.left + avoidRect.width * 0.5;
+      const preferLeft = center > vw * 0.5;
 
-      // Keep floating preview smoothly adjacent to pointer & strictly outside the milestone card
       if (preferLeft && spaceLeft >= cardW + 20) {
         const anchorLeft = avoidRect.left - cardW - 22;
-        const nudgeX = Math.max(-44, Math.min(0, (clientX - avoidRect.right) * 0.14));
+        const nudgeX = Math.max(-36, Math.min(0, (clientX - avoidRect.right) * 0.12));
         x = Math.max(pad, Math.min(anchorLeft, anchorLeft + nudgeX));
       } else if (!preferLeft && spaceRight >= cardW + 20) {
         const anchorRight = avoidRect.right + 22;
-        const nudgeX = Math.max(0, Math.min(44, (clientX - avoidRect.left) * 0.14));
+        const nudgeX = Math.max(0, Math.min(36, (clientX - avoidRect.left) * 0.12));
         x = Math.min(vw - cardW - pad, Math.max(anchorRight, anchorRight + nudgeX));
       } else if (spaceLeft >= cardW + 20) {
         x = avoidRect.left - cardW - 22;
       } else if (spaceRight >= cardW + 20) {
         x = avoidRect.right + 22;
-      } else {
-        // Vertical dodge outside the hovered trigger/title if viewport is very narrow
-        const topSpace = avoidRect.top - (navH + pad);
-        const botSpace = vh - pad - avoidRect.bottom;
-        if (topSpace >= cardH + 14) {
-          y = avoidRect.top - cardH - 14;
-        } else if (botSpace >= cardH + 14) {
-          y = avoidRect.bottom + 14;
-        } else if (trigRect) {
-          y = trigRect.top > cardH + navH + 20 ? trigRect.top - cardH - 16 : trigRect.bottom + 16;
-        }
+      } else if (trigRect) {
+        y = trigRect.top > cardH + navH + 20 ? trigRect.top - cardH - 16 : trigRect.bottom + 16;
       }
     } else if (x + cardW > vw - pad) {
       x = clientX - cardW - 26;
@@ -155,7 +144,7 @@
     floatState.currY += (floatState.targetY - floatState.currY) * ease;
     floatState.velX = (floatState.currX - prevX) * 0.35;
 
-    const tilt = reducedQuery.matches ? 0 : Math.max(-4.5, Math.min(4.5, floatState.velX));
+    const tilt = reducedQuery.matches ? 0 : Math.max(-4.0, Math.min(4.0, floatState.velX));
     if (previewEl) {
       previewEl.style.transform = `translate3d(${floatState.currX.toFixed(1)}px, ${floatState.currY.toFixed(1)}px, 0) rotate(${tilt.toFixed(2)}deg)`;
     }
@@ -210,11 +199,8 @@
         previewEl.setAttribute('aria-hidden', 'true');
       }
     };
-    if (immediate) {
-      hideNow();
-    } else {
-      floatState.hideTimer = window.setTimeout(hideNow, 75);
-    }
+    if (immediate) hideNow();
+    else floatState.hideTimer = window.setTimeout(hideNow, 75);
   }
 
   /* ==============================================================
@@ -274,7 +260,7 @@
     });
 
     trigger.addEventListener('click', (e) => {
-      if (hoverQuery.matches && window.innerWidth > 900) return;
+      if (hoverQuery.matches && window.innerWidth > 840) return;
       e.preventDefault();
       toggleMobilePreview(stepEl);
     });
@@ -287,7 +273,6 @@
     });
   });
 
-  // Hide preview immediately if scrolled out from under cursor or pointer leaves document
   window.addEventListener('scroll', () => {
     if (!floatState.active || !floatState.activeTrigger) return;
     const r = floatState.activeTrigger.getBoundingClientRect();
@@ -303,61 +288,14 @@
   window.addEventListener('blur', () => scheduleHideFloatingPreview(true));
 
   /* ==============================================================
-     3. ACTIVE STAGE & PROGRESS RAIL SYNC
+     3. ACTIVE STAGE HIGHLIGHT SYNC
      ============================================================== */
-  function setActiveStage(stageNum) {
-    steps.forEach((step) => {
-      const s = Number(step.getAttribute('data-stage-idx'));
-      step.classList.toggle('is-active', s === stageNum);
-    });
-    railDots.forEach((dot) => {
-      const s = Number(dot.getAttribute('data-rail-stage'));
-      const isActive = s === stageNum;
-      dot.classList.toggle('is-active', isActive);
-      dot.setAttribute('aria-current', isActive ? 'step' : 'false');
-    });
-  }
-
   window.addEventListener('honey:stage', (e) => {
     if (e.detail && typeof e.detail.stage === 'number') {
-      setActiveStage(e.detail.stage);
-    }
-  });
-
-  // IntersectionObserver fallback (also handles static/reduced-motion mode)
-  const stepObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-revealed');
-          if (document.getElementById('experienceWrap')?.classList.contains('is-static-fallback')) {
-            const idx = Number(entry.target.getAttribute('data-stage-idx'));
-            if (idx) setActiveStage(idx);
-          }
-        }
+      const s = e.detail.stage;
+      steps.forEach((step) => {
+        step.classList.toggle('is-active', Number(step.getAttribute('data-stage-idx')) === s);
       });
-    },
-    { threshold: 0.25 }
-  );
-  steps.forEach((step) => stepObserver.observe(step));
-
-  // If reduced-motion / no-WebGL fallback triggers, open inline thumbnails gracefully
-  window.addEventListener('honey:fallback', () => {
-    steps.forEach((step) => {
-      const box = step.querySelector('.journey-step__mobile-preview');
-      if (box) box.hidden = false;
-      step.classList.add('is-revealed', 'is-preview-open');
-    });
-  });
-
-  // Clicking a rail dot smoothly navigates to that stage
-  railDots.forEach((dot) => {
-    dot.addEventListener('click', () => {
-      const targetId = dot.getAttribute('data-target');
-      const target = targetId ? document.getElementById(targetId) : null;
-      if (target) {
-        target.scrollIntoView({ behavior: reducedQuery.matches ? 'auto' : 'smooth', block: 'center' });
-      }
-    });
+    }
   });
 })();

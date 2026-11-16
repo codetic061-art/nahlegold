@@ -1,84 +1,78 @@
 /* ============================================================
-   tokens.css — Nahl Al Thahab design system
-   Palette values sampled directly from the client's reference
-   design (Designing_Arabic_honey_landing_page_*.jpeg) and from
-   the hero videos, so the HTML chrome and the baked-in video
-   art share one continuous colour world.
+   tokens.css — Nahl Al Thahab Editorial Design System
+   Minimalist clean white (#FFFFFF) canvas, sharp black (#111111)
+   typography and thin outlines, and natural golden honey accents.
    ============================================================ */
 
 :root {
   /* ---- surfaces --------------------------------------------------- */
-  --ivory:          #F8F1DE;   /* page / navbar warm creamy ivory (sampled) */
-  --ivory-soft:     #FBF7EA;
-  --ivory-deep:     #F1E6CD;
-  --tan:            #E4D8BE;   /* the hero video's own background */
-  --tan-deep:       #DACCB2;
+  --bg:             #FFFFFF;
+  --surface:        #FFFFFF;
+  --surface-soft:   #F8F8F7;
+  --surface-muted:  #F2F1EE;
+  --ivory:          #FFFFFF;
+  --ivory-soft:     #FAFAFA;
+  --ivory-deep:     #EFECE6;
+  --tan:            #EAE7E1;
+  --tan-deep:       #DDD8CE;
 
-  /* ---- ink -------------------------------------------------------- */
-  --ink:            #3C2712;   /* deep warm brown — never pure black */
-  --ink-soft:       #6B5334;
-  --ink-mute:       #907B5B;
+  /* ---- ink & editorial outlines ---------------------------------- */
+  --ink:            #111111;   /* crisp architectural black typography */
+  --ink-strong:     #000000;
+  --ink-soft:       #404040;
+  --ink-mute:       #6E6E6E;
+  --outline:        #111111;
+  --hairline:       rgba(17, 17, 17, 0.14);
+  --hairline-med:   rgba(17, 17, 17, 0.24);
 
-  /* ---- brand browns ---------------------------------------------- */
-  --brown:          #492A0D;   /* shop button fill (sampled) */
-  --brown-deep:     #331C07;
-  --brown-lift:     #5C3A16;
-  --cream:          #FAEDDB;   /* label / button text on brown */
+  /* ---- dark fills / accents -------------------------------------- */
+  --brown:          #111111;   /* primary editorial black fill */
+  --brown-deep:     #000000;
+  --brown-lift:     #262626;
+  --cream:          #FFFFFF;
 
-  /* ---- honey ------------------------------------------------------ */
-  --honey:          #D6861E;   /* honey river (sampled) */
-  --honey-mid:      #C8821F;
-  --honey-deep:     #A3460A;   /* honeycomb shadow (sampled) */
-  --honey-light:    #E8A93C;
-  --honey-glow:     #F0C46A;
+  /* ---- honey gold ------------------------------------------------- */
+  --honey:          #E39617;
+  --honey-mid:      #D6861E;
+  --honey-deep:     #A95B08;
+  --honey-light:    #F2BC3C;
+  --honey-glow:     #FAD86F;
+  --channel-fill:   #C8C4BB;   /* darker interior inside the two thin black channel outlines */
 
   /* ---- type ------------------------------------------------------- */
   --font-display: "Tajawal", "Almarai", "Segoe UI", system-ui, sans-serif;
   --font-body:    "Almarai", "Tajawal", "Segoe UI", system-ui, sans-serif;
 
-  --fs-nav:     1.0625rem;   /* 17px */
-  --fs-btn:     1rem;
+  --fs-nav:     1.025rem;
+  --fs-btn:     0.98rem;
   --fs-body:    1rem;
   --lh-tight:   1.25;
   --ls-ar:      0;           /* Arabic must never be letter-spaced */
 
   /* ---- layout ----------------------------------------------------- */
-  --nav-h:          76px;
-  --gutter:         40px;
+  --nav-h:          74px;
+  --gutter:         clamp(20px, 4vw, 44px);
   --container:      1240px;
-
-  /* honey separator */
-  --divider-h:      180px;   /* total band height */
-  --edge-h:         clamp(120px, 16.6vw, 240px);  /* honey edge overhang */
 
   /* ---- motion ----------------------------------------------------- */
   --ease-soft:  cubic-bezier(.22, .61, .36, 1);
   --t-quick:    .18s;
   --t-cross:    .42s;
 
-  --shadow-nav: 0 1px 0 rgba(60, 39, 18, .07), 0 10px 30px -18px rgba(60, 39, 18, .35);
-  --surface-glass: rgba(251, 247, 234, .82);
-  --surface-glass-strong: rgba(251, 247, 234, .92);
-  --border-gold: rgba(214, 134, 30, .26);
-  --shadow-preview: 0 24px 50px -18px rgba(45, 24, 6, .38), 0 4px 16px -6px rgba(214, 134, 30, .28);
-}
-
-@media (max-width: 1180px) {
-  :root { --gutter: 32px; --divider-h: 160px; }
+  --shadow-nav: 0 1px 0 rgba(17, 17, 17, 0.10);
+  --shadow-card: 0 12px 28px -20px rgba(17, 17, 17, 0.16);
+  --shadow-preview: 0 22px 46px -18px rgba(17, 17, 17, 0.26);
 }
 
 @media (max-width: 900px) {
   :root {
-    --nav-h: 68px;
-    --gutter: 24px;
-    --divider-h: 140px;
+    --nav-h: 66px;
   }
 }
 
 @media (max-width: 560px) {
   :root {
     --nav-h: 60px;
-    --fs-nav: 1rem;
-    --divider-h: 115px;
+    --fs-nav: 0.98rem;
   }
 }

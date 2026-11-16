@@ -1,0 +1,605 @@
+/* ============================================================
+   journey.css — 2D Winding Honey Storytelling + Focused 3D Pour
+   & High-Contrast Clear-Glass Final Jar on #FFFFFF White
+   ============================================================ */
+
+main { position: relative; z-index: 1; }
+
+.journey {
+  position: relative;
+  background: #FFFFFF;
+  border-top: 1px solid var(--hairline, rgba(17, 17, 17, 0.14));
+  padding-top: clamp(3.5rem, 6vw, 5.5rem);
+  padding-bottom: 0;
+  overflow-x: clip;
+}
+
+.journey__head {
+  text-align: center;
+  max-width: 660px;
+  margin-inline: auto;
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+  padding-inline: var(--gutter);
+}
+
+/* ============================================================
+   1. MASTER 2D EDITORIAL BOARD
+   Contains the stainless honey drum at top, the single continuous
+   2D SVG winding path (2 black outlines + darker interior + golden
+   scroll-driven honey), nodes 01..05, and Stage 05 3D jar finale.
+   ============================================================ */
+.journey-board {
+  position: relative;
+  width: 100%;
+  max-width: 1120px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  /* LTR geometry coordinate system inside for deterministic SVG node sync;
+     individual Arabic text columns stay true RTL! */
+  direction: ltr;
+}
+
+/* Continuous 2D SVG Path layer sitting behind nodes & cards cleanly */
+.journey-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: visible;
+}
+
+.journey-path-outline {
+  fill: none;
+  stroke: #111111;
+  stroke-linecap: butt;
+  stroke-linejoin: round;
+}
+
+.journey-path-interior {
+  fill: none;
+  stroke: var(--channel-fill, #C8C4BB);
+  stroke-linecap: butt;
+  stroke-linejoin: round;
+}
+
+.journey-path-honey {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.journey-path-sheen {
+  fill: none;
+  stroke: rgba(255, 245, 204, 0.45);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.journey-inlet-cap {
+  fill: #111111;
+}
+
+.journey-inlet-rim {
+  fill: #FFFFFF;
+  stroke: #111111;
+  stroke-width: 2;
+}
+
+/* ============================================================
+   2. TOP POURING ASSEMBLY (Metal Honey Drum + Tap + 3D Stream)
+   ============================================================ */
+.journey-pour {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 0.5rem;
+  padding-bottom: clamp(150px, 16vw, 210px);
+  z-index: 3;
+}
+
+.journey-tank-wrap {
+  position: relative;
+  width: min(360px, 84%);
+  margin-inline: auto;
+  /* Shift tank gently left so chrome tap (73.2% of image width) sits near board X ~ 52% */
+  transform: translateX(-11%);
+  z-index: 2;
+}
+
+.journey-tank-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  user-select: none;
+}
+
+/* Focused 3D WebGL canvas for ONLY continuous pouring liquid honey stream */
+.pour-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* Static SVG stream shown only if WebGL disabled or prefers-reduced-motion */
+.pour-fallback-svg {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.journey-board.is-pour-fallback .pour-canvas {
+  display: none;
+}
+.journey-board.is-pour-fallback .pour-fallback-svg {
+  display: block;
+}
+
+/* Subtle horizontal anchor just below tank where 3D pour enters 2D channel */
+.journey-inlet-marker {
+  position: absolute;
+  bottom: clamp(12px, 2vw, 24px);
+  left: 51.5%;
+  width: 30px;
+  height: 14px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* ============================================================
+   3. STORYTELLING STAGES (01 .. 04 ON THE 2D WINDING PATH)
+   Reference Image B / user image.png style: clean editorial
+   black typography on white, circular dark numbered node ON path.
+   ============================================================ */
+.journey-steps {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(9rem, 15vw, 15.5rem);
+  padding-top: clamp(4.2rem, 6.5vw, 6rem);
+  padding-bottom: clamp(4rem, 7vw, 6.5rem);
+}
+
+.journey-step {
+  position: relative;
+  width: 100%;
+}
+
+.journey-step__cluster {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(1rem, 2vw, 1.65rem);
+  width: min(500px, 100%);
+}
+
+/* Position nodes cleanly around the 2D curve on desktop */
+.journey-step--node-right .journey-step__cluster {
+  margin-left: auto;
+  margin-right: 12%;
+  flex-direction: row-reverse; /* circle node on RIGHT sitting cleanly on curve, RTL text to its LEFT */
+}
+
+.journey-step--node-left .journey-step__cluster {
+  margin-left: 25%;
+  margin-right: auto;
+  flex-direction: row; /* circle node on LEFT sitting cleanly on curve, RTL text to its RIGHT */
+}
+
+/* Extra breathing room under Stage 02 for the signature left-side SVG loop */
+.journey-step--has-loop {
+  padding-bottom: clamp(7rem, 11vw, 11rem);
+}
+
+.journey-step__node {
+  position: relative;
+  z-index: 5;
+  flex: 0 0 auto;
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: #111111;
+  color: #FAD56F;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 800;
+  border: 2.5px solid #111111;
+  box-shadow: 0 0 0 4px #FFFFFF;
+  cursor: pointer;
+  transition: transform 0.22s var(--ease-soft),
+              background-color 0.22s var(--ease-soft),
+              color 0.22s var(--ease-soft);
+}
+
+.journey-step__node:hover,
+.journey-step.is-active .journey-step__node {
+  transform: scale(1.08);
+  background: #E39617;
+  color: #111111;
+  border-color: #111111;
+}
+
+.journey-step__copy {
+  direction: rtl;
+  text-align: right;
+  flex: 1 1 auto;
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.92);
+  padding: 0.25rem 0.4rem;
+  border-radius: 12px;
+}
+
+.journey-step__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.5vw, 2.15rem);
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--ink, #111111);
+  margin-bottom: 0.55rem;
+  cursor: pointer;
+  transition: color 0.18s var(--ease-soft);
+}
+
+.journey-step__title:hover {
+  color: var(--honey-deep, #A95B08);
+}
+
+.journey-step__desc {
+  font-family: var(--font-body);
+  font-size: clamp(0.95rem, 1.12vw, 1.04rem);
+  line-height: 1.82;
+  color: var(--ink-soft, #404040);
+}
+
+.journey-highlight {
+  color: #111111;
+  font-weight: 700;
+  border-bottom: 1.5px solid #111111;
+  padding-bottom: 1px;
+  cursor: pointer;
+  transition: color 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.journey-highlight:hover {
+  color: var(--honey-deep, #A95B08);
+  border-bottom-color: var(--honey, #E39617);
+  background: rgba(227, 150, 23, 0.10);
+}
+
+.journey-step__hint {
+  margin-top: 0.65rem;
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ink-mute, #6E6E6E);
+}
+
+.journey-step__preview-btn {
+  display: none;
+  margin-top: 0.75rem;
+  padding: 0.42rem 1rem;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #111111;
+  background: #FFFFFF;
+  border: 1.2px solid #111111;
+  cursor: pointer;
+}
+.journey-step__preview-btn:hover {
+  background: #111111;
+  color: #FFFFFF;
+}
+
+.journey-step__mobile-preview {
+  margin-top: 0.85rem;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1.2px solid #111111;
+}
+
+.journey-step__mobile-preview[hidden] { display: none; }
+
+.journey-step__mobile-preview img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+/* ============================================================
+   4. STAGE 05 + 3D HIGH-CONTRAST GLASS JAR + ENTER-HONEY FINALE
+   ============================================================ */
+.journey-stage-05 {
+  position: relative;
+  z-index: 4;
+  padding-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.journey-stage-05__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 470px);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.journey-stage-05__left {
+  padding-top: 0;
+}
+
+.journey-stage-05 .journey-step__cluster {
+  margin: 0;
+  width: 100%;
+  flex-direction: row-reverse;
+}
+
+/* Scoped sticky Finale Wrapper strictly around the Final 3D Jar;
+   offset downward so Stage 05 node 05 sits cleanly above the jar mouth inlet */
+.jar-finale-wrap {
+  position: relative;
+  margin-top: clamp(135px, 14vw, 185px);
+  height: clamp(640px, 145svh, 1180px);
+}
+
+.jar-stage {
+  position: sticky;
+  top: var(--nav-h);
+  height: min(620px, calc(100svh - var(--nav-h) - 16px));
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+/* Anchor point right at top-center of Jar canvas where 2D SVG path cleanly connects */
+.jar-inlet-anchor {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 12px;
+  height: 6px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.jar-canvas {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.jar-fallback-visual {
+  display: none;
+  width: min(360px, 90%);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1.25px solid #111111;
+  background: #FFFFFF;
+}
+
+.jar-fallback-visual img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.jar-finale-wrap.is-jar-fallback {
+  height: auto;
+  padding-bottom: 2rem;
+}
+.jar-finale-wrap.is-jar-fallback .jar-stage {
+  position: static;
+  height: auto;
+}
+.jar-finale-wrap.is-jar-fallback .jar-canvas {
+  display: none;
+}
+.jar-finale-wrap.is-jar-fallback .jar-fallback-visual {
+  display: block;
+}
+
+.journey-finale__cue {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  padding: 0.55rem 1.25rem;
+  border-radius: 999px;
+  background: #FFFFFF;
+  border: 1.25px solid #111111;
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #111111;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Portal caustic immersion overlay triggered ONLY on final Enter-the-Honey scroll dive */
+.jar-portal-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 48%,
+    rgba(255, 246, 214, 0.96) 0%,
+    rgba(243, 188, 60, 0.94) 48%,
+    rgba(214, 134, 30, 0.90) 86%,
+    rgba(255, 255, 255, 0.98) 100%);
+}
+
+/* ============================================================
+   5. FLOATING CURSOR-FOLLOWING EDITORIAL PREVIEW (Desktop Hover)
+   Clean white frame + crisp thin black outline
+   ============================================================ */
+.preview-float {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 80;
+  width: 268px;
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform, opacity;
+  transition: opacity 0.20s var(--ease-soft);
+}
+
+.preview-float__card {
+  border-radius: 16px;
+  overflow: hidden;
+  background: #FFFFFF;
+  border: 1.5px solid #111111;
+  box-shadow: var(--shadow-preview);
+  transform: scale(0.92);
+  transform-origin: center center;
+  transition: transform 0.24s var(--ease-soft);
+}
+
+.preview-float.is-visible {
+  opacity: 1;
+}
+.preview-float.is-visible .preview-float__card {
+  transform: scale(1);
+}
+
+.preview-float__media {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--surface-soft, #F8F8F7);
+  border-bottom: 1px solid #111111;
+}
+
+.preview-float__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.preview-float__caption {
+  direction: rtl;
+  padding: 0.65rem 0.9rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.preview-float__tag {
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--honey-deep, #A95B08);
+}
+
+.preview-float__title {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--ink, #111111);
+}
+
+/* ============================================================
+   6. RESPONSIVE BREAKPOINTS (Tablet & 390px Mobile)
+   ============================================================ */
+@media (max-width: 1020px) {
+  .journey-step--node-right .journey-step__cluster {
+    margin-right: 4%;
+  }
+  .journey-step--node-left .journey-step__cluster {
+    margin-left: 16%;
+  }
+  .journey-stage-05__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(290px, 400px);
+  }
+}
+
+@media (max-width: 840px) {
+  .journey-tank-wrap {
+    width: min(300px, 84%);
+    transform: translateX(-8%);
+  }
+
+  .journey-pour {
+    padding-bottom: 120px;
+  }
+
+  .journey-steps {
+    gap: 5.5rem;
+    padding-bottom: 2.5rem;
+  }
+
+  /* Clean mobile editorial layout: 2D channel runs cleanly along the LEFT side (X ~ 34px),
+     with all nodes docked directly on the rail and crisp RTL copy on the right! */
+  .journey-step--node-right .journey-step__cluster,
+  .journey-step--node-left .journey-step__cluster,
+  .journey-stage-05 .journey-step__cluster {
+    margin-left: 8px;
+    margin-right: 0;
+    flex-direction: row;
+    width: calc(100% - 8px);
+    gap: 1rem;
+  }
+
+  .journey-step--has-loop {
+    padding-bottom: 5.5rem;
+  }
+
+  .journey-step__node {
+    width: 44px;
+    height: 44px;
+    font-size: 0.98rem;
+  }
+
+  .journey-step__hint { display: none; }
+  .journey-step__preview-btn { display: inline-flex; }
+  .preview-float { display: none !important; }
+
+  .journey-stage-05__grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .journey-stage-05__left {
+    padding-top: 0;
+  }
+
+  .jar-finale-wrap {
+    margin-top: 2.25rem;
+    height: clamp(500px, 115svh, 760px);
+  }
+
+  .jar-stage {
+    height: min(460px, calc(100svh - var(--nav-h) - 16px));
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .journey-step__hint { display: none; }
+  .journey-step__preview-btn { display: inline-flex; }
+  .preview-float { display: none !important; }
+}
