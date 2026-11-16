@@ -1,7 +1,7 @@
 /* ============================================================
    journey.css — Scoped Styles strictly (.nh-*) for:
-     1. New Hero Section (.nh-hero) with Botanical Meadow + 3D Drum Pour
-     2. Organic 2D Honey Journey (.nh-journey) — outline-free warm-shaded S-tube
+     1. New Hero Section (.nh-hero) with Botanical Meadow + 3D Honeycomb Frame
+     2. Organic 2D Honey Journey (.nh-journey) — outline-free rich-amber S-tube
      3. Pinned GSAP ScrollTrigger Jar Finale & Caustic Reveal (.nh-finale)
      4. Floating Editorial Stage Preview (.nh-preview)
 
@@ -169,8 +169,9 @@
 .nh-hero__fallback-img {
   width: 100%;
   height: auto;
-  border-radius: 22px;
-  mix-blend-mode: multiply;
+  border-radius: 20px;
+  border: 1px solid rgba(214, 134, 30, 0.35);
+  box-shadow: 0 18px 40px -20px rgba(73, 42, 13, 0.38);
 }
 
 .nh-hero--fallback .nh-hero__canvas { display: none; }
@@ -178,9 +179,10 @@
 
 /* ============================================================
    2. NEW ORGANIC 2D HONEY JOURNEY SECTION (#journey)
-   Warm cream ground (#FAF4E4), zero black borders/strokes, shaded
-   multi-tone golden amber channel, bright scrolling honey interior,
-   clean art-directed S-curves and unboxed RTL editorial typography.
+   Warm cream ground (#FAF4E4), zero black borders/strokes, richer
+   amber-brown shaded channel, bright scrolling honey interior,
+   art-directed S-curves, unboxed RTL editorial typography, and subtle
+   2D honeycomb/botanical decorations in alternating margin spaces.
    ============================================================ */
 .nh-journey {
   position: relative;
@@ -210,31 +212,31 @@
   overflow: visible;
 }
 
-/* Soft recessed warm channel defined purely via amber-cream tonal shading (ZERO BLACK STROKES!) */
+/* Rich darker amber-brown shaded channel (ZERO black strokes!) */
 .nh-tube-cushion {
   fill: none;
-  stroke: #E9D3A9;
+  stroke: #DEC08A;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .nh-tube-wall {
   fill: none;
-  stroke: #D29E51;
+  stroke: #BA7E31;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .nh-tube-core {
   fill: none;
-  stroke: #B37224;
+  stroke: #8A4B10;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .nh-tube-trough {
   fill: none;
-  stroke: rgba(112, 54, 10, 0.28);
+  stroke: rgba(82, 36, 5, 0.36);
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -247,10 +249,39 @@
 
 .nh-tube-sheen {
   fill: none;
-  stroke: rgba(255, 249, 221, 0.56);
+  stroke: rgba(255, 240, 192, 0.44);
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
+/* Curated 2D editorial botanical & honeycomb clusters placed in open alternating space */
+.nh-journey__decor {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.nh-jdecor {
+  position: absolute;
+  width: clamp(190px, 23vw, 265px);
+  height: auto;
+  opacity: 0.92;
+  animation: nhJdecFloat 9s ease-in-out infinite;
+}
+
+.nh-jdecor svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.nh-jdecor--1 { top: 13%; left: clamp(16px, 4.5vw, 56px); animation-delay: 0s; }
+.nh-jdecor--2 { top: 32%; right: clamp(16px, 4.5vw, 56px); animation-delay: -2.4s; }
+.nh-jdecor--3 { top: 51%; left: clamp(20px, 5vw, 64px); animation-delay: -4.2s; }
+.nh-jdecor--4 { top: 69%; right: clamp(20px, 5vw, 64px); animation-delay: -1.8s; }
+.nh-jdecor--5 { top: 84%; left: clamp(20px, 5vw, 64px); animation-delay: -5.4s; }
 
 /* Horizontal receiver dot anchored directly under Hero's open drum pour stream */
 .nh-journey__inlet {
@@ -537,30 +568,61 @@
 .nh-finale.is-jar-fallback .nh-jar-canvas { display: none; }
 .nh-finale.is-jar-fallback .nh-jar-fallback { display: block; }
 
-.nh-jar-cue {
+/* Tasteful 2D editorial decorations framing empty space around pinned Jar (left-emphasized) */
+.nh-jar-decor {
   position: absolute;
-  bottom: clamp(1rem, 3vw, 2rem);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 6;
-  padding: 0.55rem 1.35rem;
-  border-radius: 999px;
-  background: rgba(255, 252, 245, 0.92);
-  border: 1px solid rgba(214, 134, 30, 0.38);
-  box-shadow: 0 10px 26px -14px rgba(60, 39, 18, 0.35);
-  font-family: var(--font-display);
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: var(--ink, #3C2712);
-  white-space: nowrap;
+  inset: 0;
+  z-index: 1;
   pointer-events: none;
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  overflow: hidden;
 }
 
-.nh-jar-cue.is-full {
-  background: rgba(214, 134, 30, 0.14);
-  border-color: rgba(214, 134, 30, 0.72);
-  color: var(--honey-deep, #A3460A);
+.nh-jar-decor__left,
+.nh-jar-decor__right {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.nh-jar-decor__left {
+  left: clamp(0.5rem, 3vw, 3.5rem);
+  width: clamp(240px, 28vw, 410px);
+  opacity: 0.96;
+}
+
+.nh-jar-decor__right {
+  right: clamp(0.5rem, 2.5vw, 2.8rem);
+  width: clamp(190px, 22vw, 300px);
+  opacity: 0.72;
+}
+
+.nh-jar-decor svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.nh-jdec-float {
+  animation: nhJdecFloat 8s ease-in-out infinite;
+}
+
+.nh-jdec-float-alt {
+  animation: nhJdecFloat 9.5s ease-in-out infinite reverse;
+}
+
+.nh-jdec-pollen {
+  animation: nhJdecPollen 7s ease-in-out infinite;
+}
+
+@keyframes nhJdecFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-7px); }
+}
+
+@keyframes nhJdecPollen {
+  0%, 100% { transform: translate(0px, 0px); opacity: 0.45; }
+  50% { transform: translate(4px, -9px); opacity: 0.8; }
 }
 
 /* Soft edge veil gently harmonizing WebGL caustic portal dive into original #FAF5EA site */
@@ -656,6 +718,14 @@
   .nh-step--left .nh-step__cluster {
     margin-right: calc(54% - 24px);
   }
+  .nh-jar-decor__left {
+    width: clamp(190px, 24vw, 310px);
+    left: 0.25rem;
+  }
+  .nh-jar-decor__right {
+    width: clamp(150px, 19vw, 240px);
+    right: 0.25rem;
+  }
 }
 
 @media (max-width: 840px) {
@@ -700,6 +770,13 @@
     text-align: right;
   }
 
+  .nh-jdecor {
+    width: 118px;
+    opacity: 0.42;
+  }
+  .nh-jdecor--1, .nh-jdecor--3, .nh-jdecor--5 { left: -10px; right: auto; }
+  .nh-jdecor--2, .nh-jdecor--4 { right: -10px; left: auto; }
+
   .nh-steps {
     gap: 4.5rem;
     padding-bottom: 4.5rem;
@@ -739,9 +816,20 @@
     min-height: 420px;
   }
 
-  .nh-jar-cue {
-    font-size: 0.82rem;
-    padding: 0.48rem 1rem;
+  .nh-jar-decor__left {
+    width: 138px;
+    top: 4%;
+    left: -14px;
+    transform: none;
+    opacity: 0.75;
+  }
+  .nh-jar-decor__right {
+    width: 128px;
+    top: auto;
+    bottom: 6%;
+    right: -12px;
+    transform: none;
+    opacity: 0.65;
   }
 }
 
@@ -749,4 +837,13 @@
   .nh-step__hint { display: none; }
   .nh-step__preview-btn { display: inline-flex; }
   .nh-preview { display: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nh-jdecor,
+  .nh-jdec-float,
+  .nh-jdec-float-alt,
+  .nh-jdec-pollen {
+    animation: none !important;
+  }
 }

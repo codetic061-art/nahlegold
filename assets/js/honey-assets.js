@@ -1,10 +1,11 @@
 /**
  * honey-assets.js — Focused Studio 3D Assets for the Corrected Honey Experience:
  *  - High-contrast white-studio PMREM environment for clear glass refraction
- *  - Improved Crystal-Clear Octagonal Stage 05 "نحل الذهب" Jar with neck threads,
- *    contact shadow, clear Fresnel silhouettes, rising golden honey, and pour ripple coil
- *  - Continuous Liquid Pour Stream geometry (Lathe catenoid/ribbon column)
- *  - Subtle optional animated 3D Honeybee
+ *  - Realistic 3D Beehive Honeycomb Frame with Hexagonal Beeswax Cells, overflowing golden
+ *    honey, dripping strands, and wood/antique-brass honey-catching collection channel
+ *  - Crystal-Clear Octagonal Stage 05 "نحل الذهب" Jar with neck threads, contact shadow,
+ *    clear Fresnel silhouettes, rising golden honey, and pour ripple coil
+ *  - Continuous Liquid Pour Stream geometry (Lathe/Bezier catenoid column)
  */
 import * as THREE from './vendor/three.module.min.js';
 import {
@@ -600,376 +601,568 @@ export function createContinuousPourGeometry({
 }
 
 /**
- * Optional crisp articulated 3D Honeybee whose wings flap smoothly.
+ * Procedural natural cedar/acacia wood grain texture for the Hero honeycomb
+ * beehive frame and honey-catching collection channel.
  */
-export function createHoneybee() {
-  const bee = new THREE.Group();
-
-  const amberMat = new THREE.MeshStandardMaterial({ color: '#E89B24', roughness: 0.36, metalness: 0.08 });
-  const darkMat  = new THREE.MeshStandardMaterial({ color: '#18110B', roughness: 0.45, metalness: 0.06 });
-  const wingMat  = new THREE.MeshStandardMaterial({
-    color: '#F4F4F2',
-    roughness: 0.16,
-    transparent: true,
-    opacity: 0.72,
-    side: THREE.DoubleSide,
-  });
-
-  const abd = new THREE.Mesh(new THREE.SphereGeometry(0.11, 14, 12), amberMat);
-  abd.scale.set(0.95, 0.9, 1.45);
-  abd.position.z = -0.14;
-  bee.add(abd);
-
-  for (const zOff of [-0.08, -0.16, -0.23]) {
-    const stripe = new THREE.Mesh(new THREE.TorusGeometry(0.095, 0.018, 6, 14), darkMat);
-    stripe.position.z = zOff;
-    bee.add(stripe);
-  }
-
-  const thorax = new THREE.Mesh(new THREE.SphereGeometry(0.092, 12, 10), darkMat);
-  thorax.position.z = 0.02;
-  bee.add(thorax);
-
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.068, 12, 10), darkMat);
-  head.position.z = 0.13;
-  bee.add(head);
-
-  const wingGeo = new THREE.CircleGeometry(0.15, 14);
-  wingGeo.scale(0.56, 1.28, 1);
-  wingGeo.translate(0, 0.15, 0);
-
-  const leftWing = new THREE.Mesh(wingGeo, wingMat);
-  leftWing.position.set(-0.04, 0.08, 0.02);
-  leftWing.rotation.set(-0.55, 0, 0.65);
-
-  const rightWing = new THREE.Mesh(wingGeo, wingMat);
-  rightWing.position.set(0.04, 0.08, 0.02);
-  rightWing.rotation.set(-0.55, 0, -0.65);
-
-  bee.add(leftWing, rightWing);
-  bee.userData = { leftWing, rightWing, phase: Math.random() * Math.PI * 2 };
-  return bee;
-}
-
-/**
- * Generates a fine brushed stainless steel texture for realistic anisotropic
- * tank highlights on the Hero extraction drum.
- */
-export function createBrushedSteelTexture() {
+function createCedarWoodTexture() {
   const canvas = document.createElement('canvas');
   canvas.width = 512;
-  canvas.height = 256;
+  canvas.height = 512;
   const ctx = canvas.getContext('2d');
 
-  const grad = ctx.createLinearGradient(0, 0, 512, 0);
-  grad.addColorStop(0.0, '#CDD2D6');
-  grad.addColorStop(0.22, '#E9EDF0');
-  grad.addColorStop(0.46, '#C4C9CE');
-  grad.addColorStop(0.72, '#F2F5F7');
-  grad.addColorStop(1.0, '#CDD2D6');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, 512, 256);
+  const base = ctx.createLinearGradient(0, 0, 512, 512);
+  base.addColorStop(0.0, '#9B6532');
+  base.addColorStop(0.35, '#B57B40');
+  base.addColorStop(0.7, '#895627');
+  base.addColorStop(1.0, '#A77038');
+  ctx.fillStyle = base;
+  ctx.fillRect(0, 0, 512, 512);
 
-  for (let y = 0; y < 256; y += 2) {
-    const shade = 212 + Math.round(Math.sin(y * 0.7) * 18 + (Math.random() - 0.5) * 20);
-    ctx.strokeStyle = `rgba(${shade}, ${shade + 2}, ${shade + 5}, 0.22)`;
+  // Fine organic wood fiber streaks
+  for (let y = 0; y < 512; y += 2) {
+    const wave = Math.sin(y * 0.085) * 8 + Math.cos(y * 0.23) * 4;
+    const dark = (Math.sin(y * 0.14) + Math.cos(y * 0.047)) * 0.5;
+    const alpha = 0.05 + Math.abs(dark) * 0.11;
+    ctx.strokeStyle = dark > 0 ? `rgba(68, 36, 12, ${alpha.toFixed(3)})` : `rgba(222, 168, 102, ${alpha.toFixed(3)})`;
+    ctx.lineWidth = 1.4;
     ctx.beginPath();
     ctx.moveTo(0, y);
-    ctx.lineTo(512, y);
+    ctx.bezierCurveTo(170, y + wave, 340, y - wave, 512, y);
     ctx.stroke();
+  }
+
+  // Subtle growth ring knot details
+  for (const [kx, ky, rx, ry] of [[128, 164, 34, 10], [374, 342, 26, 8]]) {
+    const kGrad = ctx.createRadialGradient(kx, ky, 2, kx, ky, rx);
+    kGrad.addColorStop(0, 'rgba(54, 28, 10, 0.36)');
+    kGrad.addColorStop(0.6, 'rgba(82, 46, 18, 0.16)');
+    kGrad.addColorStop(1, 'rgba(82, 46, 18, 0)');
+    ctx.save();
+    ctx.translate(kx, ky);
+    ctx.scale(1, ry / rx);
+    ctx.fillStyle = kGrad;
+    ctx.beginPath();
+    ctx.arc(0, 0, rx, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
   }
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.wrapS = THREE.RepeatWrapping;
-  tex.wrapT = THREE.ClampToEdgeWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
   tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
   return tex;
 }
 
 /**
- * Generates an embossed warm gold/espresso crest badge for the Hero stainless extraction drum.
+ * Deterministic cell pseudo-random generator so honeycomb variation looks natural
+ * yet stays rock-solid across frames and reloads.
  */
-function createDrumCrestTexture() {
-  const canvas = document.createElement('canvas');
-  canvas.width = 512;
-  canvas.height = 384;
-  const ctx = canvas.getContext('2d');
-
-  ctx.clearRect(0, 0, 512, 384);
-  ctx.save();
-  ctx.beginPath();
-  ctx.ellipse(256, 192, 232, 166, 0, 0, Math.PI * 2);
-  ctx.fillStyle = '#E09D2B';
-  ctx.fill();
-  ctx.lineWidth = 10;
-  ctx.strokeStyle = '#3C2712';
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.ellipse(256, 192, 214, 150, 0, 0, Math.PI * 2);
-  ctx.fillStyle = '#3C2712';
-  ctx.fill();
-
-  ctx.fillStyle = '#FBE8A6';
-  ctx.font = '800 60px "Tajawal", "Almarai", sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText('نحل الذهب', 256, 156);
-
-  ctx.fillStyle = '#E8A93C';
-  ctx.font = '700 26px "Tajawal", "Almarai", sans-serif';
-  ctx.fillText('فرز طبيعي صافي ١٠٠٪', 256, 224);
-
-  ctx.fillStyle = '#F7CA52';
-  ctx.beginPath();
-  ctx.moveTo(256, 255);
-  ctx.bezierCurveTo(272, 275, 275, 296, 256, 302);
-  ctx.bezierCurveTo(237, 296, 240, 275, 256, 255);
-  ctx.fill();
-  ctx.restore();
-
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  return tex;
+function cellHash(c, r) {
+  const n = Math.sin(c * 127.1 + r * 311.7) * 43758.5453;
+  return n - Math.floor(n);
 }
 
 /**
- * Realistic Stainless-Steel Honey Extraction Tank ("منضج / خزان عسل استانلس")
- * fitted with an unmistakably OPEN front-left chrome dispensing valve & downward nozzle.
+ * Builds a single beveled hexagonal cell wall cup geometry (hollow front & rim)
+ * for InstancedMesh rendering of a real 3D beehive honeycomb matrix.
  */
-export function createHoneyDrumWithOpenTap({ isMobile = false } = {}) {
-  const group = new THREE.Group();
-  const segs = isMobile ? 32 : 48;
-
-  const steelTex = createBrushedSteelTexture();
-  const steelMat = new THREE.MeshStandardMaterial({
-    map: steelTex,
-    color: new THREE.Color('#EAEFF2'),
-    metalness: 0.88,
-    roughness: 0.22,
-    envMapIntensity: 1.55,
-  });
-
-  const chromeMat = new THREE.MeshStandardMaterial({
-    color: new THREE.Color('#F5F7FA'),
-    metalness: 0.94,
-    roughness: 0.14,
-    envMapIntensity: 1.7,
-  });
-
-  const darkMetalMat = new THREE.MeshStandardMaterial({
-    color: new THREE.Color('#707780'),
-    metalness: 0.82,
-    roughness: 0.34,
-    envMapIntensity: 1.25,
-  });
-
-  const brassGripMat = new THREE.MeshStandardMaterial({
-    color: new THREE.Color('#C97A16'),
-    metalness: 0.35,
-    roughness: 0.30,
-    envMapIntensity: 1.2,
-  });
-
-  // Soft studio contact shadow underneath stainless tank base
-  const shadowGeo = new THREE.PlaneGeometry(2.75, 2.75);
-  shadowGeo.rotateX(-Math.PI / 2);
-  const shadowMat = new THREE.MeshBasicMaterial({
-    map: createContactShadowTexture(),
-    transparent: true,
-    opacity: 0.82,
-    depthWrite: false,
-  });
-  const shadowPlane = new THREE.Mesh(shadowGeo, shadowMat);
-  shadowPlane.position.y = -1.16;
-  group.add(shadowPlane);
-
-  // Main cylindrical brushed stainless extractor drum (lathe profile with rolled beads & base skirt)
-  const bodyPoints = [
-    new THREE.Vector2(0.0, -1.13),
-    new THREE.Vector2(0.87, -1.13),
-    new THREE.Vector2(0.89, -1.07),
-    new THREE.Vector2(0.86, -1.01),
-    new THREE.Vector2(0.86, -0.58),
-    new THREE.Vector2(0.888, -0.54),
-    new THREE.Vector2(0.86, -0.50),
-    new THREE.Vector2(0.86, 0.44),
-    new THREE.Vector2(0.888, 0.48),
-    new THREE.Vector2(0.86, 0.52),
-    new THREE.Vector2(0.86, 0.96),
-    new THREE.Vector2(0.905, 1.00),
-    new THREE.Vector2(0.905, 1.04),
-    new THREE.Vector2(0.86, 1.04),
-  ];
-  const bodyGeo = new THREE.LatheGeometry(bodyPoints, segs);
-  const bodyMesh = new THREE.Mesh(bodyGeo, steelMat);
-  group.add(bodyMesh);
-
-  // Domed mirror-chrome extractor lid + center brass/chrome finial knob + tension latches
-  const lidPoints = [
-    new THREE.Vector2(0.918, 0.99),
-    new THREE.Vector2(0.918, 1.09),
-    new THREE.Vector2(0.86, 1.13),
-    new THREE.Vector2(0.55, 1.18),
-    new THREE.Vector2(0.0, 1.21),
-  ];
-  const lidMesh = new THREE.Mesh(new THREE.LatheGeometry(lidPoints, segs), chromeMat);
-  group.add(lidMesh);
-
-  const knobPost = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.085, 0.11, 20), brassGripMat);
-  knobPost.position.y = 1.25;
-  group.add(knobPost);
-  const knobCap = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.11, 0.065, 24), chromeMat);
-  knobCap.position.y = 1.32;
-  group.add(knobCap);
-
-  // Side welded carry handles + latch ears
-  for (const side of [-1, 1]) {
-    const pad = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.16, 0.24), darkMetalMat);
-    pad.position.set(side * 0.87, 0.58, 0);
-    group.add(pad);
-
-    const handleCurve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(side * 0.87, 0.62, -0.09),
-      new THREE.Vector3(side * 1.02, 0.54, -0.07),
-      new THREE.Vector3(side * 1.02, 0.54, 0.07),
-      new THREE.Vector3(side * 0.87, 0.62, 0.09),
-    ]);
-    const handleMesh = new THREE.Mesh(new THREE.TubeGeometry(handleCurve, 18, 0.025, 10, false), chromeMat);
-    group.add(handleMesh);
-
-    const latch = new THREE.Mesh(new THREE.BoxGeometry(0.055, 0.14, 0.07), darkMetalMat);
-    latch.position.set(side * 0.905, 1.01, 0.12);
-    group.add(latch);
+function createHexCellWallGeometry(outerR = 0.082, innerR = 0.066, depth = 0.082) {
+  const shape = new THREE.Shape();
+  for (let i = 0; i < 6; i++) {
+    const a = (Math.PI / 3) * i + Math.PI / 6; // pointy-top hexagon
+    const x = Math.cos(a) * outerR;
+    const y = Math.sin(a) * outerR;
+    if (i === 0) shape.moveTo(x, y);
+    else shape.lineTo(x, y);
   }
+  shape.closePath();
 
-  // Front crest plaque subtly connecting stainless drum to Nahl Al-Thahab brand
-  const crestTex = createDrumCrestTexture();
-  const crestGeo = new THREE.CylinderGeometry(0.876, 0.876, 0.44, 32, 1, true, -0.34, 0.68);
-  const crestMat = new THREE.MeshStandardMaterial({
-    map: crestTex,
-    transparent: true,
-    alphaTest: 0.18,
-    roughness: 0.35,
-    metalness: 0.12,
-    polygonOffset: true,
-    polygonOffsetFactor: -1,
+  const hole = new THREE.Path();
+  for (let i = 0; i < 6; i++) {
+    const a = (Math.PI / 3) * i + Math.PI / 6;
+    const x = Math.cos(a) * innerR;
+    const y = Math.sin(a) * innerR;
+    if (i === 0) hole.moveTo(x, y);
+    else hole.lineTo(x, y);
+  }
+  hole.closePath();
+  shape.holes.push(hole);
+
+  const geo = new THREE.ExtrudeGeometry(shape, {
+    depth,
+    bevelEnabled: true,
+    bevelThickness: 0.008,
+    bevelSize: 0.005,
+    bevelSegments: 2,
+    curveSegments: 1,
   });
-  const crestMesh = new THREE.Mesh(crestGeo, crestMat);
-  crestMesh.position.y = 0.04;
-  crestMesh.rotation.y = 0.18;
-  group.add(crestMesh);
+  geo.computeVertexNormals();
+  return geo;
+}
 
-  // =====================================================================
-  // UNMISTAKABLY OPEN DISPENSING TAP (Lower Left-Front of Stainless Tank)
-  // Oriented cleanly toward screen LEFT-FRONT so bolted flange, valve bore,
-  // lifted chrome+amber lever (OPEN!), and flowing honey stream read crisply.
-  // =====================================================================
-  const tapGroup = new THREE.Group();
-  const tapAzimuth = -Math.PI * 0.36; // pointing left & slightly front
-  const wallR = 0.855;
-  tapGroup.position.set(Math.sin(tapAzimuth) * wallR, -0.78, Math.cos(tapAzimuth) * wallR);
-  tapGroup.rotation.y = tapAzimuth;
-  group.add(tapGroup);
+/**
+ * Builds the Hero 3D Beehive Honeycomb Frame & Honey-Catching Channel:
+ *  - Tilted 3/4 natural oiled cedar wooden beehive frame (top bar ears, side end bars,
+ *    bottom bar, brass wire pins & tension wires).
+ *  - Detailed 3D hexagonal beeswax matrix filled with golden honey pools, creamy capped cells,
+ *    and bulging lower cells overflowing with honey.
+ *  - Continuous liquid drips & hanging golden droplets stretching off the bottom wooden bar.
+ *  - Sculpted wood & antique brushed-brass honey-catching tray/channel directly beneath
+ *    collecting the falling drips into a glossy honey basin with a front pouring spout lip.
+ */
+export function createHoneycombFrameWithChannel({ isMobile = false } = {}) {
+  const root = new THREE.Group();
 
-  // 1. Bolted diamond/oval wall flange + 4 hex bolts
-  const flangePlate = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.19, 0.045, 24), chromeMat);
-  flangePlate.rotation.x = Math.PI / 2;
-  flangePlate.scale.set(1.22, 1, 0.85);
-  flangePlate.position.z = 0.015;
-  tapGroup.add(flangePlate);
+  const woodTex = createCedarWoodTexture();
+  const woodMat = new THREE.MeshStandardMaterial({
+    map: woodTex,
+    color: new THREE.Color('#D8A972'),
+    roughness: 0.56,
+    metalness: 0.04,
+    envMapIntensity: 0.85,
+  });
 
-  for (const bx of [-0.145, 0.145]) {
-    for (const by of [-0.075, 0.075]) {
-      const bolt = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.032, 6), darkMetalMat);
-      bolt.rotation.x = Math.PI / 2;
-      bolt.position.set(bx, by, 0.042);
-      tapGroup.add(bolt);
+  const brassMat = new THREE.MeshStandardMaterial({
+    color: new THREE.Color('#DFA649'),
+    roughness: 0.24,
+    metalness: 0.78,
+    envMapIntensity: 1.5,
+  });
+
+  const wireMat = new THREE.MeshStandardMaterial({
+    color: new THREE.Color('#C8CDD2'),
+    roughness: 0.28,
+    metalness: 0.88,
+    envMapIntensity: 1.35,
+  });
+
+  const beeswaxMidribMat = new THREE.MeshStandardMaterial({
+    color: new THREE.Color('#B56910'),
+    emissive: new THREE.Color('#471F00'),
+    emissiveIntensity: 0.28,
+    roughness: 0.48,
+    metalness: 0.04,
+  });
+
+  const cellWallMat = new THREE.MeshStandardMaterial({
+    color: new THREE.Color('#F2C56A'),
+    emissive: new THREE.Color('#5A2E04'),
+    emissiveIntensity: 0.14,
+    roughness: 0.36,
+    metalness: 0.05,
+    envMapIntensity: 1.15,
+  });
+
+  const waxCapMat = new THREE.MeshStandardMaterial({
+    color: new THREE.Color('#F5DC9B'),
+    emissive: new THREE.Color('#694510'),
+    emissiveIntensity: 0.12,
+    roughness: 0.64,
+    metalness: 0.02,
+    envMapIntensity: 0.8,
+  });
+
+  const cellHoneyMat = new THREE.MeshPhysicalMaterial({
+    color: new THREE.Color('#DF840C'),
+    emissive: new THREE.Color('#732E00'),
+    emissiveIntensity: 0.26,
+    roughness: 0.06,
+    metalness: 0.04,
+    clearcoat: 1.0,
+    clearcoatRoughness: 0.05,
+    envMapIntensity: 1.9,
+  });
+
+  // ------------------------------------------------------------------
+  // 1. HANGING 3D WOODEN BEEHIVE HONEYCOMB FRAME (tilted 3/4 for rich 3D depth)
+  // ------------------------------------------------------------------
+  const frameGroup = new THREE.Group();
+  frameGroup.position.set(0.06, 0.39, 0.0);
+  frameGroup.rotation.set(0.11, -0.40, -0.045);
+  root.add(frameGroup);
+
+  const innerW = 2.08;
+  const innerH = 1.18;
+  const barD = 0.22;
+
+  // Top bar (with left & right resting rabbet ears)
+  const topBarMain = new THREE.Mesh(new THREE.BoxGeometry(2.68, 0.12, 0.25), woodMat);
+  topBarMain.position.set(0, innerH * 0.5 + 0.06, 0);
+  frameGroup.add(topBarMain);
+
+  // Subtle recessed underside shoulder on top bar
+  const topShoulder = new THREE.Mesh(new THREE.BoxGeometry(innerW + 0.16, 0.045, 0.20), woodMat);
+  topShoulder.position.set(0, innerH * 0.5 - 0.015, 0);
+  frameGroup.add(topShoulder);
+
+  // Bottom bar
+  const bottomBar = new THREE.Mesh(new THREE.BoxGeometry(innerW + 0.22, 0.095, 0.20), woodMat);
+  bottomBar.position.set(0, -innerH * 0.5 - 0.045, 0);
+  frameGroup.add(bottomBar);
+
+  // Side end-bars with brass corner rivets & tension wire eyelets
+  for (const side of [-1, 1]) {
+    const endBar = new THREE.Mesh(new THREE.BoxGeometry(0.11, innerH + 0.19, barD), woodMat);
+    endBar.position.set(side * (innerW * 0.5 + 0.055), 0.0, 0);
+    frameGroup.add(endBar);
+
+    for (const py of [innerH * 0.5 + 0.05, -innerH * 0.5 - 0.04]) {
+      const nail = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.018, 10), brassMat);
+      nail.rotation.z = Math.PI / 2;
+      nail.position.set(side * (innerW * 0.5 + 0.112), py, 0);
+      frameGroup.add(nail);
+    }
+
+    for (const wy of [-0.28, 0.02, 0.30]) {
+      const eyelet = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.02, 10), brassMat);
+      eyelet.rotation.z = Math.PI / 2;
+      eyelet.position.set(side * (innerW * 0.5 + 0.111), wy, 0.015);
+      frameGroup.add(eyelet);
     }
   }
 
-  // 2. Hex coupling nut + horizontal stainless outlet barrel
-  const hexCoupler = new THREE.Mesh(new THREE.CylinderGeometry(0.115, 0.115, 0.08, 6), chromeMat);
-  hexCoupler.rotation.x = Math.PI / 2;
-  hexCoupler.position.z = 0.075;
-  tapGroup.add(hexCoupler);
+  // Horizontal stainless foundation support wires embedded across comb
+  for (const wy of [-0.28, 0.02, 0.30]) {
+    const wire = new THREE.Mesh(new THREE.CylinderGeometry(0.0045, 0.0045, innerW + 0.08, 8), wireMat);
+    wire.rotation.z = Math.PI / 2;
+    wire.position.set(0, wy, 0.016);
+    frameGroup.add(wire);
+  }
 
-  const feedPipe = new THREE.Mesh(new THREE.CylinderGeometry(0.072, 0.072, 0.24, 24), steelMat);
-  feedPipe.rotation.x = Math.PI / 2;
-  feedPipe.position.z = 0.20;
-  tapGroup.add(feedPipe);
+  // Warm translucent-looking honey-amber beeswax septum midrib plate inside frame
+  const midribMesh = new THREE.Mesh(new THREE.BoxGeometry(innerW + 0.02, innerH + 0.02, 0.032), beeswaxMidribMat);
+  frameGroup.add(midribMesh);
 
-  // 3. Heavy cylindrical valve chamber + raised chrome gland nut (OPEN stem extension)
-  const valveChamber = new THREE.Mesh(new THREE.CylinderGeometry(0.112, 0.112, 0.23, 24), chromeMat);
-  valveChamber.position.set(0, 0.015, 0.34);
-  tapGroup.add(valveChamber);
+  // Build authentic staggered hexagonal comb coordinates cleanly filling aperture
+  const cellR = 0.082;
+  const colStep = Math.sqrt(3) * cellR; // ~0.142
+  const rowStep = 1.5 * cellR;          // ~0.123
+  const cells = [];
 
-  const glandNut = new THREE.Mesh(new THREE.CylinderGeometry(0.085, 0.085, 0.055, 6), darkMetalMat);
-  glandNut.position.set(0, 0.14, 0.34);
-  tapGroup.add(glandNut);
+  for (let r = -4; r <= 4; r++) {
+    const cy = r * rowStep;
+    if (Math.abs(cy) > innerH * 0.5 - 0.048) continue;
+    const xShift = (Math.abs(r) % 2) * (colStep * 0.5);
+    for (let c = -7; c <= 7; c++) {
+      const cx = c * colStep + xShift - (colStep * 0.25);
+      if (Math.abs(cx) > innerW * 0.5 - 0.055) continue;
 
-  const brassStem = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 0.11, 16), brassGripMat);
-  brassStem.position.set(0, 0.20, 0.34);
-  tapGroup.add(brassStem);
+      const rnd = cellHash(c, r);
+      const normY = (cy + innerH * 0.5) / innerH; // 0 bottom .. 1 top
+      const isSealed = normY > 0.62 && rnd > 0.34 || (normY > 0.45 && Math.abs(cx) > 0.68 && rnd > 0.35);
+      const isOverflow = normY < 0.26 && rnd > 0.25;
+      cells.push({ cx, cy, r, c, rnd, isSealed, isOverflow });
+    }
+  }
 
-  // 4. OPEN LEVER HANDLE: rotated +54 deg upward & aligned PARALLEL with spout flow!
-  const leverPivot = new THREE.Group();
-  leverPivot.position.set(0, 0.245, 0.34);
-  // Negative X rotation lifts +Z end upward toward +Y cleanly -> unmistakably pulled OPEN!
-  leverPivot.rotation.x = -0.88;
-  tapGroup.add(leverPivot);
+  // Front + back extruded 3D hexagonal cell cups (one single InstancedMesh draw call!)
+  const hexWallGeo = createHexCellWallGeometry(cellR + 0.003, cellR - 0.017, 0.082);
+  const totalWallInstances = cells.length * 2;
+  const wallInstanced = new THREE.InstancedMesh(hexWallGeo, cellWallMat, totalWallInstances);
+  const dummy = new THREE.Object3D();
+  const cColor = new THREE.Color();
 
-  const pivotHub = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.06, 18), chromeMat);
-  leverPivot.add(pivotHub);
+  let wIdx = 0;
+  cells.forEach((cell) => {
+    // Front comb face (+Z)
+    dummy.position.set(cell.cx, cell.cy, 0.014);
+    dummy.rotation.set(0, 0, 0);
+    dummy.scale.set(1, 1, 0.94 + cell.rnd * 0.16);
+    dummy.updateMatrix();
+    wallInstanced.setMatrixAt(wIdx, dummy.matrix);
+    cColor.setHSL(0.105 + cell.rnd * 0.018, 0.78, 0.62 - cell.rnd * 0.12);
+    wallInstanced.setColorAt(wIdx, cColor);
+    wIdx++;
 
-  const leverBar = new THREE.Mesh(new THREE.BoxGeometry(0.038, 0.026, 0.30), chromeMat);
-  leverBar.position.z = 0.16;
-  leverPivot.add(leverBar);
+    // Back comb face (-Z)
+    dummy.position.set(cell.cx, cell.cy, -0.014);
+    dummy.rotation.set(0, Math.PI, 0);
+    dummy.scale.set(1, 1, 0.94 + cell.rnd * 0.14);
+    dummy.updateMatrix();
+    wallInstanced.setMatrixAt(wIdx, dummy.matrix);
+    wallInstanced.setColorAt(wIdx, cColor);
+    wIdx++;
+  });
+  wallInstanced.instanceMatrix.needsUpdate = true;
+  if (wallInstanced.instanceColor) wallInstanced.instanceColor.needsUpdate = true;
+  frameGroup.add(wallInstanced);
 
-  // Ergonomic warm amber-copper grip sleeve makes open lever read starkly against silver/cream
-  const leverGrip = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.028, 0.19, 16), brassGripMat);
-  leverGrip.rotation.x = Math.PI / 2;
-  leverGrip.position.z = 0.27;
-  leverPivot.add(leverGrip);
+  // Beeswax dome cappings on upper sealed cells
+  const sealedCells = cells.filter((c) => c.isSealed);
+  if (sealedCells.length) {
+    const capGeo = new THREE.CylinderGeometry(cellR - 0.012, cellR - 0.008, 0.032, 6);
+    capGeo.rotateX(Math.PI / 2);
+    const capInstanced = new THREE.InstancedMesh(capGeo, waxCapMat, sealedCells.length);
+    sealedCells.forEach((cell, idx) => {
+      dummy.position.set(cell.cx, cell.cy, 0.080 + cell.rnd * 0.016);
+      dummy.rotation.set((cell.rnd - 0.5) * 0.08, (cell.rnd - 0.5) * 0.08, 0);
+      dummy.scale.setScalar(0.98 + cell.rnd * 0.08);
+      dummy.updateMatrix();
+      capInstanced.setMatrixAt(idx, dummy.matrix);
+      cColor.setHSL(0.115 + cell.rnd * 0.015, 0.65, 0.76 + cell.rnd * 0.08);
+      capInstanced.setColorAt(idx, cColor);
+    });
+    capInstanced.instanceMatrix.needsUpdate = true;
+    if (capInstanced.instanceColor) capInstanced.instanceColor.needsUpdate = true;
+    frameGroup.add(capInstanced);
+  }
 
-  const leverTip = new THREE.Mesh(new THREE.SphereGeometry(0.032, 12, 10), brassGripMat);
-  leverTip.position.z = 0.365;
-  leverPivot.add(leverTip);
+  // Glossy liquid amber honey filling inside all uncapped open cells
+  const openCells = cells.filter((c) => !c.isSealed);
+  if (openCells.length) {
+    const poolHexGeo = new THREE.CylinderGeometry(cellR - 0.016, cellR - 0.016, 0.058, 6);
+    poolHexGeo.rotateX(Math.PI / 2);
+    const poolInstanced = new THREE.InstancedMesh(poolHexGeo, cellHoneyMat, openCells.length);
+    openCells.forEach((cell, idx) => {
+      const fillDepthZ = cell.isOverflow ? 0.072 : 0.044 + cell.rnd * 0.022;
+      dummy.position.set(cell.cx, cell.cy, fillDepthZ);
+      dummy.rotation.set(0, 0, 0);
+      dummy.scale.set(1, 1, 1);
+      dummy.updateMatrix();
+      poolInstanced.setMatrixAt(idx, dummy.matrix);
+      cColor.setHSL(0.082 + cell.rnd * 0.018, 0.92, cell.isOverflow ? 0.50 : 0.44 + cell.rnd * 0.08);
+      poolInstanced.setColorAt(idx, cColor);
+    });
+    poolInstanced.instanceMatrix.needsUpdate = true;
+    if (poolInstanced.instanceColor) poolInstanced.instanceColor.needsUpdate = true;
+    frameGroup.add(poolInstanced);
+  }
 
-  // 5. Graceful 90-degree bent chrome dispensing spout pointing straight DOWN
-  const spoutCurve = new THREE.CubicBezierCurve3(
-    new THREE.Vector3(0, 0.0, 0.40),
-    new THREE.Vector3(0, 0.0, 0.56),
-    new THREE.Vector3(0, -0.05, 0.62),
-    new THREE.Vector3(0, -0.22, 0.62)
+  // Natural brimming golden honey bulging gently out of lower hex cells & draping over bottom bar
+  const liveHoneyMat = createLiquidHoneyMaterial();
+  const dripMat = createLiquidHoneyMaterial({ animatedFlow: true });
+
+  // Soft golden honey pillows overflowing slightly out of random bottom-row open cells
+  const brimCellSpots = [
+    [-0.56, -0.43, 0.082, 0.068],
+    [-0.30, -0.46, 0.084, 0.074],
+    [-0.04, -0.44, 0.083, 0.078],
+    [0.18, -0.48, 0.084, 0.070],
+    [0.42, -0.43, 0.082, 0.066],
+  ];
+  brimCellSpots.forEach(([bx, by, bz, br]) => {
+    const bulge = new THREE.Mesh(new THREE.SphereGeometry(br, 14, 12), cellHoneyMat);
+    bulge.position.set(bx, by, bz);
+    bulge.scale.set(1.08, 1.18, 0.36);
+    frameGroup.add(bulge);
+  });
+
+  // Subtle tapering drip rivulets curving seamlessly down onto bottom wooden frame rail
+  const spillRivulets = [
+    [-0.48, -0.49, 0.090, 0.24],
+    [-0.18, -0.47, 0.094, 0.28],
+    [0.09, -0.49, 0.094, 0.27],
+    [0.37, -0.48, 0.088, 0.22],
+  ];
+  spillRivulets.forEach(([sx, sy, sz, len]) => {
+    const dripGeo = new THREE.ConeGeometry(0.022, len, 12);
+    dripGeo.rotateX(Math.PI);
+    const dripRibbon = new THREE.Mesh(dripGeo, liveHoneyMat);
+    dripRibbon.position.set(sx, sy - len * 0.32, sz);
+    dripRibbon.scale.set(1.15, 1.0, 0.42);
+    frameGroup.add(dripRibbon);
+  });
+
+  // Delicate glistening amber meniscus lip along center span of bottom frame bar
+  const barGlazeCurve = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(-0.62, -innerH * 0.5 - 0.015, 0.090),
+    new THREE.Vector3(-0.24, -innerH * 0.5 - 0.056, 0.102),
+    new THREE.Vector3(0.10, -innerH * 0.5 - 0.066, 0.100),
+    new THREE.Vector3(0.50, -innerH * 0.5 - 0.036, 0.090),
+  ]);
+  const barGlazeMesh = new THREE.Mesh(
+    new THREE.TubeGeometry(barGlazeCurve, 24, 0.022, 10, false),
+    liveHoneyMat
   );
-  const spoutMesh = new THREE.Mesh(new THREE.TubeGeometry(spoutCurve, 20, 0.066, 18, false), chromeMat);
-  tapGroup.add(spoutMesh);
+  frameGroup.add(barGlazeMesh);
 
-  const nozzleLip = new THREE.Mesh(new THREE.TorusGeometry(0.066, 0.014, 10, 24), chromeMat);
-  nozzleLip.rotation.x = Math.PI / 2;
-  nozzleLip.position.set(0, -0.22, 0.62);
-  tapGroup.add(nozzleLip);
+  // Organic staggered hanging honey lobes gripping underside of bottom frame bar
+  const pendantPositions = [-0.46, -0.16, 0.12, 0.44];
+  const frameDrops = [];
+  const dripBaseY = -0.26;
+  pendantPositions.forEach((px, idx) => {
+    const lobeSize = idx === 1 ? 0.034 : idx === 2 ? 0.030 : 0.024;
+    const pendant = new THREE.Mesh(new THREE.SphereGeometry(lobeSize, 14, 12), liveHoneyMat);
+    pendant.position.set(px * 0.88, -innerH * 0.5 - 0.080, 0.04 + (idx % 2) * 0.025);
+    pendant.scale.set(0.84, 1.55, 0.84);
+    frameGroup.add(pendant);
 
-  // Glistening honey bead brimming directly inside the open nozzle rim
-  const honeyBeadMat = createLiquidHoneyMaterial();
-  const honeyBead = new THREE.Mesh(new THREE.SphereGeometry(0.059, 16, 12), honeyBeadMat);
-  honeyBead.scale.set(1, 0.85, 1);
-  honeyBead.position.set(0, -0.23, 0.62);
-  tapGroup.add(honeyBead);
+    // Falling elongated honey droplet traveling smoothly down into the brass collector pool
+    const tearGroup = new THREE.Group();
+    const dropR = 0.026 + (idx % 2) * 0.007;
+    const bulb = new THREE.Mesh(new THREE.SphereGeometry(dropR, 14, 12), dripMat);
+    bulb.scale.set(0.82, 1.38, 0.82);
+    tearGroup.add(bulb);
 
-  // Exact world anchor right below nozzle exit where the 3D viscous stream emerges
-  const tapSpoutAnchor = new THREE.Object3D();
-  tapSpoutAnchor.position.set(0, -0.225, 0.62);
-  tapGroup.add(tapSpoutAnchor);
+    const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.006, dropR * 0.72, 0.12, 10), dripMat);
+    neck.position.y = 0.07;
+    tearGroup.add(neck);
+
+    root.add(tearGroup);
+    frameDrops.push({
+      mesh: tearGroup,
+      x: px * 0.82,
+      z: 0.05 + (idx === 1 ? 0.06 : 0),
+      startY: dripBaseY,
+      endY: -0.78,
+      phase: idx * 0.29,
+      speed: 0.36 + (idx % 3) * 0.08,
+    });
+  });
+
+  // Two continuous silky liquid honey rivulets bridging frame bottom smoothly into collection basin
+  for (const [rx, rz, rTop, rBot] of [[-0.08, 0.06, 0.028, 0.019], [0.22, 0.02, 0.020, 0.015]]) {
+    const thread = new THREE.Mesh(
+      createGravityPourGeometry({
+        start: new THREE.Vector3(rx, dripBaseY + 0.06, rz),
+        dropX: rx - 0.02,
+        dropZ: rz + 0.02,
+        bottomY: -0.80,
+        topRadius: rTop,
+        waistRadius: rBot * 0.74,
+        bottomRadius: rBot,
+        radialSegments: 16,
+        heightSegments: 24,
+      }),
+      dripMat
+    );
+    root.add(thread);
+  }
+
+  // ------------------------------------------------------------------
+  // 2. SCULPTED WOOD & ANTIQUE BRASS HONEY-CATCHING COLLECTION CHANNEL
+  //    Angled forward slightly so gleaming golden pool & flush spout channel read clearly
+  // ------------------------------------------------------------------
+  const collectorGroup = new THREE.Group();
+  collectorGroup.position.set(0.02, -0.82, 0.08);
+  collectorGroup.rotation.set(0.16, 0.0, 0.0);
+  root.add(collectorGroup);
+
+  // Outer carved cedar catching bowl/cradle + subtle flared rim
+  const segs = isMobile ? 28 : 40;
+  const bowlOuterPts = [
+    new THREE.Vector2(0.0, -0.14),
+    new THREE.Vector2(0.46, -0.14),
+    new THREE.Vector2(0.76, -0.05),
+    new THREE.Vector2(0.88, 0.11),
+    new THREE.Vector2(0.84, 0.14),
+    new THREE.Vector2(0.74, 0.03),
+    new THREE.Vector2(0.0, -0.04),
+  ];
+  const woodBowlGeo = new THREE.LatheGeometry(bowlOuterPts, segs);
+  woodBowlGeo.scale(1.22, 1.0, 0.80);
+  const woodBowl = new THREE.Mesh(woodBowlGeo, woodMat);
+  collectorGroup.add(woodBowl);
+
+  // Antique brushed-brass inner honey-collecting trough liner + front tapered pouring channel
+  const brassLinerPts = [
+    new THREE.Vector2(0.0, -0.048),
+    new THREE.Vector2(0.72, 0.022),
+    new THREE.Vector2(0.82, 0.135),
+    new THREE.Vector2(0.77, 0.142),
+    new THREE.Vector2(0.67, 0.045),
+    new THREE.Vector2(0.0, -0.022),
+  ];
+  const brassLinerGeo = new THREE.LatheGeometry(brassLinerPts, segs);
+  brassLinerGeo.scale(1.18, 1.0, 0.76);
+  const brassLiner = new THREE.Mesh(brassLinerGeo, brassMat);
+  collectorGroup.add(brassLiner);
+
+  // Smooth rounded low-profile brass pouring spout cradle flush with front bowl rim (zero sharp horns)
+  const spoutShape = new THREE.Shape();
+  spoutShape.moveTo(-0.15, 0.038);
+  spoutShape.quadraticCurveTo(-0.08, 0.0, 0.0, -0.012);
+  spoutShape.quadraticCurveTo(0.08, 0.0, 0.15, 0.038);
+  spoutShape.quadraticCurveTo(0.16, 0.018, 0.14, 0.002);
+  spoutShape.quadraticCurveTo(0.07, -0.034, 0.0, -0.040);
+  spoutShape.quadraticCurveTo(-0.07, -0.034, -0.14, 0.002);
+  spoutShape.quadraticCurveTo(-0.16, 0.018, -0.15, 0.038);
+
+  const lipChannelGeo = new THREE.ExtrudeGeometry(spoutShape, {
+    depth: 0.34,
+    bevelEnabled: true,
+    bevelThickness: 0.008,
+    bevelSize: 0.006,
+    bevelSegments: 3,
+    curveSegments: 16,
+  });
+  const spoutLipGroup = new THREE.Group();
+  spoutLipGroup.position.set(-0.03, 0.056, 0.46);
+  spoutLipGroup.rotation.set(0.16, -0.05, 0);
+  const lipMesh = new THREE.Mesh(lipChannelGeo, brassMat);
+  spoutLipGroup.add(lipMesh);
+
+  // Smooth golden honey tongue filling the U-spout lip cleanly
+  const honeyTongueCurve = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(0, 0.024, -0.02),
+    new THREE.Vector3(0, 0.014, 0.16),
+    new THREE.Vector3(0, -0.004, 0.32),
+    new THREE.Vector3(0, -0.036, 0.35),
+  ]);
+  const honeyTongue = new THREE.Mesh(
+    new THREE.TubeGeometry(honeyTongueCurve, 18, 0.042, 12, false),
+    dripMat
+  );
+  spoutLipGroup.add(honeyTongue);
+  collectorGroup.add(spoutLipGroup);
+
+  // Pooled liquid honey surface inside catching basin catching drips
+  const poolGeo = new THREE.CircleGeometry(0.75, segs);
+  poolGeo.rotateX(-Math.PI / 2);
+  poolGeo.scale(1.16, 1.0, 0.74);
+  const poolMesh = new THREE.Mesh(poolGeo, liveHoneyMat);
+  poolMesh.position.set(0, 0.052, 0);
+  collectorGroup.add(poolMesh);
+
+  // Soft ripples at drop impact points in the pool
+  const impactRing = new THREE.Mesh(
+    new THREE.TorusGeometry(0.11, 0.018, 10, 28),
+    liveHoneyMat
+  );
+  impactRing.rotation.x = Math.PI / 2;
+  impactRing.position.set(-0.06, 0.058, 0.06);
+  collectorGroup.add(impactRing);
+
+  // Exact world anchor at end of V-spout lip where continuous vertical stream enters Section 2
+  const spoutAnchor = new THREE.Object3D();
+  spoutAnchor.position.set(0, -0.036, 0.35);
+  spoutLipGroup.add(spoutAnchor);
+
+  const updateDrips = (t) => {
+    liveHoneyMat.uniforms.uTime.value = t;
+    dripMat.uniforms.uTime.value = t;
+
+    frameDrops.forEach((d) => {
+      const cycle = (t * d.speed + d.phase) % 1.0;
+      // Stay coalescing on bottom bar for first 25%, then accelerate smoothly down into basin
+      const fall = cycle < 0.28 ? 0 : Math.pow((cycle - 0.28) / 0.72, 1.65);
+      const currY = THREE.MathUtils.lerp(d.startY, d.endY, fall);
+      const stretchY = cycle < 0.28
+        ? THREE.MathUtils.lerp(0.65, 1.25, cycle / 0.28)
+        : THREE.MathUtils.lerp(1.25, 0.85, fall);
+      const radialScale = cycle > 0.90 ? THREE.MathUtils.lerp(1.0, 0.2, (cycle - 0.90) / 0.10) : 1.0;
+
+      d.mesh.position.set(d.x, currY, d.z);
+      d.mesh.scale.set(radialScale, stretchY, radialScale);
+    });
+
+    const ringPulse = 0.85 + Math.sin(t * 3.4) * 0.18;
+    impactRing.scale.set(ringPulse, ringPulse, 1.0);
+  };
 
   return {
-    group,
-    tapSpoutAnchor,
-    leverPivot,
-    honeyBead,
+    group: root,
+    frameGroup,
+    collectorGroup,
+    spoutAnchor,
+    liveHoneyMat,
+    dripMat,
+    updateDrips,
   };
 }
+
 
 /**
  * Builds a single continuous gravity-curved viscous honey column starting cleanly inside

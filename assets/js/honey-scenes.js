@@ -1,7 +1,7 @@
 /**
  * honey-scenes.js — Focused Real-Time 3D Scenes for Nahl Al-Thahab:
- *  1) Hero Stainless-Steel Honey Drum with VISIBLY OPEN Tap + Continuous 3D Stream
- *     pouring seamlessly down into the top inlet of Section 2 (#journey).
+ *  1) Hero 3D Wooden Beehive Honeycomb Frame with Hexagonal Beeswax Cells,
+ *     Natural Dripping Honey & Honey-Catching Channel pouring into Section 2 (#journey).
  *  2) Stage 05 Crystal-Clear Octagonal "نحل الذهب" Jar Pinned with GSAP ScrollTrigger:
  *     Filling -> Full-Jar Appreciation Pause -> Gradual Over-Rim Dive -> Caustic Exit Reveal
  *     directly into the restored original website (#categories).
@@ -13,11 +13,10 @@ import {
 } from './honey-shaders.js';
 import {
   createHoneyEnvironment,
-  createHoneyDrumWithOpenTap,
+  createHoneycombFrameWithChannel,
   createGravityPourGeometry,
   createHoneyJar,
   createContinuousPourGeometry,
-  createHoneybee,
 } from './honey-assets.js';
 
 const reducedQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -28,7 +27,7 @@ function getNavH() {
 }
 
 /* =====================================================================
-   SCENE 1 — HERO STAINLESS DRUM + OPEN TAP + CONTINUOUS 3D POUR STREAM
+   SCENE 1 — HERO 3D HONEYCOMB FRAME + COLLECTION CHANNEL + POUR STREAM
    ===================================================================== */
 function initHeroScene() {
   const hero = document.getElementById('hero');
@@ -38,8 +37,7 @@ function initHeroScene() {
 
   const broadcastFallbackSpout = () => {
     const sr = stage.getBoundingClientRect();
-    // Balanced default spout horizontal coordinate matching fallback drum art
-    const cx = sr.left + sr.width * 0.44;
+    const cx = sr.left + sr.width * 0.50;
     window.__NH_HERO_SPOUT__ = { clientX: cx };
     window.dispatchEvent(new CustomEvent('honey:hero-spout', { detail: { clientX: cx } }));
   };
@@ -69,7 +67,7 @@ function initHeroScene() {
   const isMobile = mobileQuery.matches;
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.12;
+  renderer.toneMappingExposure = 1.14;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
   const scene = new THREE.Scene();
@@ -77,26 +75,26 @@ function initHeroScene() {
   scene.environment = envTex;
 
   const camera = new THREE.PerspectiveCamera(34, 1.6, 0.1, 45);
-  camera.position.set(0, 0.15, 7.6);
+  camera.position.set(0, 0.12, 7.8);
 
-  // Studio three-point rig calibrated for crisp brushed stainless & luminous golden honey
-  scene.add(new THREE.HemisphereLight('#FFFDF7', '#B59B78', 0.95));
-  const key = new THREE.DirectionalLight('#FFFBF2', 2.65);
-  key.position.set(5.5, 6.5, 6.2);
+  // Warm three-point daylight lighting tailored for natural beeswax, wood grain, and honey refraction
+  scene.add(new THREE.HemisphereLight('#FFFDF5', '#B08448', 1.0));
+  const key = new THREE.DirectionalLight('#FFFBF0', 2.45);
+  key.position.set(4.5, 6.5, 6.8);
   scene.add(key);
 
-  const rim = new THREE.DirectionalLight('#FFD98B', 1.55);
-  rim.position.set(-5.8, 2.8, -3.5);
+  const rim = new THREE.DirectionalLight('#FFCE6B', 1.75);
+  rim.position.set(-5.8, 3.2, -3.2);
   scene.add(rim);
 
-  const frontFill = new THREE.DirectionalLight('#FFFFFF', 0.95);
-  frontFill.position.set(-2.5, 1.2, 7.0);
+  const frontFill = new THREE.DirectionalLight('#FFF6E0', 1.05);
+  frontFill.position.set(-2.2, 0.8, 7.2);
   scene.add(frontFill);
 
-  const drum = createHoneyDrumWithOpenTap({ isMobile });
-  scene.add(drum.group);
+  const honeycomb = createHoneycombFrameWithChannel({ isMobile });
+  scene.add(honeycomb.group);
 
-  // Continuous 3D Liquid Stream rebuilt cleanly to hero bottom at current nozzle world coordinate
+  // Continuous 3D liquid stream flowing downward out of the collector channel spout into Section 2
   const pourMat = createLiquidHoneyMaterial({ animatedFlow: true });
   let pourMesh = new THREE.Mesh(
     createGravityPourGeometry({ start: new THREE.Vector3(0, 0, 0), bottomY: -2.5 }),
@@ -104,12 +102,6 @@ function initHeroScene() {
   );
   scene.add(pourMesh);
 
-  // Single delicate 3D honeybee hovering softly above/beside the open tap
-  const bee = createHoneybee();
-  bee.scale.setScalar(isMobile ? 0.56 : 0.68);
-  scene.add(bee);
-
-  let beeHome = new THREE.Vector3(1.2, 0.8, 1.2);
   let lastSpoutClientX = null;
 
   function syncHeroLayout() {
@@ -123,70 +115,61 @@ function initHeroScene() {
     camera.updateProjectionMatrix();
     renderer.setSize(w, h, false);
 
-    const camZ = w < 720 ? 8.3 : 7.6;
-    camera.position.set(0, 0.14, camZ);
-    camera.lookAt(0, 0.05, 0);
+    const camZ = w < 720 ? 8.5 : 7.8;
+    camera.position.set(0, 0.10, camZ);
+    camera.lookAt(0, 0.02, 0);
     camera.updateMatrixWorld(true);
 
     const halfH = Math.tan(THREE.MathUtils.degToRad(camera.fov * 0.5)) * camZ;
     const halfW = halfH * camera.aspect;
 
-    // Position brushed stainless extraction drum squarely inside `.nh-hero__stage`
-    const targetPxX = (sr.left - hr.left) + sr.width * (w < 720 ? 0.56 : 0.58);
-    const targetPxY = (sr.top - hr.top) + sr.height * (w < 720 ? 0.42 : 0.44);
+    // Position 3D honeycomb frame & catching channel neatly inside `.nh-hero__stage`
+    const targetPxX = (sr.left - hr.left) + sr.width * (w < 720 ? 0.50 : 0.52);
+    const targetPxY = (sr.top - hr.top) + sr.height * (w < 720 ? 0.45 : 0.44);
 
     const worldX = ((targetPxX / w) * 2 - 1) * halfW;
     const worldY = (1 - (targetPxY / h) * 2) * halfH + camera.position.y;
 
-    // Fit brushed stainless drum generously without crowding hero copy or clipping hero bottom
     const stageHFrac = sr.height / h;
-    const drumScale = THREE.MathUtils.clamp(
-      w < 720 ? Math.min(stageHFrac * 1.18, 0.86) : Math.min(stageHFrac * 1.15, 1.18),
-      0.72,
-      1.18
+    const frameScale = THREE.MathUtils.clamp(
+      w < 720 ? Math.min(stageHFrac * 1.12, 0.78) : Math.min(stageHFrac * 1.08, 1.06),
+      0.66,
+      1.06
     );
 
-    drum.group.scale.setScalar(drumScale);
-    drum.group.position.set(worldX, worldY + 0.14, 0);
-    drum.group.rotation.y = w < 720 ? 0.16 : 0.24;
-    drum.group.updateMatrixWorld(true);
+    honeycomb.group.scale.setScalar(frameScale);
+    honeycomb.group.position.set(worldX, worldY + 0.10, 0);
+    honeycomb.group.rotation.y = w < 720 ? 0.02 : 0.04;
+    honeycomb.group.updateMatrixWorld(true);
 
-    // Measure exact world position of OPEN spout mouth
+    // Measure exact world position of collector channel spout mouth
     const spoutWorld = new THREE.Vector3();
-    drum.tapSpoutAnchor.getWorldPosition(spoutWorld);
+    honeycomb.spoutAnchor.getWorldPosition(spoutWorld);
 
-    // Compute exact hero bottom world Y at spout depth Z so continuous pour extends past bottom clip seamlessly
     const distAtSpoutZ = Math.max(2.0, camZ - spoutWorld.z);
     const halfHAtSpout = Math.tan(THREE.MathUtils.degToRad(camera.fov * 0.5)) * distAtSpoutZ;
     const bottomWorldY = camera.position.y - halfHAtSpout - 0.28;
 
-    const dropX = spoutWorld.x - 0.08 * drumScale;
-    const dropZ = spoutWorld.z + 0.02;
+    const dropX = spoutWorld.x;
+    const dropZ = spoutWorld.z + 0.015;
 
     if (pourMesh.geometry) pourMesh.geometry.dispose();
     pourMesh.position.set(dropX, 0, dropZ);
     pourMesh.geometry = createGravityPourGeometry({
-      start: new THREE.Vector3(spoutWorld.x - dropX, spoutWorld.y, spoutWorld.z - dropZ),
+      start: new THREE.Vector3(0, spoutWorld.y, 0),
       dropX: 0,
       dropZ: 0,
       bottomY: Math.min(spoutWorld.y - 0.45, bottomWorldY),
-      topRadius: 0.060 * drumScale,
-      waistRadius: 0.048 * drumScale,
-      bottomRadius: 0.056 * drumScale,
+      topRadius: 0.056 * frameScale,
+      waistRadius: 0.044 * frameScale,
+      bottomRadius: 0.052 * frameScale,
       radialSegments: 24,
       heightSegments: 54,
     });
 
-    // Project exact lower stream exit coordinate at hero bottom seam
     const bottomExitWorld = new THREE.Vector3(dropX, camera.position.y - halfHAtSpout, dropZ);
     const projected = bottomExitWorld.clone().project(camera);
     const spoutClientX = hr.left + (projected.x * 0.5 + 0.5) * hr.width;
-
-    beeHome.set(
-      w < 720 ? spoutWorld.x + 0.34 * drumScale : spoutWorld.x - 0.56 * drumScale,
-      w < 720 ? spoutWorld.y + 1.28 * drumScale : spoutWorld.y + 1.38 * drumScale,
-      spoutWorld.z + 0.35
-    );
 
     if (lastSpoutClientX === null || Math.abs(lastSpoutClientX - spoutClientX) > 0.4) {
       lastSpoutClientX = spoutClientX;
@@ -231,22 +214,12 @@ function initHeroScene() {
 
     pointerSmoothX += (pointerX - pointerSmoothX) * Math.min(1, dt * 4.5);
     pourMat.uniforms.uTime.value = t;
-    drum.honeyBead.material.uniforms.uTime.value = t;
+    honeycomb.updateDrips(t);
 
-    // Gentle subtle parallax breathing on pointer hover (leaves stream rock-steady at bottom exit!)
-    drum.group.rotation.y = (window.innerWidth < 720 ? 0.16 : 0.22) + pointerSmoothX * 0.035;
-
-    // Wingbeat + figure-8 idle motion on delicate hero bee
-    bee.position.set(
-      beeHome.x + Math.sin(t * 1.45) * 0.18,
-      beeHome.y + Math.cos(t * 2.05) * 0.13,
-      beeHome.z + Math.sin(t * 1.1) * 0.12
-    );
-    bee.rotation.y = 0.65 + Math.sin(t * 0.85) * 0.22;
-    bee.rotation.z = Math.sin(t * 2.2) * 0.08;
-    const flap = Math.sin(t * 34.0) * 0.62;
-    bee.userData.leftWing.rotation.z = 0.58 + flap;
-    bee.userData.rightWing.rotation.z = -0.58 - flap;
+    // Subtle breathing & hover angle on suspended honeycomb frame while keeping collector spout locked!
+    honeycomb.frameGroup.rotation.x = 0.11 + Math.sin(t * 0.50) * 0.01;
+    honeycomb.frameGroup.rotation.y = -0.40 + pointerSmoothX * 0.05 + Math.sin(t * 0.65) * 0.018;
+    honeycomb.frameGroup.rotation.z = -0.045 + Math.cos(t * 0.55) * 0.008;
 
     renderer.render(scene, camera);
   }
@@ -278,7 +251,7 @@ function initJarFinaleScene() {
   const stage = document.getElementById('nhJarPin');
   const canvas = document.getElementById('jarCanvas');
   const portalVeil = document.getElementById('nhPortalVeil');
-  const cue = document.getElementById('journeyFinaleCue');
+  const jarDecor = document.getElementById('nhJarDecor');
   if (!wrap || !stage || !canvas) return;
 
   if (reducedQuery.matches) {
@@ -447,8 +420,6 @@ function initJarFinaleScene() {
   const clock = new THREE.Clock();
   const camPos = new THREE.Vector3();
   const camLook = new THREE.Vector3();
-  let lastCueText = '';
-  let lastCueDone = false;
   let rafId = 0;
 
   function tickFinale() {
@@ -576,25 +547,8 @@ function initJarFinaleScene() {
       portalVeil.style.opacity = (veilIn * veilOut * 0.995).toFixed(3);
     }
 
-    if (cue) {
-      let nextCue = 'يمتلئ البرطمان بالعسل الصافي…';
-      let isDonePhase = false;
-      if (p >= 0.42 && p < 0.64) {
-        nextCue = 'عسل نقي، معبّأ بعناية — استمر للتذوق';
-        isDonePhase = true;
-      } else if (p >= 0.64) {
-        nextCue = 'ندخل الآن إلى عالم نحل الذهب';
-      }
-      if (nextCue !== lastCueText) {
-        cue.textContent = nextCue;
-        lastCueText = nextCue;
-      }
-      if (isDonePhase !== lastCueDone) {
-        cue.classList.toggle('is-full', isDonePhase);
-        lastCueDone = isDonePhase;
-      }
-      const cueOpacity = 1.0 - THREE.MathUtils.smoothstep(p, 0.58, 0.67);
-      cue.style.opacity = cueOpacity.toFixed(2);
+    if (jarDecor) {
+      jarDecor.style.opacity = (1.0 - THREE.MathUtils.smoothstep(p, 0.65, 0.84)).toFixed(3);
     }
 
     renderer.render(scene, camera);

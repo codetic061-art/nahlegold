@@ -1,9 +1,9 @@
 /**
  * journey-2d.js — Soft Organic 2D Honey Journey Channel (SVG + Vanilla JS)
- * - ZERO black outlines or hard borders: defined strictly via layered warm tonal shading
- *   (soft cream-amber cushion -> golden-tan channel wall -> deeper golden-brown interior ->
+ * - ZERO black outlines or hard borders: defined strictly via layered warm amber tonal shading
+ *   (soft cream-amber cushion -> rich golden-tan channel wall -> deep amber-brown interior ->
  *    bright animated scroll-driven liquid honey + subtle surface sheen).
- * - Connects seamlessly at top to the Hero 3D Stainless Drum open spout coordinates
+ * - Connects seamlessly at top to the Hero 3D Honeycomb Collector Channel spout coordinates
  *   (`honey:hero-spout`) and sweeps cleanly down through art-directed S-curves into #jarInletAnchor.
  */
 (function initJourney2D() {
@@ -108,9 +108,9 @@
     const n5 = centerRelToBoard(nodes[4], boardRect);
     const jarTop = centerRelToBoard(jarInletAnchor, boardRect);
 
-    // Top entry originates inside funnel at y = 18 so rounded cap stays flush inside #journey;
-    // journeyInletCup/Honey seamlessly bridge y = 0 (Hero pour exit) -> y = 30.
-    state.inletPt = { x: inlet.x, y: 18 };
+    // Top entry starts directly at y = 0 (clipped cleanly via #nhBoardTopClip + soft wall fade mask)
+    // while journeyInletHoney flares the 3D Hero pour stream smoothly into the full 2D honey width.
+    state.inletPt = { x: inlet.x, y: 0 };
     state.outletPt = { x: jarTop.x, y: jarTop.top + 4 };
 
     const pts = [];
@@ -137,8 +137,8 @@
     } else {
       // Responsive Mobile Organic Winding Snake:
       // Curving cleanly into left gutter inside open inlet gap before reaching mobile copy
-      const elbowY = Math.max(54, Math.min(n1.y - 44, 88));
-      const dyTop = Math.max(40, elbowY - state.inletPt.y);
+      const elbowY = Math.max(58, Math.min(n1.y - 42, 92));
+      const dyTop = Math.max(36, elbowY - state.inletPt.y);
       const dyElbow1 = Math.max(40, n1.y - elbowY);
       const dy12m = Math.max(60, n2.y - n1.y);
       const dy23m = Math.max(60, n3.y - n2.y);
@@ -185,29 +185,18 @@
       pathSheen.setAttribute('stroke-width', String(sheenW));
     }
 
-    // Seamless warm amber funnel bridging 3D Hero pour width at y = 0 -> 2D channel at y = 32
-    if (inletCup && inletHoney) {
+    // Seamless transition collar bridging narrow 3D stream radius at y=0 cleanly into honeyW at y=24
+    if (inletHoney) {
       const ix = state.inletPt.x;
-      const iy = 0;
-      const topR = isMob ? 8.2 : 9.6;
-      const botR = cushionW * 0.50;
-      const hTop = isMob ? 6.2 : 7.4;
+      const hTop = isMob ? 5.2 : 6.0;
       const hBot = honeyW * 0.50;
-      inletCup.setAttribute(
-        'd',
-        `M ${(ix - topR).toFixed(1)} ${iy.toFixed(1)} ` +
-        `L ${(ix + topR).toFixed(1)} ${iy.toFixed(1)} ` +
-        `Q ${(ix + botR).toFixed(1)} 16 ${(ix + botR).toFixed(1)} 32 ` +
-        `L ${(ix - botR).toFixed(1)} 32 ` +
-        `Q ${(ix - botR).toFixed(1)} 16 ${(ix - topR).toFixed(1)} ${iy.toFixed(1)} Z`
-      );
       inletHoney.setAttribute(
         'd',
-        `M ${(ix - hTop).toFixed(1)} ${iy.toFixed(1)} ` +
-        `L ${(ix + hTop).toFixed(1)} ${iy.toFixed(1)} ` +
-        `Q ${(ix + hBot).toFixed(1)} 16 ${(ix + hBot).toFixed(1)} 32 ` +
-        `L ${(ix - hBot).toFixed(1)} 32 ` +
-        `Q ${(ix - hBot).toFixed(1)} 16 ${(ix - hTop).toFixed(1)} ${iy.toFixed(1)} Z`
+        `M ${(ix - hTop).toFixed(1)} 0 ` +
+        `L ${(ix + hTop).toFixed(1)} 0 ` +
+        `C ${(ix + hTop).toFixed(1)} 10, ${(ix + hBot).toFixed(1)} 16, ${(ix + hBot).toFixed(1)} 28 ` +
+        `L ${(ix - hBot).toFixed(1)} 28 ` +
+        `C ${(ix - hBot).toFixed(1)} 16, ${(ix - hTop).toFixed(1)} 10, ${(ix - hTop).toFixed(1)} 0 Z`
       );
     }
 

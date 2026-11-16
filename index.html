@@ -787,7 +787,7 @@
 <main>
   <!-- ==========================================================
        1. NEW HERO SECTION — Natural Botanical Backdrop + Realistic
-          3D Stainless Extraction Drum with Open Tap & Liquid Stream
+          3D Wooden Honeycomb Frame, Drip Collect Tray & Liquid Stream
        ========================================================== -->
   <section class="nh-hero" id="hero" aria-labelledby="heroHeading">
     <canvas class="nh-hero__canvas" id="heroDrumCanvas" aria-hidden="true"></canvas>
@@ -811,17 +811,17 @@
       <div class="nh-hero__stage" id="heroStage">
         <div class="nh-hero__fallback-wrap">
           <img class="nh-hero__fallback-img"
-               src="assets/img/journey/honey-tank-tap.jpg"
-               alt="وعاء استخلاص عسل طبيعي بصنبور مفتوح ينساب منه العسل الذهبي"
-               width="900" height="675" decoding="async">
+               src="assets/img/journey/honeycomb-hero-fallback.jpg"
+               alt="إطار شمع نحل طبيعي يقطر منه العسل الذهبي إلى قناة تجميع صافية"
+               width="960" height="720" decoding="async">
         </div>
       </div>
     </div>
   </section>
 
   <!-- ==========================================================
-       2. NEW HONEY JOURNEY SECTION — Soft Shaded 2D Winding Channel
-          Connected Seamlessly from Hero Drum Stream (No Black Lines)
+       2. HONEY JOURNEY SECTION — Rich Amber Shaded 2D Winding Channel
+          & Tasteful Botanical / Honeycomb Editorial Margin Art
        ========================================================== -->
   <section class="nh-journey" id="journey" aria-labelledby="journeyHeading">
     <div class="nh-journey__board" id="journeyBoard">
@@ -829,30 +829,143 @@
       <svg class="nh-journey__svg" id="journeySvg" aria-hidden="true">
         <defs>
           <linearGradient id="nhHoneyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#F7C74B"/>
-            <stop offset="50%" stop-color="#E58C10"/>
-            <stop offset="100%" stop-color="#C96A04"/>
+            <stop offset="0%" stop-color="#E5A933"/>
+            <stop offset="48%" stop-color="#CC700A"/>
+            <stop offset="100%" stop-color="#9F4803"/>
           </linearGradient>
           <linearGradient id="nhInletCupGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#E9D3A9" stop-opacity="0"/>
-            <stop offset="45%" stop-color="#E9D3A9" stop-opacity="0.85"/>
-            <stop offset="100%" stop-color="#E9D3A9" stop-opacity="1"/>
+            <stop offset="0%" stop-color="#DEC08A" stop-opacity="0"/>
+            <stop offset="45%" stop-color="#DEC08A" stop-opacity="0.85"/>
+            <stop offset="100%" stop-color="#DEC08A" stop-opacity="1"/>
           </linearGradient>
           <linearGradient id="nhInletHoneyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#D47409"/>
-            <stop offset="55%" stop-color="#E89314"/>
-            <stop offset="100%" stop-color="#F7C74B"/>
+            <stop offset="0%" stop-color="#C96807"/>
+            <stop offset="55%" stop-color="#DB8314"/>
+            <stop offset="100%" stop-color="#E5A933"/>
           </linearGradient>
+          <!-- Reusable botanical / honeycomb 2D accents shared across Journey & Jar decor -->
+          <g id="nhFloralClover">
+            <path d="M0 44 C-4 22,-18 8,-34 -2 M0 44 C4 20,16 4,34 -8 M0 44 C0 24,2 10,0 -10" fill="none" stroke="#7A8652" stroke-width="2" stroke-linecap="round"/>
+            <ellipse cx="-20" cy="18" rx="12" ry="5.5" transform="rotate(-38 -20 18)" fill="#8E9B63" opacity="0.72"/>
+            <ellipse cx="22" cy="14" rx="13" ry="5.5" transform="rotate(34 22 14)" fill="#8E9B63" opacity="0.72"/>
+            <g transform="translate(-34,-2)">
+              <circle cx="0" cy="-7" r="6.5" fill="#FFFDF6" stroke="#D7B781" stroke-width="1"/>
+              <circle cx="6.5" cy="-2" r="6.5" fill="#FFFDF6" stroke="#D7B781" stroke-width="1"/>
+              <circle cx="4" cy="5.5" r="6.5" fill="#FFFDF6" stroke="#D7B781" stroke-width="1"/>
+              <circle cx="-4" cy="5.5" r="6.5" fill="#FFFDF6" stroke="#D7B781" stroke-width="1"/>
+              <circle cx="-6.5" cy="-2" r="6.5" fill="#FFFDF6" stroke="#D7B781" stroke-width="1"/>
+              <circle cx="0" cy="0" r="4.2" fill="#E39B26"/>
+            </g>
+            <g transform="translate(34,-8) scale(0.86)">
+              <circle cx="0" cy="-7" r="6.5" fill="#FFFDF6" stroke="#D7B781" stroke-width="1"/>
+              <circle cx="6.5" cy="-2" r="6.5" fill="#FFFDF6" stroke="#D7B781" stroke-width="1"/>
+              <circle cx="4" cy="5.5" r="6.5" fill="#FFFDF6" stroke="#D7B781" stroke-width="1"/>
+              <circle cx="-4" cy="5.5" r="6.5" fill="#FFFDF6" stroke="#D7B781" stroke-width="1"/>
+              <circle cx="-6.5" cy="-2" r="6.5" fill="#FFFDF6" stroke="#D7B781" stroke-width="1"/>
+              <circle cx="0" cy="0" r="4.2" fill="#E39B26"/>
+            </g>
+          </g>
+          <polygon id="nhHexTile" points="0,-24 20.8,-12 20.8,12 0,24 -20.8,12 -20.8,-12"/>
+          <clipPath id="nhBoardTopClip">
+            <rect x="-400" y="0" width="3200" height="9000"/>
+          </clipPath>
+          <linearGradient id="nhTopFadeGrad" x1="0" y1="0" x2="0" y2="34" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="white" stop-opacity="0"/>
+            <stop offset="100%" stop-color="white" stop-opacity="1"/>
+          </linearGradient>
+          <mask id="nhTopFadeMask" maskUnits="userSpaceOnUse" x="-400" y="0" width="3200" height="9000">
+            <rect x="-400" y="0" width="3200" height="34" fill="url(#nhTopFadeGrad)"/>
+            <rect x="-400" y="34" width="3200" height="9000" fill="white"/>
+          </mask>
         </defs>
-        <path class="nh-tube-cushion" id="journeyPathCushion" d=""/>
-        <path class="nh-tube-wall" id="journeyPathWall" d=""/>
-        <path class="nh-tube-core" id="journeyPathCore" d=""/>
-        <path class="nh-tube-trough" id="journeyPathTrough" d=""/>
-        <path class="nh-tube-honey" id="journeyPathHoney" d="" stroke="url(#nhHoneyGrad)"/>
-        <path class="nh-tube-sheen" id="journeyPathSheen" d=""/>
-        <path id="journeyInletCup" fill="url(#nhInletCupGrad)" d=""/>
-        <path id="journeyInletHoney" fill="url(#nhInletHoneyGrad)" d=""/>
+        <g clip-path="url(#nhBoardTopClip)">
+          <g mask="url(#nhTopFadeMask)">
+            <path class="nh-tube-cushion" id="journeyPathCushion" d=""/>
+            <path class="nh-tube-wall" id="journeyPathWall" d=""/>
+            <path class="nh-tube-core" id="journeyPathCore" d=""/>
+            <path class="nh-tube-trough" id="journeyPathTrough" d=""/>
+          </g>
+          <path class="nh-tube-honey" id="journeyPathHoney" d="" stroke="url(#nhHoneyGrad)"/>
+          <path class="nh-tube-sheen" id="journeyPathSheen" d=""/>
+        </g>
+        <path id="journeyInletCup" fill="url(#nhInletCupGrad)" opacity="0" d=""/>
+        <path id="journeyInletHoney" fill="url(#nhHoneyGrad)" d=""/>
       </svg>
+
+      <!-- Subtle alternating 2D honeycomb & floral illustrations filling empty margin voids -->
+      <div class="nh-journey__decor" aria-hidden="true">
+        <div class="nh-jdecor nh-jdecor--1">
+          <svg viewBox="0 0 260 240" width="260" height="240">
+            <g opacity="0.34" stroke="#B67622" stroke-width="1.3" fill="rgba(227,172,72,0.16)">
+              <use href="#nhHexTile" x="72" y="70"/><use href="#nhHexTile" x="115" y="70"/>
+              <use href="#nhHexTile" x="93.5" y="108"/><use href="#nhHexTile" x="136.5" y="108" fill="rgba(214,134,30,0.28)"/>
+              <use href="#nhHexTile" x="72" y="146"/><use href="#nhHexTile" x="115" y="146"/>
+            </g>
+            <g transform="translate(158, 122) scale(1.12)"><use href="#nhFloralClover"/></g>
+            <circle cx="48" cy="48" r="3" fill="#D89226" opacity="0.45"/>
+            <circle cx="195" cy="64" r="2.2" fill="#D89226" opacity="0.4"/>
+            <circle cx="132" cy="186" r="3.4" fill="#B87018" opacity="0.32"/>
+          </svg>
+        </div>
+
+        <div class="nh-jdecor nh-jdecor--2">
+          <svg viewBox="0 0 260 240" width="260" height="240">
+            <g opacity="0.30" stroke="#B67622" stroke-width="1.3" fill="rgba(227,172,72,0.14)">
+              <use href="#nhHexTile" x="148" y="78"/><use href="#nhHexTile" x="191" y="78"/>
+              <use href="#nhHexTile" x="126.5" y="116"/><use href="#nhHexTile" x="169.5" y="116" fill="rgba(214,134,30,0.26)"/>
+              <use href="#nhHexTile" x="148" y="154"/>
+            </g>
+            <g transform="translate(88, 108) scale(1.05)"><use href="#nhFloralClover"/></g>
+            <path d="M54 156 Q86 184 128 176" fill="none" stroke="#C58832" stroke-width="1.2" stroke-dasharray="4 5" opacity="0.45"/>
+            <circle cx="196" cy="176" r="2.8" fill="#D89226" opacity="0.4"/>
+            <circle cx="62" cy="54" r="3.4" fill="#D89226" opacity="0.36"/>
+          </svg>
+        </div>
+
+        <div class="nh-jdecor nh-jdecor--3">
+          <svg viewBox="0 0 260 240" width="260" height="240">
+            <circle cx="124" cy="116" r="56" fill="none" stroke="#C4862C" stroke-width="1" stroke-dasharray="3 6" opacity="0.35"/>
+            <g opacity="0.32" stroke="#B67622" stroke-width="1.3" fill="rgba(227,172,72,0.16)">
+              <use href="#nhHexTile" x="86" y="88"/><use href="#nhHexTile" x="129" y="88" fill="rgba(214,134,30,0.28)"/>
+              <use href="#nhHexTile" x="107.5" y="126"/>
+            </g>
+            <g transform="translate(154, 142) rotate(-14) scale(1.0)"><use href="#nhFloralClover"/></g>
+            <path d="M180 62 C188 76, 189 88, 180 92 C171 88, 172 76, 180 62 Z" fill="#D98B22" opacity="0.36"/>
+            <circle cx="66" cy="172" r="3" fill="#D89226" opacity="0.42"/>
+          </svg>
+        </div>
+
+        <div class="nh-jdecor nh-jdecor--4">
+          <svg viewBox="0 0 260 240" width="260" height="240">
+            <g opacity="0.32" stroke="#B67622" stroke-width="1.3" fill="rgba(227,172,72,0.15)">
+              <use href="#nhHexTile" x="144" y="68"/><use href="#nhHexTile" x="165.5" y="106" fill="rgba(214,134,30,0.24)"/>
+              <use href="#nhHexTile" x="122.5" y="106"/><use href="#nhHexTile" x="144" y="144"/>
+            </g>
+            <!-- Minimal editorial wooden honey dipper botanical line illustration -->
+            <g transform="translate(86, 128) rotate(-32)" opacity="0.48" stroke="#7A4C1A" stroke-width="1.4" fill="#E4A948">
+              <rect x="-2.5" y="10" width="5" height="58" rx="2.5" fill="#9E652B" stroke="none"/>
+              <rect x="-13" y="-12" width="26" height="5" rx="2.5"/>
+              <rect x="-16" y="-5" width="32" height="5" rx="2.5"/>
+              <rect x="-13" y="2" width="26" height="5" rx="2.5"/>
+              <rect x="-9" y="8" width="18" height="4" rx="2"/>
+            </g>
+            <g transform="translate(158, 152) scale(0.92)"><use href="#nhFloralClover"/></g>
+            <circle cx="72" cy="72" r="2.6" fill="#D89226" opacity="0.4"/>
+          </svg>
+        </div>
+
+        <div class="nh-jdecor nh-jdecor--5">
+          <svg viewBox="0 0 260 220" width="260" height="220">
+            <g opacity="0.30" stroke="#B67622" stroke-width="1.3" fill="rgba(227,172,72,0.16)">
+              <use href="#nhHexTile" x="92" y="74"/><use href="#nhHexTile" x="135" y="74"/>
+              <use href="#nhHexTile" x="113.5" y="112" fill="rgba(214,134,30,0.28)"/>
+            </g>
+            <g transform="translate(154, 118) scale(1.06)"><use href="#nhFloralClover"/></g>
+            <circle cx="62" cy="142" r="3.2" fill="#D89226" opacity="0.4"/>
+            <circle cx="192" cy="60" r="2.4" fill="#D89226" opacity="0.38"/>
+          </svg>
+        </div>
+      </div>
 
       <div class="nh-journey__inlet">
         <div class="nh-journey__inlet-marker" id="journeyInletMarker" aria-hidden="true"></div>
@@ -981,11 +1094,78 @@
 
   <!-- ==========================================================
        3. PINNED JAR FINALE & SLOW ENTER-THE-JAR TRANSITION
-       Smooth GSAP ScrollTrigger Sequence -> Original Website
+       Tasteful Left & Side 2D Honeycomb / Floral Framing + Pinned Jar
        ========================================================== -->
   <section class="nh-finale" id="nhJarFinale" aria-label="اكتمال تعبئة برطمان نحل الذهب">
     <div class="nh-jar-pin" id="nhJarPin">
       <div class="nh-jar-inlet-anchor" id="jarInletAnchor" aria-hidden="true"></div>
+
+      <!-- Subtle 2D honeycomb hexagons, flower stickers & pollen balancing left empty space -->
+      <div class="nh-jar-decor" id="nhJarDecor" aria-hidden="true">
+        <div class="nh-jar-decor__left">
+          <svg viewBox="0 0 420 560" width="420" height="560">
+            <g opacity="0.42" stroke="#BC7D24" stroke-width="1.35" fill="rgba(227,172,72,0.16)">
+              <use href="#nhHexTile" x="92" y="132"/><use href="#nhHexTile" x="136" y="132" fill="rgba(214,134,30,0.28)"/>
+              <use href="#nhHexTile" x="180" y="132"/>
+              <use href="#nhHexTile" x="70" y="170"/><use href="#nhHexTile" x="114" y="170" fill="rgba(214,134,30,0.24)"/>
+              <use href="#nhHexTile" x="158" y="170"/><use href="#nhHexTile" x="202" y="170"/>
+              <use href="#nhHexTile" x="92" y="208" fill="rgba(227,172,72,0.28)"/><use href="#nhHexTile" x="136" y="208"/>
+              <use href="#nhHexTile" x="180" y="208"/>
+              <use href="#nhHexTile" x="114" y="246"/><use href="#nhHexTile" x="158" y="246" fill="rgba(214,134,30,0.22)"/>
+              <use href="#nhHexTile" x="92" y="284"/><use href="#nhHexTile" x="136" y="284"/>
+            </g>
+            <!-- Soft geometric golden orbits -->
+            <circle cx="148" cy="212" r="118" fill="none" stroke="#C88E34" stroke-width="1" stroke-dasharray="4 7" opacity="0.34"/>
+            <!-- Small botanical flower sticker 1 (upper left) -->
+            <g transform="translate(242, 134)">
+              <g class="nh-jdec-float">
+                <circle cx="0" cy="0" r="46" fill="#FFFDF7" stroke="#DFB46A" stroke-width="1.8"/>
+                <g transform="translate(0, -9) scale(0.78)"><use href="#nhFloralClover"/></g>
+              </g>
+            </g>
+            <!-- Floating flower branch mid-left -->
+            <g transform="translate(106, 360) rotate(-12) scale(1.25)">
+              <g class="nh-jdec-float-alt"><use href="#nhFloralClover"/></g>
+            </g>
+            <!-- Small honeycomb floral medallion sticker 2 (lower left) -->
+            <g transform="translate(250, 408)">
+              <g class="nh-jdec-float">
+                <circle cx="0" cy="0" r="38" fill="#FFFDF7" stroke="#DFB46A" stroke-width="1.6"/>
+                <g opacity="0.65" stroke="#B67622" stroke-width="1.2" fill="rgba(227,172,72,0.22)" transform="scale(0.65)">
+                  <use href="#nhHexTile" x="-12" y="-12"/><use href="#nhHexTile" x="30" y="-12"/><use href="#nhHexTile" x="9" y="24"/>
+                </g>
+              </g>
+            </g>
+            <!-- Gentle pollen motes -->
+            <circle class="nh-jdec-pollen" cx="288" cy="236" r="4" fill="#D89226" opacity="0.52"/>
+            <circle class="nh-jdec-pollen" cx="62" cy="96" r="3.2" fill="#E3A334" opacity="0.46"/>
+            <circle class="nh-jdec-pollen" cx="326" cy="316" r="3.5" fill="#B87018" opacity="0.42"/>
+            <circle class="nh-jdec-pollen" cx="186" cy="488" r="3" fill="#D89226" opacity="0.48"/>
+          </svg>
+        </div>
+
+        <div class="nh-jar-decor__right">
+          <svg viewBox="0 0 320 520" width="320" height="520">
+            <g opacity="0.32" stroke="#BC7D24" stroke-width="1.3" fill="rgba(227,172,72,0.14)">
+              <use href="#nhHexTile" x="190" y="168"/><use href="#nhHexTile" x="234" y="168"/>
+              <use href="#nhHexTile" x="212" y="206" fill="rgba(214,134,30,0.24)"/><use href="#nhHexTile" x="168" y="206"/>
+              <use href="#nhHexTile" x="190" y="244"/>
+            </g>
+            <g transform="translate(132, 336) rotate(14) scale(1.12)">
+              <g class="nh-jdec-float-alt"><use href="#nhFloralClover"/></g>
+            </g>
+            <g transform="translate(106, 138)">
+              <g class="nh-jdec-float">
+                <circle cx="0" cy="0" r="32" fill="#FFFDF7" stroke="#DFB46A" stroke-width="1.5"/>
+                <path d="M0 -14 C9 -3,11 10,0 13 C-11 10,-9 -3,0 -14 Z" fill="#D98B22" opacity="0.8"/>
+              </g>
+            </g>
+            <circle class="nh-jdec-pollen" cx="76" cy="248" r="3.5" fill="#D89226" opacity="0.45"/>
+            <circle class="nh-jdec-pollen" cx="236" cy="396" r="3" fill="#E3A334" opacity="0.42"/>
+          </svg>
+        </div>
+      </div>
+
       <canvas class="nh-jar-canvas" id="jarCanvas" aria-hidden="true"></canvas>
 
       <div class="nh-jar-fallback">
@@ -993,8 +1173,6 @@
              alt="برطمان نحل الذهب مملوء بالعسل الذهبي الصافي"
              width="800" height="600" loading="lazy" decoding="async">
       </div>
-
-      <div class="nh-jar-cue" id="journeyFinaleCue" aria-live="polite">يمتلئ البرطمان بالعسل الصافي…</div>
     </div>
   </section>
 
