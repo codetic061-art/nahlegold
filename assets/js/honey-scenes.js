@@ -1,8 +1,9 @@
 /**
- * honey-scenes.js — Focused Real-Time 3D Scenes for Nahl Al-Thahab:
- *  1) Hero 3D Irregular Broken Honeycomb Composition with Yellow Wildflowers,
- *     Soft GPU Bokeh Background Chunks, Multi-Piece Cascading Viscous Honey &
- *     Underside Pour Stream feeding seamlessly into Section 2 (#journey).
+ * honey-scenes.js — Real-Time 3D Scenes for Nahl Al-Thahab:
+ *  1) Hero Real-Time 3D Viscous Honey Flow System aligned to the Transparent
+ *     Photorealistic Honeycomb PNG: emerging from lower honeycomb edges,
+ *     flowing over lower pieces, collecting underneath, and pouring continuously
+ *     into Section 2 (#journey).
  *  2) Stage 05 Crystal-Clear Octagonal "نحل الذهب" Jar Pinned with GSAP ScrollTrigger:
  *     Filling -> Full-Jar Appreciation Pause -> Gradual Over-Rim Dive -> Caustic Exit Reveal
  *     directly into the restored original website (#categories).
@@ -11,12 +12,10 @@ import * as THREE from './vendor/three.module.min.js';
 import {
   createLiquidHoneyMaterial,
   createCausticPortalMaterial,
-  createBokehBlurMaterial,
 } from './honey-shaders.js';
 import {
   createHoneyEnvironment,
-  createBrokenHoneycombComposition,
-  createGravityPourGeometry,
+  createHeroHoneyFlowSystem,
   createHoneyJar,
   createContinuousPourGeometry,
 } from './honey-assets.js';
@@ -29,19 +28,23 @@ function getNavH() {
 }
 
 /* =====================================================================
-   SCENE 1 — HERO 3D BROKEN HONEYCOMB COMPOSITION + CASCADING FLOW
+   SCENE 1 — HERO REAL-TIME 3D LIQUID HONEY FLOW OVER TRANSPARENT PNG
    ===================================================================== */
 function initHeroScene() {
   const hero = document.getElementById('hero');
   const stage = document.getElementById('heroStage');
+  const pngEl = document.getElementById('heroHoneycombPng');
   const canvas = document.getElementById('heroDrumCanvas');
   if (!hero || !stage || !canvas) return;
 
   const broadcastFallbackSpout = () => {
-    const sr = stage.getBoundingClientRect();
-    const cx = sr.left + sr.width * 0.50;
-    window.__NH_HERO_SPOUT__ = { clientX: cx };
-    window.dispatchEvent(new CustomEvent('honey:hero-spout', { detail: { clientX: cx } }));
+    const targetRect = pngEl && pngEl.getBoundingClientRect().width > 10
+      ? pngEl.getBoundingClientRect()
+      : stage.getBoundingClientRect();
+    const cx = targetRect.left + targetRect.width * 0.506;
+    const radiusPx = mobileQuery.matches ? 5.5 : 8.0;
+    window.__NH_HERO_SPOUT__ = { clientX: cx, radiusPx };
+    window.dispatchEvent(new CustomEvent('honey:hero-spout', { detail: { clientX: cx, radiusPx } }));
   };
 
   if (reducedQuery.matches) {
@@ -69,85 +72,40 @@ function initHeroScene() {
   const isMobile = mobileQuery.matches;
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.02;
+  renderer.toneMappingExposure = 1.04;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.autoClear = false;
 
   const envTex = createHoneyEnvironment(renderer);
 
-  // Foreground Scene (crisp broken chunks, 3D flowers, cascading streams & bottom pour)
   const scene = new THREE.Scene();
   scene.environment = envTex;
 
-  scene.add(new THREE.HemisphereLight('#FFF9EB', '#7A4F1A', 0.68));
-  const key = new THREE.DirectionalLight('#FFF6E0', 1.65);
+  scene.add(new THREE.HemisphereLight('#FFF9EB', '#7A4F1A', 0.72));
+  const key = new THREE.DirectionalLight('#FFF6E0', 1.75);
   key.position.set(4.5, 6.5, 6.8);
   scene.add(key);
 
-  const rim = new THREE.DirectionalLight('#FFD16D', 1.35);
+  const rim = new THREE.DirectionalLight('#FFD16D', 1.38);
   rim.position.set(-5.8, 3.2, -3.2);
   scene.add(rim);
 
-  const frontFill = new THREE.DirectionalLight('#FFF4DC', 0.48);
+  const frontFill = new THREE.DirectionalLight('#FFF4DC', 0.52);
   frontFill.position.set(-2.2, 0.8, 7.2);
   scene.add(frontFill);
 
-  // Background Bokeh Depth Scene (same studio rig lighting for seamless 3D background chunks)
-  const bgScene = new THREE.Scene();
-  bgScene.environment = envTex;
-  bgScene.add(new THREE.HemisphereLight('#FFF8E8', '#8C5C22', 0.72));
-  const bgKey = key.clone();
-  const bgRim = rim.clone();
-  const bgFill = frontFill.clone();
-  bgScene.add(bgKey, bgRim, bgFill);
-
   const camera = new THREE.PerspectiveCamera(34, 1.6, 0.1, 45);
-  camera.position.set(0, 0.08, 7.8);
+  camera.position.set(0, 0, 7.8);
 
-  const honeycomb = createBrokenHoneycombComposition({ isMobile });
-  scene.add(honeycomb.group);
-  bgScene.add(honeycomb.bgGroup);
-
-  // Offscreen half-res Bokeh Gaussian blur targets & fullscreen composite quad
-  const rtParams = {
-    minFilter: THREE.LinearFilter,
-    magFilter: THREE.LinearFilter,
-    format: THREE.RGBAFormat,
-  };
-  const rtA = new THREE.WebGLRenderTarget(320, 240, rtParams);
-  const rtB = new THREE.WebGLRenderTarget(320, 240, rtParams);
-
-  const postCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-  const postScene = new THREE.Scene();
-  const blurHMat = createBokehBlurMaterial();
-  blurHMat.blending = THREE.NoBlending;
-  const blurVMat = createBokehBlurMaterial();
-  blurVMat.blending = THREE.NormalBlending;
-  const postQuadGeo = new THREE.PlaneGeometry(2, 2);
-  const postQuad = new THREE.Mesh(postQuadGeo, blurHMat);
-  postQuad.frustumCulled = false;
-  postScene.add(postQuad);
-
-  // Continuous 3D liquid stream exiting downward from small underside collection opening into Section 2
-  const pourMat = createLiquidHoneyMaterial({
-    animatedFlow: true,
-    warmGolden: true,
-    flowAxis: 'uvy',
-    flowSpeed: 2.6,
-  });
-  const pourMesh = new THREE.Mesh(
-    createGravityPourGeometry({ start: new THREE.Vector3(0, 0, 0), bottomY: -2.5 }),
-    pourMat
-  );
-  scene.add(pourMesh);
+  const heroFlow = createHeroHoneyFlowSystem();
+  scene.add(heroFlow.group);
 
   let lastSpoutClientX = null;
-  let bokehTexW = 320;
-  let bokehTexH = 240;
+  let lastSpoutRadiusPx = null;
 
   function syncHeroLayout() {
     const hr = hero.getBoundingClientRect();
     const sr = stage.getBoundingClientRect();
+    const pr = pngEl ? pngEl.getBoundingClientRect() : sr;
     const w = Math.max(240, Math.round(hr.width));
     const h = Math.max(280, Math.round(hr.height));
 
@@ -156,82 +114,61 @@ function initHeroScene() {
     camera.updateProjectionMatrix();
     renderer.setSize(w, h, false);
 
-    bokehTexW = Math.max(160, Math.round(w * 0.5));
-    bokehTexH = Math.max(160, Math.round(h * 0.5));
-    rtA.setSize(bokehTexW, bokehTexH);
-    rtB.setSize(bokehTexW, bokehTexH);
-
     const camZ = w < 720 ? 8.6 : 7.8;
-    camera.position.set(0, 0.08, camZ);
-    camera.lookAt(0, 0.02, 0);
+    camera.position.set(0, 0, camZ);
+    camera.lookAt(0, 0, 0);
     camera.updateMatrixWorld(true);
 
     const halfH = Math.tan(THREE.MathUtils.degToRad(camera.fov * 0.5)) * camZ;
     const halfW = halfH * camera.aspect;
 
-    // Center broken honeycomb composition directly inside `.nh-hero__stage`
-    const targetPxX = (sr.left - hr.left) + sr.width * (w < 720 ? 0.50 : 0.51);
-    const targetPxY = (sr.top - hr.top) + sr.height * (w < 720 ? 0.45 : 0.44);
+    // Measure actual visible PNG bounding box relative to #hero so 3D streams lock pixel-accurately
+    const box = pr.width > 16 && pr.height > 16 ? pr : sr;
+    const relLeft = box.left - hr.left;
+    const relRight = box.right - hr.left;
+    const relTop = box.top - hr.top;
+    const relBottom = box.bottom - hr.top;
 
-    const worldX = ((targetPxX / w) * 2 - 1) * halfW;
-    const worldY = (1 - (targetPxY / h) * 2) * halfH + camera.position.y;
+    const toWorldX = (px) => ((px / w) * 2 - 1) * halfW;
+    const toWorldY = (py) => (1 - (py / h) * 2) * halfH;
 
-    const stageHFrac = sr.height / h;
-    const desiredScale = w < 720 ? stageHFrac * 1.48 : stageHFrac * 1.46;
-    const floorWorldY = camera.position.y - halfH;
-    const ceilWorldY = camera.position.y + halfH;
-    const maxScaleForFloor = Math.max(0.55, (worldY - (floorWorldY + 0.34)) / 1.32);
-    const maxScaleForCeil = Math.max(0.55, (ceilWorldY - 0.14 - worldY) / 1.66);
-    const frameScale = THREE.MathUtils.clamp(
-      Math.min(desiredScale, maxScaleForFloor, maxScaleForCeil),
-      0.56,
-      1.18
-    );
+    const worldRect = {
+      left: toWorldX(relLeft),
+      right: toWorldX(relRight),
+      top: toWorldY(relTop),
+      bottom: toWorldY(relBottom),
+    };
+    worldRect.width = Math.max(0.4, worldRect.right - worldRect.left);
+    worldRect.height = Math.max(0.4, worldRect.top - worldRect.bottom);
 
-    honeycomb.group.scale.setScalar(frameScale);
-    honeycomb.group.position.set(worldX, worldY, 0);
-    honeycomb.group.rotation.y = w < 720 ? 0.01 : 0.03;
-    honeycomb.group.updateMatrixWorld(true);
+    const heroBottomWorldY = -halfH - 0.16;
+    heroFlow.syncToPngRect(worldRect, heroBottomWorldY);
 
-    // Mirror world layout to blurred 3D background honeycomb layer
-    honeycomb.bgGroup.scale.setScalar(frameScale);
-    honeycomb.bgGroup.position.set(worldX, worldY, 0);
-    honeycomb.bgGroup.rotation.y = honeycomb.group.rotation.y;
-    honeycomb.bgGroup.updateMatrixWorld(true);
-
-    // Measure exact world position of small underside collection aperture (`spoutAnchor`)
+    // Project bottom exit stream center & radius to CSS pixels for seamless Journey inlet handoff
+    heroFlow.group.updateMatrixWorld(true);
     const spoutWorld = new THREE.Vector3();
-    honeycomb.spoutAnchor.getWorldPosition(spoutWorld);
+    heroFlow.spoutAnchor.getWorldPosition(spoutWorld);
 
     const distAtSpoutZ = Math.max(2.0, camZ - spoutWorld.z);
     const halfHAtSpout = Math.tan(THREE.MathUtils.degToRad(camera.fov * 0.5)) * distAtSpoutZ;
-    const bottomWorldY = camera.position.y - halfHAtSpout - 0.28;
+    const pxPerWorld = h / (2 * halfHAtSpout);
+    const spoutRadiusPx = Math.max(4.0, heroFlow.getExitBottomRadius() * pxPerWorld);
 
-    const dropX = spoutWorld.x;
-    const dropZ = spoutWorld.z;
-
-    if (pourMesh.geometry) pourMesh.geometry.dispose();
-    pourMesh.position.set(dropX, 0, dropZ);
-    pourMesh.geometry = createGravityPourGeometry({
-      start: new THREE.Vector3(0, spoutWorld.y, 0),
-      dropX: 0,
-      dropZ: 0,
-      bottomY: Math.min(spoutWorld.y - 0.35, bottomWorldY),
-      topRadius: 0.042 * frameScale,
-      waistRadius: 0.029 * frameScale,
-      bottomRadius: 0.038 * frameScale,
-      radialSegments: 24,
-      heightSegments: 48,
-    });
-
-    const bottomExitWorld = new THREE.Vector3(dropX, camera.position.y - halfHAtSpout, dropZ);
-    const projected = bottomExitWorld.clone().project(camera);
+    const bottomExitWorld = new THREE.Vector3(spoutWorld.x, -halfHAtSpout, spoutWorld.z);
+    const projected = bottomExitWorld.project(camera);
     const spoutClientX = hr.left + (projected.x * 0.5 + 0.5) * hr.width;
 
-    if (lastSpoutClientX === null || Math.abs(lastSpoutClientX - spoutClientX) > 0.4) {
+    if (
+      lastSpoutClientX === null ||
+      Math.abs(lastSpoutClientX - spoutClientX) > 0.3 ||
+      Math.abs((lastSpoutRadiusPx || 0) - spoutRadiusPx) > 0.25
+    ) {
       lastSpoutClientX = spoutClientX;
-      window.__NH_HERO_SPOUT__ = { clientX: spoutClientX };
-      window.dispatchEvent(new CustomEvent('honey:hero-spout', { detail: { clientX: spoutClientX } }));
+      lastSpoutRadiusPx = spoutRadiusPx;
+      window.__NH_HERO_SPOUT__ = { clientX: spoutClientX, radiusPx: spoutRadiusPx };
+      window.dispatchEvent(new CustomEvent('honey:hero-spout', {
+        detail: { clientX: spoutClientX, radiusPx: spoutRadiusPx },
+      }));
     }
   }
 
@@ -243,8 +180,13 @@ function initHeroScene() {
   visObs.observe(hero);
 
   if (window.ResizeObserver) {
-    new ResizeObserver(syncHeroLayout).observe(hero);
-    new ResizeObserver(syncHeroLayout).observe(stage);
+    const ro = new ResizeObserver(syncHeroLayout);
+    ro.observe(hero);
+    ro.observe(stage);
+    if (pngEl) ro.observe(pngEl);
+  }
+  if (pngEl) {
+    pngEl.addEventListener('load', syncHeroLayout);
   }
   window.addEventListener('resize', syncHeroLayout);
   if (document.fonts && document.fonts.ready) {
@@ -252,62 +194,16 @@ function initHeroScene() {
   }
   syncHeroLayout();
 
-  let pointerX = 0;
-  let pointerSmoothX = 0;
-  if (!isMobile) {
-    hero.addEventListener('pointermove', (e) => {
-      pointerX = (e.clientX / window.innerWidth - 0.5) * 2;
-    }, { passive: true });
-  }
-
   const clock = new THREE.Clock();
   let rafId = 0;
 
   function tickHero() {
     rafId = requestAnimationFrame(tickHero);
     if (!isVisible || document.hidden) return;
-    const dt = Math.min(clock.getDelta(), 0.05);
+    clock.getDelta();
     const t = clock.elapsedTime;
 
-    pointerSmoothX += (pointerX - pointerSmoothX) * Math.min(1, dt * 4.5);
-    pourMat.uniforms.uTime.value = t;
-    honeycomb.updateCascade(t);
-
-    // Gentle living float & mouse depth parallax on foreground chunks while preserving bottom spout X
-    honeycomb.upperChunk.rotation.y = (honeycomb.upperChunk.userData.baseRotY ?? 0.32) + pointerSmoothX * 0.045 + Math.sin(t * 0.7) * 0.014;
-    honeycomb.leftChunk.rotation.y = (honeycomb.leftChunk.userData.baseRotY ?? 0.32) + pointerSmoothX * 0.035 + Math.cos(t * 0.65) * 0.012;
-    honeycomb.mainChunk.rotation.y = (honeycomb.mainChunk.userData.baseRotY ?? -0.24) + pointerSmoothX * 0.030 + Math.sin(t * 0.55) * 0.010;
-    honeycomb.bgGroup.rotation.y = (honeycomb.group.rotation.y || 0) - pointerSmoothX * 0.045;
-
-    // 1. Render background 3D honeycomb pieces cleanly to half-res RT A (alpha = 0 background)
-    renderer.setRenderTarget(rtA);
-    renderer.setClearColor(0x000000, 0);
-    renderer.clear(true, true, true);
-    renderer.render(bgScene, camera);
-
-    // 2. Separable Horizontal Bokeh Blur Pass -> RT B (linear HDR retained)
-    blurHMat.uniforms.tDiffuse.value = rtA.texture;
-    blurHMat.uniforms.uTexelStep.value.set(0.68 / bokehTexW, 0);
-    blurHMat.uniforms.uOpacity.value = 1.0;
-    blurHMat.uniforms.uApplyGamma.value = 0.0;
-    postQuad.material = blurHMat;
-    renderer.setRenderTarget(rtB);
-    renderer.clear(true, false, false);
-    renderer.render(postScene, postCam);
-
-    // 3. Clear main Hero WebGL canvas, draw Vertically Blurred Bokeh layer w/ sRGB tone mapping, then Crisp 3D Foreground
-    renderer.setRenderTarget(null);
-    renderer.setClearColor(0x000000, 0);
-    renderer.clear(true, true, true);
-
-    blurVMat.uniforms.tDiffuse.value = rtB.texture;
-    blurVMat.uniforms.uTexelStep.value.set(0, 0.68 / bokehTexH);
-    blurVMat.uniforms.uOpacity.value = 0.74;
-    blurVMat.uniforms.uApplyGamma.value = 1.0;
-    postQuad.material = blurVMat;
-    renderer.render(postScene, postCam);
-
-    renderer.clearDepth();
+    heroFlow.update(t);
     renderer.render(scene, camera);
   }
 
@@ -317,19 +213,12 @@ function initHeroScene() {
     cancelAnimationFrame(rafId);
     visObs.disconnect();
     window.removeEventListener('resize', syncHeroLayout);
-    rtA.dispose();
-    rtB.dispose();
-    postQuadGeo.dispose();
-    blurHMat.dispose();
-    blurVMat.dispose();
-    [scene, bgScene].forEach((sc) => {
-      sc.traverse((obj) => {
-        if (obj.geometry) obj.geometry.dispose();
-        if (obj.material) {
-          const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
-          mats.forEach((m) => m.dispose());
-        }
-      });
+    scene.traverse((obj) => {
+      if (obj.geometry) obj.geometry.dispose();
+      if (obj.material) {
+        const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+        mats.forEach((m) => m.dispose());
+      }
     });
     envTex.dispose();
     renderer.dispose();
@@ -399,15 +288,23 @@ function initJarFinaleScene() {
   jar.lidGroup.rotation.set(0.24, 0.0, -0.36);
   scene.add(jar.group);
 
-  // Slim Continuous 3D Pour Stream descending from exact top center (#jarInletAnchor)
-  const streamMat = createLiquidHoneyMaterial({ animatedFlow: true });
+  // Continuous 3D Pour Stream locked to exact screen top-center (#jarInletAnchor)
+  // and sized proportionally to the incoming 2D Honey Journey channel
+  const streamMat = createLiquidHoneyMaterial({
+    animatedFlow: true,
+    warmGolden: true,
+    flowAxis: 'uvy',
+    flowSpeed: 2.55,
+    pulseAmp: 0.065,
+    swayAmp: 0.004,
+  });
   const streamGeo = createContinuousPourGeometry({
-    topRadius: 0.030,
-    midRadius: 0.024,
-    botRadius: 0.036,
+    topRadius: isMobile ? 0.044 : 0.056,
+    midRadius: isMobile ? 0.030 : 0.038,
+    botRadius: isMobile ? 0.038 : 0.048,
     height: 1.0,
-    radialSegments: 20,
-    heightSegments: 32,
+    radialSegments: 24,
+    heightSegments: 36,
   });
   const streamMesh = new THREE.Mesh(streamGeo, streamMat);
   scene.add(streamMesh);
@@ -420,10 +317,9 @@ function initJarFinaleScene() {
   portalQuad.visible = false;
   scene.add(portalQuad);
 
-  // Synchronized timeline state driven by GSAP ScrollTrigger (or fallback scroll progress)
   const timeline = {
-    preProgress: 0,   // 0..1 while scrolling into #nhJarFinale before pin locks
-    pinProgress: 0,   // 0..1 across full pinned ScrollTrigger scroll range
+    preProgress: 0,
+    pinProgress: 0,
   };
 
   let smoothPre = 0;
@@ -436,7 +332,6 @@ function initJarFinaleScene() {
   if (hasGsapST) {
     window.gsap.registerPlugin(window.ScrollTrigger);
 
-    // Pre-pin smooth filling intro as visitor scrolls up toward the finale block
     window.ScrollTrigger.create({
       trigger: wrap,
       start: 'top 92%',
@@ -468,7 +363,6 @@ function initJarFinaleScene() {
       },
     });
   } else {
-    // Fallback linear scroll mapping if ScrollTrigger unavailable
     const updateFallbackScroll = () => {
       const r = wrap.getBoundingClientRect();
       const navH = getNavH();
@@ -514,6 +408,13 @@ function initJarFinaleScene() {
   const clock = new THREE.Clock();
   const camPos = new THREE.Vector3();
   const camLook = new THREE.Vector3();
+  const topRaycaster = new THREE.Raycaster();
+  const zZeroPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+  const streamTopAnchor = new THREE.Vector3(0, 2.0, 0);
+  const streamBotImpact = new THREE.Vector3(0, 0, 0);
+  const streamBotNow = new THREE.Vector3(0, 0, 0);
+  const streamDir = new THREE.Vector3(0, 1, 0);
+  const upAxis = new THREE.Vector3(0, 1, 0);
   let rafId = 0;
 
   function tickFinale() {
@@ -523,7 +424,6 @@ function initJarFinaleScene() {
     const dt = Math.min(clock.getDelta(), 0.05);
     const t = clock.elapsedTime;
 
-    // Gentle catch-up smoothing on top of GSAP scrub for silky WebGL sub-frame motion
     const dampPre = Math.min(1, dt * 10);
     const dampPin = Math.min(1, dt * 9);
     smoothPre += (timeline.preProgress - smoothPre) * dampPre;
@@ -533,12 +433,6 @@ function initJarFinaleScene() {
     const p = THREE.MathUtils.clamp(smoothPin, 0, 1);
     const pre = THREE.MathUtils.clamp(smoothPre, 0, 1);
 
-    // Phase breakdown:
-    //  pre (before lock): fill 0.18 -> 0.42
-    //  p [0.00 .. 0.42] : fill 0.42 -> 0.95 (jar fills completely)
-    //  p [0.42 .. 0.62] : hold at 0.95 FULL JAR appreciation moment
-    //  p [0.62 .. 0.87] : slow lid exit + gradual camera rim glide
-    //  p [0.87 .. 1.00] : interior submersion + golden caustic reveal into original site
     const fillFromPre = THREE.MathUtils.lerp(0.18, 0.42, pre);
     const fillFromPin = THREE.MathUtils.smoothstep(p, 0.0, 0.42);
     const jarFill = THREE.MathUtils.lerp(fillFromPre, 0.95, fillFromPin);
@@ -548,7 +442,6 @@ function initJarFinaleScene() {
     const fullAppreciationZoom = THREE.MathUtils.smoothstep(p, 0.42, 0.62);
     const divePrep = THREE.MathUtils.smoothstep(p, 0.62, 0.76);
     const diveProgress = THREE.MathUtils.smoothstep(p, 0.62, 0.87);
-    const insideDive = THREE.MathUtils.smoothstep(p, 0.85, 0.99);
 
     const jarScale = jar.group.scale.y;
     const jarY = jar.group.position.y;
@@ -557,7 +450,6 @@ function initJarFinaleScene() {
       THREE.MathUtils.lerp(-0.14, 0.05, Math.min(1, fillFromPin + fullAppreciationZoom * 0.25)) +
       pointerSmoothX * 0.08 * (1 - diveProgress);
 
-    // Brushed gold lid stays poised offset beside rim during fill & hold, then lifts smoothly out of view
     jar.lidGroup.position.set(
       lidRestX + divePrep * 0.9,
       lidRestY + divePrep * 1.45,
@@ -565,23 +457,7 @@ function initJarFinaleScene() {
     );
     jar.lidGroup.rotation.z = -0.36 - divePrep * 0.42;
 
-    // 3D Pouring honey stream aligned strictly from top inlet anchor down to rising meniscus
-    streamMat.uniforms.uTime.value = t;
-    streamMesh.visible = streamCut < 0.95;
-    if (streamMesh.visible) {
-      const halfH = Math.tan(THREE.MathUtils.degToRad(camera.fov * 0.5)) * camera.position.z;
-      const streamTopY = Math.max(1.9, camera.position.y + halfH + 0.08);
-      const surfaceWorldY = jarY + jar.getSurfaceY() * jarScale;
-      const totalH = Math.max(0.2, streamTopY - surfaceWorldY);
-      const radiusFactor = Math.max(0.05, 1 - streamCut);
-      // Taper cleanly downward as pour finishes so it never pops instantaneously
-      const tailBot = THREE.MathUtils.lerp(surfaceWorldY, streamTopY, Math.pow(streamCut, 1.5));
-      const h = Math.max(0.08, streamTopY - tailBot);
-      streamMesh.position.set(0, tailBot, 0);
-      streamMesh.scale.set(radiusFactor, h, radiusFactor);
-    }
-
-    // Slow, non-abrupt Camera Choreography
+    // Camera choreography (preserved Enter-the-Jar transition)
     const baseCamZ = isMobile ? 6.5 : 5.85;
     const holdCamZ = isMobile ? 5.75 : 5.05;
     const holdCamY = isMobile ? 0.34 : 0.36;
@@ -592,7 +468,6 @@ function initJarFinaleScene() {
       camLook.set(0, THREE.MathUtils.lerp(-0.16, -0.06, q), 0);
       camera.fov = isMobile ? 39 : 36;
     } else if (p <= 0.62) {
-      // Dedicated full-jar appreciation pause — gentle slow camera push-in to admire gold facets & label
       const u = THREE.MathUtils.smoothstep(p, 0.42, 0.62);
       camPos.set(
         pointerSmoothX * 0.10 * (1 - u * 0.4),
@@ -602,7 +477,6 @@ function initJarFinaleScene() {
       camLook.set(0, THREE.MathUtils.lerp(-0.06, 0.0, u), 0);
       camera.fov = isMobile ? 39 : 36;
     } else if (p <= 0.87) {
-      // Gradual graceful rise & approach over faceted rim
       const u = THREE.MathUtils.smoothstep(p, 0.62, 0.87);
       const arcLift = Math.sin(u * Math.PI * 0.72) * 0.45;
       camPos.set(
@@ -613,7 +487,6 @@ function initJarFinaleScene() {
       camLook.set(0, THREE.MathUtils.lerp(0.0, 0.24, u), 0);
       camera.fov = THREE.MathUtils.lerp(isMobile ? 39 : 36, 49, u);
     } else {
-      // Smooth submersion inside luminous honey chamber
       const u = THREE.MathUtils.smoothstep(p, 0.87, 1.0);
       camPos.set(0, THREE.MathUtils.lerp(1.44, -0.35, u), THREE.MathUtils.lerp(1.32, 0.02, u));
       camLook.set(0, THREE.MathUtils.lerp(0.24, -2.1, u), 0);
@@ -623,6 +496,27 @@ function initJarFinaleScene() {
     camera.position.copy(camPos);
     camera.lookAt(camLook);
     camera.updateProjectionMatrix();
+    camera.updateMatrixWorld(true);
+
+    // Keep 3D pouring stream locked cleanly to top-center #jarInletAnchor -> rising meniscus coil
+    streamMat.uniforms.uTime.value = t;
+    streamMesh.visible = streamCut < 0.95;
+    if (streamMesh.visible) {
+      topRaycaster.setFromCamera(new THREE.Vector2(0, 1.02), camera);
+      if (!topRaycaster.ray.intersectPlane(zZeroPlane, streamTopAnchor)) {
+        const halfH = Math.tan(THREE.MathUtils.degToRad(camera.fov * 0.5)) * camera.position.z;
+        streamTopAnchor.set(0, Math.max(1.9, camera.position.y + halfH + 0.08), 0);
+      }
+      const surfaceWorldY = jarY + jar.getSurfaceY() * jarScale;
+      streamBotImpact.set(0, surfaceWorldY, 0);
+      streamBotNow.lerpVectors(streamBotImpact, streamTopAnchor, Math.pow(streamCut, 1.5));
+      streamDir.subVectors(streamTopAnchor, streamBotNow);
+      const len = Math.max(0.08, streamDir.length());
+      const radiusFactor = Math.max(0.06, 1 - streamCut);
+      streamMesh.position.copy(streamBotNow);
+      streamMesh.quaternion.setFromUnitVectors(upAxis, streamDir.normalize());
+      streamMesh.scale.set(radiusFactor, len, radiusFactor);
+    }
 
     // Animated 3D caustic dive portal quad + smooth exit into original #FAF5EA site
     const portalStrength = THREE.MathUtils.smoothstep(p, 0.83, 0.94);
@@ -630,7 +524,6 @@ function initJarFinaleScene() {
     portalMat.uniforms.uStrength.value = portalStrength;
     portalQuad.visible = portalStrength > 0.01;
 
-    // Fade jar stage out cleanly beneath portal veil as #categories scrolls into viewport
     const pinFadeOut = 1.0 - THREE.MathUtils.smoothstep(p, 0.90, 0.985);
     stage.style.opacity = pinFadeOut.toFixed(3);
     canvas.style.opacity = '1';

@@ -1,6 +1,6 @@
 /* ============================================================
    journey.css — Scoped Styles strictly (.nh-*) for:
-     1. New Hero Section (.nh-hero) with Botanical Meadow + 3D Honeycomb Frame
+     1. New Hero Section (.nh-hero) with Botanical Meadow + Transparent Honeycomb PNG & 3D Flow
      2. Organic 2D Honey Journey (.nh-journey) — outline-free rich-amber S-tube
      3. Pinned GSAP ScrollTrigger Jar Finale & Caustic Reveal (.nh-finale)
      4. Floating Editorial Stage Preview (.nh-preview)
@@ -12,7 +12,7 @@
 /* ============================================================
    1. NEW BOTANICAL HERO SECTION (#hero)
    Left: clean editorial RTL Arabic copy over bright cream light
-   Right: clover/citrus floral atmosphere + 3D Stainless Drum w/ OPEN tap
+   Right: clover/citrus floral atmosphere + transparent Honeycomb PNG + real-time 3D Honey Flow
    ============================================================ */
 .nh-hero {
   position: relative;
@@ -35,12 +35,12 @@
 
 .nh-hero__inner {
   position: relative;
-  z-index: 6;
+  z-index: 4;
   width: 100%;
   max-width: var(--container, 1240px);
   margin-inline: auto;
   padding-inline: var(--gutter, 40px);
-  /* LTR column ordering locks text strictly on screen LEFT & stainless tank on RIGHT */
+  /* LTR column ordering locks text strictly on screen LEFT & honeycomb visual on RIGHT */
   direction: ltr;
   display: grid;
   grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
@@ -148,13 +148,13 @@
   justify-content: center;
 }
 
-/* Full-hero transparent WebGL canvas spanning cleanly down to Hero foot seam */
+/* Full-hero transparent WebGL canvas rendering real-time 3D honey flow above PNG down to Hero foot seam */
 .nh-hero__canvas {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  z-index: 4;
+  z-index: 5;
   pointer-events: none;
   display: block;
 }
@@ -163,7 +163,7 @@
 .nh-hero__decor {
   position: absolute;
   inset: 0;
-  z-index: 3;
+  z-index: 2;
   pointer-events: none;
   overflow: hidden;
 }
@@ -192,22 +192,26 @@
   .nh-hero__decor { display: none; }
 }
 
-.nh-hero__fallback-wrap {
-  display: none;
+.nh-hero__visual-wrap {
+  display: block;
   position: relative;
-  width: min(440px, 92%);
-  text-align: center;
+  z-index: 3;
+  width: min(465px, 90%);
+  margin-inline: auto;
+  margin-top: -1.4rem;
+  margin-bottom: 2.2rem;
+  pointer-events: none;
+  user-select: none;
 }
 
-.nh-hero__fallback-img {
+.nh-hero__png-img {
   width: 100%;
   height: auto;
   display: block;
-  filter: drop-shadow(0 20px 28px rgba(73, 42, 13, 0.22));
+  filter: drop-shadow(0 18px 28px rgba(73, 42, 13, 0.16));
 }
 
 .nh-hero--fallback .nh-hero__canvas { display: none; }
-.nh-hero--fallback .nh-hero__fallback-wrap { display: block; }
 
 /* ============================================================
    2. NEW ORGANIC 2D HONEY JOURNEY SECTION (#journey)
@@ -831,6 +835,12 @@
 
   .nh-hero__stage {
     min-height: clamp(290px, 42svh, 360px);
+  }
+
+  .nh-hero__visual-wrap {
+    width: min(320px, 84%);
+    margin-top: 0;
+    margin-bottom: 1.8rem;
   }
 
   .nh-journey__inlet {

@@ -1,12 +1,12 @@
 /**
- * honey-assets.js — Focused Studio 3D Assets for Nahl Al-Thahab:
- *  - High-contrast white-studio PMREM environment for clear glass & warm beeswax highlights
- *  - Irregular 3D Broken Honeycomb Composition (3 foreground fractured chunks, 3 background
- *    3D chunks for bokeh depth, 3D wildflower stems & blossoms, cascading continuous viscous
- *    liquid honey bridges, and bottom-center amber pooling pocket with underside spout outlet)
- *  - Crystal-Clear Octagonal Stage 05 "نحل الذهب" Jar with neck threads, contact shadow,
- *    clear Fresnel silhouettes, rising golden honey, and pour ripple coil
- *  - Continuous Liquid Pour Stream geometry (Lathe/Bezier catenoid column)
+ * honey-assets.js — Studio 3D Assets for Nahl Al-Thahab:
+ *  - High-contrast studio PMREM environment for clear glass, gold cap, & honey highlights
+ *  - Real-time 3D Hero Liquid Honey Flow System aligned to the transparent Honeycomb PNG:
+ *    over-comb accumulation ribbons, lower V-apex meniscus, gravity-stretched continuous streams,
+ *    left-piece tributary flow, occasional surface-tension droplets, underside collection opening
+ *    with pooled coiling honey, and continuous exit stream feeding into #journey.
+ *  - Upgraded Stage 05 Crystal-Clear Octagonal "نحل الذهب" Jar with sculpted capillary meniscus,
+ *    viscous honey rope-coiling mound, internal glass honey bounce, and contact shadow.
  */
 import * as THREE from './vendor/three.module.min.js';
 import {
@@ -16,9 +16,9 @@ import {
 } from './honey-shaders.js';
 
 /**
- * Generates a white-backdrop studio PMREM environment map with dark negative-fill
- * reflector cards and sharp crisp softbox strips so gold caps & glass jar walls
- * catch razor-sharp specular highlights against #FFFFFF white.
+ * Generates a studio PMREM environment map with dark negative-fill reflector cards
+ * and crisp softbox strips so glass jar walls, gold caps, and viscous honey streams
+ * catch razor-sharp specular reflections against warm cream (#FAF4E4).
  */
 export function createHoneyEnvironment(renderer) {
   const pmrem = new THREE.PMREMGenerator(renderer);
@@ -27,7 +27,6 @@ export function createHoneyEnvironment(renderer) {
   const envScene = new THREE.Scene();
   envScene.background = new THREE.Color('#D8D4CE');
 
-  // High overhead studio softbox
   const topPanel = new THREE.Mesh(
     new THREE.PlaneGeometry(18, 18),
     new THREE.MeshBasicMaterial({ color: new THREE.Color(2.6, 2.55, 2.45), side: THREE.DoubleSide })
@@ -36,7 +35,6 @@ export function createHoneyEnvironment(renderer) {
   topPanel.rotation.x = Math.PI / 2;
   envScene.add(topPanel);
 
-  // Key narrow bright softbox strip (right-front)
   const keyStrip = new THREE.Mesh(
     new THREE.PlaneGeometry(3.2, 15),
     new THREE.MeshBasicMaterial({ color: new THREE.Color(4.2, 4.0, 3.65), side: THREE.DoubleSide })
@@ -45,7 +43,6 @@ export function createHoneyEnvironment(renderer) {
   keyStrip.lookAt(0, 0, 0);
   envScene.add(keyStrip);
 
-  // Warm amber fill bounce (left-back) for honey translucency
   const fillStrip = new THREE.Mesh(
     new THREE.PlaneGeometry(5, 12),
     new THREE.MeshBasicMaterial({ color: new THREE.Color(2.4, 1.75, 0.72), side: THREE.DoubleSide })
@@ -54,7 +51,6 @@ export function createHoneyEnvironment(renderer) {
   fillStrip.lookAt(0, 0, 0);
   envScene.add(fillStrip);
 
-  // Deep charcoal negative-fill silhouette cards so glass borders look unmistakably crisp on #FFFFFF
   const darkLeft = new THREE.Mesh(
     new THREE.PlaneGeometry(5.5, 16),
     new THREE.MeshBasicMaterial({ color: new THREE.Color('#14110D'), side: THREE.DoubleSide })
@@ -76,10 +72,6 @@ export function createHoneyEnvironment(renderer) {
   return renderTarget.texture;
 }
 
-/**
- * Draws a crisp subtle studio ground shadow texture so the Stage 05 jar sits
- * physically grounded on pure #FFFFFF white without gray smudge.
- */
 function createContactShadowTexture() {
   const canvas = document.createElement('canvas');
   canvas.width = 256;
@@ -94,13 +86,9 @@ function createContactShadowTexture() {
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 256, 256);
 
-  const tex = new THREE.CanvasTexture(canvas);
-  return tex;
+  return new THREE.CanvasTexture(canvas);
 }
 
-/**
- * Draws the gold jar lid rim texture with brushed metallic detail & Arabic script band.
- */
 export function createGoldCapTexture() {
   const canvas = document.createElement('canvas');
   canvas.width = 1024;
@@ -138,10 +126,6 @@ export function createGoldCapTexture() {
   return tex;
 }
 
-/**
- * High-contrast oval "نحل الذهب" label matching the authentic product jars,
- * framed with crisp dark/gold editorial edge rings so it pops sharply against #FFFFFF.
- */
 export function createBrandLabelTexture() {
   const canvas = document.createElement('canvas');
   canvas.width = 1024;
@@ -156,7 +140,6 @@ export function createBrandLabelTexture() {
   const paintLabel = (logoImg) => {
     ctx.clearRect(0, 0, 1024, 1024);
 
-    // Outer subtle dark hairline framing ring
     ctx.save();
     ctx.beginPath();
     ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
@@ -164,7 +147,6 @@ export function createBrandLabelTexture() {
     ctx.fill();
     ctx.restore();
 
-    // Metallic gold border ring
     ctx.save();
     ctx.beginPath();
     ctx.ellipse(cx, cy, rx - 5, ry - 5, 0, 0, Math.PI * 2);
@@ -177,7 +159,6 @@ export function createBrandLabelTexture() {
     ctx.fill();
     ctx.restore();
 
-    // Crisp pure cream-white interior label face
     ctx.save();
     ctx.beginPath();
     ctx.ellipse(cx, cy, rx - 22, ry - 22, 0, 0, Math.PI * 2);
@@ -192,7 +173,6 @@ export function createBrandLabelTexture() {
     ctx.stroke();
     ctx.restore();
 
-    // Top hexagon + bee crest
     ctx.save();
     ctx.translate(cx, 250);
     ctx.beginPath();
@@ -210,7 +190,6 @@ export function createBrandLabelTexture() {
     ctx.strokeStyle = '#E6A22E';
     ctx.stroke();
 
-    // Bee wings & body inside crest
     ctx.fillStyle = 'rgba(255, 250, 232, 0.92)';
     ctx.beginPath();
     ctx.ellipse(-40, -16, 44, 19, -0.32, 0, Math.PI * 2);
@@ -229,7 +208,6 @@ export function createBrandLabelTexture() {
     ctx.fill();
     ctx.restore();
 
-    // Brand Logo Image or Fallback Bold Calligraphy
     if (logoImg) {
       const targetW = 540;
       const ratio = logoImg.height / logoImg.width;
@@ -258,7 +236,6 @@ export function createBrandLabelTexture() {
     ctx.textBaseline = 'middle';
     ctx.fillText('عسل النحل الطبيعي ومشتقاته', cx, 574);
 
-    // High-contrast ribbon banner ("عسل طبيعي مصري ١٠٠٪")
     ctx.save();
     ctx.fillStyle = '#14110D';
     ctx.beginPath();
@@ -272,7 +249,6 @@ export function createBrandLabelTexture() {
     ctx.fillText('عسل مصري خام ١٠٠٪', cx, 661);
     ctx.restore();
 
-    // Botanical leaves & honey drop crest
     ctx.save();
     ctx.translate(cx, 788);
     for (const side of [-1, 1]) {
@@ -322,14 +298,89 @@ function getOctagonalScale(x, z) {
 }
 
 /**
- * Improved Final Stage 05 Clear Glass Honey Jar built specifically to read with sharp
- * silhouette edges, glass wall thickness, screw neck threads, glossy reflections, and
- * ground contact shadow against #FFFFFF white.
+ * Builds a sculpted capillary meniscus disc (concentric radial rings with upturned glass-wetting
+ * rim) + a multi-turn viscous honey rope-coiling mound for the pouring impact center inside the jar.
+ */
+function createJarMeniscusAndCoil(radialSegs) {
+  const rings = 14;
+  const maxR = 0.79;
+  const positions = [];
+  const uvs = [];
+  const indices = [];
+
+  for (let rIdx = 0; rIdx <= rings; rIdx++) {
+    const f = rIdx / rings;
+    const rad = f * maxR;
+    // Upturned concave capillary edge near jar wall + slight center pooling depression/mound
+    const capillary = Math.pow(THREE.MathUtils.smoothstep(f, 0.56, 1.0), 1.65) * 0.040;
+    const baseRimY = capillary;
+
+    for (let s = 0; s <= radialSegs; s++) {
+      const a = (s / radialSegs) * Math.PI * 2;
+      const x = Math.cos(a) * rad;
+      const z = Math.sin(a) * rad;
+      const oct = f > 0.35 ? THREE.MathUtils.lerp(1.0, getOctagonalScale(x, z), (f - 0.35) / 0.65 * 0.86) : 1.0;
+      positions.push(x * oct, baseRimY, z * oct);
+      uvs.push(0.5 + (x / (maxR * 2)), 0.5 + (z / (maxR * 2)));
+    }
+  }
+
+  const stride = radialSegs + 1;
+  for (let rIdx = 0; rIdx < rings; rIdx++) {
+    for (let s = 0; s < radialSegs; s++) {
+      const a = rIdx * stride + s;
+      const b = a + 1;
+      const c = (rIdx + 1) * stride + s;
+      const d = c + 1;
+      indices.push(a, c, b);
+      indices.push(b, c, d);
+    }
+  }
+
+  const surfGeo = new THREE.BufferGeometry();
+  surfGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+  surfGeo.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+  surfGeo.setIndex(indices);
+  surfGeo.computeVertexNormals();
+
+  // Save rest Y values so tick loop can ripple concentric waves physically
+  surfGeo.userData.baseY = new Float32Array(positions.length / 3);
+  for (let i = 0; i < surfGeo.userData.baseY.length; i++) {
+    surfGeo.userData.baseY[i] = positions[i * 3 + 1];
+  }
+
+  // Sculpted viscous rope-coiling honey mound (2.3-turn spiral tapering cleanly down into meniscus)
+  const coilPts = [];
+  const turns = 2.25;
+  const steps = 42;
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    const angle = t * Math.PI * 2 * turns;
+    const rad = THREE.MathUtils.lerp(0.012, 0.145, Math.pow(t, 0.88));
+    const y = THREE.MathUtils.lerp(0.056, -0.004, Math.pow(t, 0.80));
+    coilPts.push(new THREE.Vector3(Math.cos(angle) * rad, y, Math.sin(angle) * rad));
+  }
+  const coilGeo = createTaperedBridgeGeometry({
+    points: coilPts,
+    radiusStart: 0.026,
+    radiusMid: 0.023,
+    radiusEnd: 0.010,
+    tubularSegments: 42,
+    radialSegments: 12,
+    flattenZ: 1.0,
+  });
+
+  return { surfGeo, coilGeo };
+}
+
+/**
+ * Stage 05 Clear Glass Octagonal Honey Jar with refractive glass reflections,
+ * dynamic honey-level bounce inside glass walls, sculpted capillary meniscus, and
+ * viscous coiling pour mound.
  */
 export function createHoneyJar({ isMobile = false, initialFill = 0.25 } = {}) {
   const group = new THREE.Group();
 
-  // Soft studio contact shadow ellipse at base
   const shadowTex = createContactShadowTexture();
   const shadowGeo = new THREE.PlaneGeometry(2.6, 2.6);
   shadowGeo.rotateX(-Math.PI / 2);
@@ -342,7 +393,6 @@ export function createHoneyJar({ isMobile = false, initialFill = 0.25 } = {}) {
   shadowPlane.position.y = -1.07;
   group.add(shadowPlane);
 
-  // Outer faceted glass jar profile (bottom-to-top for outward normals!)
   const glassPoints = [
     new THREE.Vector2(0.0, -1.05),
     new THREE.Vector2(0.68, -1.05),
@@ -376,13 +426,11 @@ export function createHoneyJar({ isMobile = false, initialFill = 0.25 } = {}) {
   }
   glassGeo.computeVertexNormals();
 
-  // 1. Back glass shell (visible inner cavity rim when unfilled)
   const glassBackMat = createClearGlassMaterial({ backSide: true });
   const glassBackMesh = new THREE.Mesh(glassGeo, glassBackMat);
   glassBackMesh.renderOrder = 0;
   group.add(glassBackMesh);
 
-  // 2. Inner honey volume (rich golden amber rising fill)
   const innerPoints = [
     new THREE.Vector2(0.0, -0.94),
     new THREE.Vector2(0.75, -0.94),
@@ -416,30 +464,35 @@ export function createHoneyJar({ isMobile = false, initialFill = 0.25 } = {}) {
   innerHoneyMesh.renderOrder = 1;
   group.add(innerHoneyMesh);
 
-  // 3. Top liquid meniscus cap + viscous honey coiling mound at pour contact center
-  const surfGeo = new THREE.CircleGeometry(0.79, radialSegs);
-  surfGeo.rotateX(-Math.PI / 2);
-  const surfMat = createLiquidHoneyMaterial();
-  surfMat.uniforms.uCoreColor.value.set('#A84B08');
+  // Sculpted capillary meniscus surface + viscous coiling pour mound
+  const { surfGeo, coilGeo } = createJarMeniscusAndCoil(radialSegs);
+  const surfMat = createLiquidHoneyMaterial({
+    animatedFlow: false,
+    warmGolden: true,
+    flowSpeed: 0.6,
+  });
+  surfMat.uniforms.uCoreColor.value.set('#A84B06');
   surfMat.uniforms.uMidColor.value.set('#E6951D');
   const surfaceMesh = new THREE.Mesh(surfGeo, surfMat);
   surfaceMesh.renderOrder = 2;
   group.add(surfaceMesh);
 
-  const coilGeo = new THREE.TorusGeometry(0.085, 0.036, 14, 28);
-  coilGeo.rotateX(Math.PI / 2);
-  const coilMat = createLiquidHoneyMaterial();
+  const coilMat = createLiquidHoneyMaterial({
+    animatedFlow: true,
+    warmGolden: true,
+    flowAxis: 'uvx',
+    flowSpeed: 2.2,
+    pulseAmp: 0.005,
+  });
   const coilMesh = new THREE.Mesh(coilGeo, coilMat);
   coilMesh.renderOrder = 2;
   group.add(coilMesh);
 
-  // 4. Crystal-Clear High-Contrast Front Glass Shell
   const glassFrontMat = createClearGlassMaterial({ backSide: false });
   const glassMesh = new THREE.Mesh(glassGeo, glassFrontMat);
   glassMesh.renderOrder = 3;
   group.add(glassMesh);
 
-  // Crisp glass screw-thread rings & open mouth rim lip so upper opening reads unmistakably!
   for (const ty of [0.89, 0.945, 1.00]) {
     const threadGeo = new THREE.TorusGeometry(0.655, 0.018, 10, 36);
     threadGeo.rotateX(Math.PI / 2);
@@ -455,7 +508,6 @@ export function createHoneyJar({ isMobile = false, initialFill = 0.25 } = {}) {
   mouthRim.renderOrder = 3;
   group.add(mouthRim);
 
-  // 5. Sharp Curved Brand Oval Label ("نحل الذهب") on +Z flat front wall
   const labelTex = createBrandLabelTexture();
   const labelGeo = new THREE.CylinderGeometry(0.916, 0.916, 0.98, 40, 12, true, -0.62, 1.24);
   const lpos = labelGeo.attributes.position;
@@ -485,7 +537,6 @@ export function createHoneyJar({ isMobile = false, initialFill = 0.25 } = {}) {
   labelMesh.renderOrder = 4;
   group.add(labelMesh);
 
-  // 6. Brushed Gold Lid Assembly (centered around local origin so tilt rotates cleanly in place)
   const lidGroup = new THREE.Group();
   const capTex = createGoldCapTexture();
   const capGeo = new THREE.CylinderGeometry(0.71, 0.72, 0.26, 36, 1, true);
@@ -526,6 +577,8 @@ export function createHoneyJar({ isMobile = false, initialFill = 0.25 } = {}) {
     honeyMat.uniforms.uFillLevel.value = clamped;
     honeyMat.uniforms.uRipple.value = ripple;
     honeyMat.uniforms.uTime.value = time;
+    glassFrontMat.uniforms.uFillLevel.value = clamped;
+    glassBackMat.uniforms.uFillLevel.value = clamped;
     surfMat.uniforms.uTime.value = time;
     coilMat.uniforms.uTime.value = time;
 
@@ -535,19 +588,33 @@ export function createHoneyJar({ isMobile = false, initialFill = 0.25 } = {}) {
     currentSurfaceY = y;
 
     surfaceMesh.visible = clamped > 0.02;
-    surfaceMesh.position.y = y + 0.004;
-    const shoulderShrink = y > 0.56 ? THREE.MathUtils.lerp(1.0, 0.72, (y - 0.56) / 0.34) : 1.0;
+    surfaceMesh.position.y = y + 0.010;
+    const shoulderShrink = y > 0.56 ? THREE.MathUtils.lerp(1.0, 0.71, (y - 0.56) / 0.34) : 1.0;
     surfaceMesh.scale.set(shoulderShrink, 1, shoulderShrink);
+
+    // Subtle real-time concentric ripple displacement on sculpted meniscus disc
+    if (surfaceMesh.visible) {
+      const sPos = surfGeo.attributes.position;
+      const baseY = surfGeo.userData.baseY;
+      const amp = 0.008 * (0.18 + ripple);
+      for (let i = 0; i < sPos.count; i++) {
+        const vx = sPos.getX(i);
+        const vz = sPos.getZ(i);
+        const rad = Math.hypot(vx, vz);
+        const w = Math.sin(rad * 16.0 - time * 4.4) * amp * Math.exp(-rad * 1.4);
+        sPos.setY(i, baseY[i] + w);
+      }
+      sPos.needsUpdate = true;
+      surfGeo.computeVertexNormals();
+    }
 
     coilMesh.visible = showCoil && clamped > 0.03;
     if (coilMesh.visible) {
-      coilMesh.position.set(
-        Math.cos(time * 5.2) * 0.03,
-        y + 0.028,
-        Math.sin(time * 5.2) * 0.03
-      );
-      const pulse = 0.88 + Math.sin(time * 6.0) * 0.14;
-      coilMesh.scale.set(pulse, 1.0, pulse);
+      coilMesh.position.set(0, y + 0.010, 0);
+      coilMesh.rotation.y = -time * 2.6;
+      const coilScale = (0.94 + Math.sin(time * 4.2) * 0.06) * Math.min(1.0, shoulderShrink * 1.05);
+      const coilHeight = showCoil ? (0.45 + 0.55 * Math.min(1.0, ripple + 0.25)) : 0.2;
+      coilMesh.scale.set(coilScale, coilHeight, coilScale);
     }
   };
 
@@ -568,7 +635,7 @@ export function createHoneyJar({ isMobile = false, initialFill = 0.25 } = {}) {
 /**
  * Builds a continuous vertical/catenoid pouring column Geometry centered around X=Z=0,
  * Y spanning from 0 (bottom impact end) to height H (top spout mouth), so `vUv.y = 1` at nozzle
- * and `0` at impact. Zero detached dots — one smooth viscous honey stream.
+ * and `0` at impact.
  */
 export function createContinuousPourGeometry({
   topRadius = 0.075,
@@ -579,7 +646,6 @@ export function createContinuousPourGeometry({
   heightSegments = 36,
 } = {}) {
   const geo = new THREE.CylinderGeometry(topRadius, botRadius, height, radialSegments, heightSegments, false);
-  // Shift so bottom = 0, top = height
   geo.translate(0, height * 0.5, 0);
 
   const pos = geo.attributes.position;
@@ -587,8 +653,7 @@ export function createContinuousPourGeometry({
     const x = pos.getX(i);
     const y = pos.getY(i);
     const z = pos.getZ(i);
-    const t = THREE.MathUtils.clamp(y / height, 0, 1); // 0 bottom -> 1 top
-    // Smooth catenary thinning through middle waist + tiny bell flare near inlet
+    const t = THREE.MathUtils.clamp(y / height, 0, 1);
     const bellTop = Math.pow(THREE.MathUtils.smoothstep(t, 0.72, 1.0), 1.4);
     const poolBot = Math.pow(1.0 - THREE.MathUtils.smoothstep(t, 0.0, 0.25), 1.5);
     const currBase = THREE.MathUtils.lerp(botRadius, topRadius, t);
@@ -602,652 +667,8 @@ export function createContinuousPourGeometry({
 }
 
 /**
- * Deterministic cell pseudo-random generator so organic honeycomb fracturing & cell
- * depth variations stay rock-solid across frames and reloads.
- */
-function cellHash(c, r) {
-  const n = Math.sin(c * 127.1 + r * 311.7) * 43758.5453;
-  return n - Math.floor(n);
-}
-
-/**
- * Ray-casting point-in-polygon check for irregular fractured comb boundaries.
- */
-function pointInPoly(px, py, poly) {
-  let inside = false;
-  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
-    const xi = poly[i][0], yi = poly[i][1];
-    const xj = poly[j][0], yj = poly[j][1];
-    const intersect = ((yi > py) !== (yj > py)) &&
-      (px < ((xj - xi) * (py - yi)) / ((yj - yi) || 1e-9) + xi);
-    if (intersect) inside = !inside;
-  }
-  return inside;
-}
-
-/**
- * Procedural organic golden-cream beeswax albedo & fine micro-pitted bump textures
- * so front hex walls and fractured borders look like real hand-broken natural honeycomb.
- */
-function createBeeswaxTextures() {
-  const size = 512;
-  const colCanvas = document.createElement('canvas');
-  colCanvas.width = size;
-  colCanvas.height = size;
-  const cCtx = colCanvas.getContext('2d');
-
-  const bumpCanvas = document.createElement('canvas');
-  bumpCanvas.width = size;
-  bumpCanvas.height = size;
-  const bCtx = bumpCanvas.getContext('2d');
-
-  // Keep texture tint nearly neutral-cream so multiplying vertex colors preserves authentic
-  // golden beeswax hues instead of over-saturating into peach/salmon under ACES tone mapping.
-  const grad = cCtx.createLinearGradient(0, 0, size, size);
-  grad.addColorStop(0.0, '#FFFDF6');
-  grad.addColorStop(0.45, '#F8F0DA');
-  grad.addColorStop(0.85, '#EFE0BE');
-  grad.addColorStop(1.0, '#FAF4E3');
-  cCtx.fillStyle = grad;
-  cCtx.fillRect(0, 0, size, size);
-
-  bCtx.fillStyle = '#808080';
-  bCtx.fillRect(0, 0, size, size);
-
-  // Subtle organic wax flakes, warm golden marbling & micro-pitting
-  for (let i = 0; i < 680; i++) {
-    const x = cellHash(i, 1.3) * size;
-    const y = cellHash(i, 7.9) * size;
-    const r = 4 + cellHash(i, 13.7) * 26;
-    const warm = cellHash(i, 23.1);
-
-    const g = cCtx.createRadialGradient(x, y, 0, x, y, r);
-    if (warm > 0.52) {
-      g.addColorStop(0, 'rgba(255, 250, 228, 0.24)');
-      g.addColorStop(1, 'rgba(255, 250, 228, 0)');
-    } else {
-      g.addColorStop(0, 'rgba(205, 166, 94, 0.18)');
-      g.addColorStop(1, 'rgba(205, 166, 94, 0)');
-    }
-    cCtx.fillStyle = g;
-    cCtx.beginPath();
-    cCtx.arc(x, y, r, 0, Math.PI * 2);
-    cCtx.fill();
-
-    const bv = Math.round(92 + warm * 82);
-    const bg = bCtx.createRadialGradient(x, y, 0, x, y, r * 0.85);
-    bg.addColorStop(0, `rgba(${bv},${bv},${bv},0.35)`);
-    bg.addColorStop(1, 'rgba(128,128,128,0)');
-    bCtx.fillStyle = bg;
-    bCtx.beginPath();
-    bCtx.arc(x, y, r * 0.85, 0, Math.PI * 2);
-    bCtx.fill();
-  }
-
-  const map = new THREE.CanvasTexture(colCanvas);
-  map.wrapS = THREE.RepeatWrapping;
-  map.wrapT = THREE.RepeatWrapping;
-  map.colorSpace = THREE.SRGBColorSpace;
-  map.anisotropy = 4;
-
-  const bumpMap = new THREE.CanvasTexture(bumpCanvas);
-  bumpMap.wrapS = THREE.RepeatWrapping;
-  bumpMap.wrapT = THREE.RepeatWrapping;
-
-  return { map, bumpMap };
-}
-
-/**
- * Shrinks an irregular broken contour slightly inward toward its centroid so the central
- * beeswax midrib never bulges outside the jagged fractured perimeter hexagonal cells.
- */
-function insetPoly(poly, shrinkDist) {
-  let cx = 0, cy = 0;
-  for (const [x, y] of poly) { cx += x; cy += y; }
-  cx /= poly.length;
-  cy /= poly.length;
-  return poly.map(([x, y]) => {
-    const dx = x - cx;
-    const dy = y - cy;
-    const len = Math.hypot(dx, dy) || 1;
-    const factor = Math.max(0.45, (len - shrinkDist) / len);
-    return [cx + dx * factor, cy + dy * factor];
-  });
-}
-
-/**
- * Watertight quantized corner hash so adjacent hex cells share identical organic corner jitter.
- */
-function getJitteredHexVertex(px, py, cx, cy, outerR, a) {
-  const ux = cx + Math.cos(a) * outerR;
-  const uy = cy + Math.sin(a) * outerR;
-  const qx = Math.round(ux * 220);
-  const qy = Math.round(uy * 220);
-  const dx = (cellHash(qx, qy) - 0.5) * outerR * 0.12;
-  const dy = (cellHash(qx + 17, qy + 31) - 0.5) * outerR * 0.12;
-  return [ux + dx, uy + dy];
-}
-
-/**
- * Builds an extruded non-uniform hexagonal beeswax lattice mesh that cleanly fractures open
- * half-cells along an irregular broken polygon boundary in ONE single draw call without
- * protruding outward spikes, with deep recessed golden-amber throats & creamy wax rims.
- */
-function buildFracturedCombCellsGeometry({
-  contour,
-  cellR = 0.068,
-  depthFront = 0.095,
-  depthBack = 0.065,
-  septumHalfZ = 0.020,
-  zTilt = 0.012,
-  warmRimScale = 1.0,
-} = {}) {
-  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-  for (const [x, y] of contour) {
-    if (x < minX) minX = x;
-    if (x > maxX) maxX = x;
-    if (y < minY) minY = y;
-    if (y > maxY) maxY = y;
-  }
-
-  const positions = [];
-  const colors = [];
-  const uvs = [];
-  const indices = [];
-
-  const tmpColA = new THREE.Color();
-  const tmpColB = new THREE.Color();
-  const tmpColC = new THREE.Color();
-  // Rich caramelized beeswax interior -> warm golden-amber cell walls -> honey-kissed gold rims
-  const colFloor = new THREE.Color('#240C00');
-  const colThroat = new THREE.Color('#542001');
-  const colMid = new THREE.Color('#A6620C');
-  const colWaxOuter = new THREE.Color('#B87616');
-  const colRimBright = new THREE.Color('#E4BA54').multiplyScalar(warmRimScale);
-  const colRimWarm = new THREE.Color('#C68D24').multiplyScalar(warmRimScale);
-
-  const pushTri = (a, b, c, ca, cb, cc) => {
-    const base = positions.length / 3;
-    positions.push(a[0], a[1], a[2], b[0], b[1], b[2], c[0], c[1], c[2]);
-    colors.push(
-      ca.r, ca.g, ca.b,
-      cb.r, cb.g, cb.b,
-      cc.r, cc.g, cc.b
-    );
-    uvs.push(
-      a[0] * 0.65 + 0.5, a[1] * 0.65 + 0.5,
-      b[0] * 0.65 + 0.5, b[1] * 0.65 + 0.5,
-      c[0] * 0.65 + 0.5, c[1] * 0.65 + 0.5
-    );
-    indices.push(base, base + 1, base + 2);
-  };
-
-  const pushQuad = (a, b, c, d, ca, cb, cc, cd) => {
-    pushTri(a, b, c, ca, cb, cc);
-    pushTri(a, c, d, ca, cc, cd);
-  };
-
-  const colStep = Math.sqrt(3) * cellR;
-  const rowStep = 1.5 * cellR;
-  const rMin = Math.floor((minY - cellR) / rowStep);
-  const rMax = Math.ceil((maxY + cellR) / rowStep);
-  const cMin = Math.floor((minX - cellR) / colStep) - 1;
-  const cMax = Math.ceil((maxX + cellR) / colStep) + 1;
-
-  const openCells = [];
-  const sealedCells = [];
-
-  const wallMaskPoly = contour;
-
-  const addHexPrismFace = (cx, cy, dirSign, baseZ, wallDepth, rnd) => {
-    const outerR = cellR * 1.02;
-    const midR = cellR * 0.89;
-    const innerR = cellR * 0.77;
-
-    const rimTone = tmpColA.copy(colRimBright).lerp(colRimWarm, rnd * 0.62);
-    const rim0 = rimTone.clone();
-    const midTone = colMid.clone().lerp(colThroat, (1 - rnd) * 0.25);
-
-    const floorPts = [];
-
-    for (let k = 0; k < 6; k++) {
-      const kNext = (k + 1) % 6;
-      const a0 = (Math.PI / 3) * k + Math.PI / 6;
-      const a1 = (Math.PI / 3) * kNext + Math.PI / 6;
-
-      const [ox0, oy0] = getJitteredHexVertex(0, 0, cx, cy, outerR, a0);
-      const [ox1, oy1] = getJitteredHexVertex(0, 0, cx, cy, outerR, a1);
-
-      const ix0 = cx + (ox0 - cx) * (innerR / outerR);
-      const iy0 = cy + (oy0 - cy) * (innerR / outerR);
-      const ix1 = cx + (ox1 - cx) * (innerR / outerR);
-      const iy1 = cy + (oy1 - cy) * (innerR / outerR);
-
-      const rx0 = cx + (ox0 - cx) * (midR / outerR);
-      const ry0 = cy + (oy0 - cy) * (midR / outerR);
-      const rx1 = cx + (ox1 - cx) * (midR / outerR);
-      const ry1 = cy + (oy1 - cy) * (midR / outerR);
-
-      const aMid = (Math.PI / 3) * k + Math.PI / 3;
-      const nbX = cx + Math.cos(aMid) * colStep;
-      const nbY = cy + Math.sin(aMid) * colStep;
-      const isOuterBoundaryEdge = !pointInPoly(nbX, nbY, wallMaskPoly);
-
-      const chipScale = isOuterBoundaryEdge
-        ? (0.56 + cellHash(Math.round(ox0 * 90), Math.round(oy0 * 90)) * 0.36)
-        : (0.90 + rnd * 0.16);
-
-      const und0 = Math.sin(ox0 * 2.8 + oy0 * 2.1) * zTilt;
-      const und1 = Math.sin(ox1 * 2.8 + oy1 * 2.1) * zTilt;
-
-      const z0_0 = dirSign * baseZ + und0;
-      const z0_1 = dirSign * baseZ + und1;
-      const zMid_0 = dirSign * (baseZ + wallDepth * chipScale * 0.72) + und0;
-      const zMid_1 = dirSign * (baseZ + wallDepth * chipScale * 0.72) + und1;
-      const zTip_0 = dirSign * (baseZ + wallDepth * chipScale) + und0;
-      const zTip_1 = dirSign * (baseZ + wallDepth * chipScale) + und1;
-
-      const O0 = [ox0, oy0, z0_0], O1 = [ox1, oy1, z0_1];
-      const B0 = [ox0, oy0, zMid_0], B1 = [ox1, oy1, zMid_1];
-      const R0 = [rx0, ry0, zTip_0], R1 = [rx1, ry1, zTip_1];
-      const I0 = [ix0, iy0, zMid_0], I1 = [ix1, iy1, zMid_1];
-      const D0 = [ix0, iy0, z0_0], D1 = [ix1, iy1, z0_1];
-
-      if (dirSign > 0) {
-        pushQuad(O0, O1, B1, B0, colWaxOuter, colWaxOuter, midTone, midTone);
-        pushQuad(B0, B1, R1, R0, midTone, midTone, rim0, rim0);
-        pushQuad(R0, R1, I1, I0, rim0, rim0, colMid, colMid);
-        pushQuad(I0, I1, D1, D0, colThroat, colThroat, colFloor, colFloor);
-        floorPts.push([D0, D1]);
-
-        if (isOuterBoundaryEdge) {
-          const Ob0 = [ox0, oy0, -baseZ + und0];
-          const Ob1 = [ox1, oy1, -baseZ + und1];
-          pushQuad(O1, O0, Ob0, Ob1, colWaxOuter, colWaxOuter, colWaxOuter, colWaxOuter);
-        }
-      } else {
-        pushQuad(O1, O0, B0, B1, colWaxOuter, colWaxOuter, midTone, midTone);
-        pushQuad(B1, B0, R0, R1, midTone, midTone, rim0, rim0);
-        pushQuad(R1, R0, I0, I1, rim0, rim0, colMid, colMid);
-        pushQuad(I1, I0, D0, D1, colThroat, colThroat, colFloor, colFloor);
-        floorPts.push([D0, D1]);
-      }
-    }
-
-    // Solid amber floor triangle fan inside BOTH front & back of every kept cell (100% watertight!)
-    if (floorPts.length) {
-      const undC = Math.sin(cx * 2.8 + cy * 2.1) * zTilt;
-      const C = [cx, cy, dirSign * (baseZ * 0.72) + undC];
-      const cDeep = tmpColB.set('#3A1601');
-      const cWallFloor = tmpColC.set('#6E3504');
-      for (const [D0, D1] of floorPts) {
-        if (dirSign > 0) pushTri(C, D0, D1, cDeep, cWallFloor, cWallFloor);
-        else pushTri(C, D1, D0, cDeep, cWallFloor, cWallFloor);
-      }
-    }
-  };
-
-  for (let r = rMin; r <= rMax; r++) {
-    const cy = r * rowStep;
-    const xShift = (Math.abs(r) % 2) * (colStep * 0.5);
-    for (let c = cMin; c <= cMax; c++) {
-      const cx = c * colStep + xShift;
-      if (!pointInPoly(cx, cy, wallMaskPoly)) continue;
-
-      let boundaryCount = 0;
-      for (let k = 0; k < 6; k++) {
-        const aMid = (Math.PI / 3) * k + Math.PI / 3;
-        if (!pointInPoly(cx + Math.cos(aMid) * colStep, cy + Math.sin(aMid) * colStep, wallMaskPoly)) {
-          boundaryCount++;
-        }
-      }
-
-      const rnd = cellHash(c, r);
-      addHexPrismFace(cx, cy, +1, septumHalfZ, depthFront, rnd);
-      addHexPrismFace(cx, cy, -1, septumHalfZ, depthBack, rnd);
-
-      const undulation = Math.sin(cx * 2.8 + cy * 2.1) * zTilt;
-      const sealScore = Math.sin(cx * 3.2 - cy * 2.4) * 0.16 + rnd;
-      if (sealScore > 0.965 && boundaryCount === 0) {
-        sealedCells.push({ cx, cy, rnd, undulation });
-      } else {
-        openCells.push({ cx, cy, rnd, undulation, isEdge: boundaryCount > 0 });
-      }
-    }
-  }
-
-  const wallGeo = new THREE.BufferGeometry();
-  wallGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-  wallGeo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-  wallGeo.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
-  wallGeo.setIndex(indices);
-  wallGeo.computeVertexNormals();
-
-  return { wallGeo, openCells, sealedCells };
-}
-
-/**
- * Builds a gentle 3-ring silky concave honey saucer matching a pointy-top hexagon cell,
- * shaded from deep warm amber center -> molten golden honey capillary rim without harsh cone glints.
- */
-function createConcaveHoneyPoolGeometry(cellR) {
-  const outerR = cellR * 0.785;
-  const midR = cellR * 0.48;
-  const cCenter = new THREE.Color('#662F02');
-  const cMid = new THREE.Color('#CE7E08');
-  const cRim = new THREE.Color('#F7C538');
-
-  const positions = [0, 0, -0.013];
-  const colors = [cCenter.r, cCenter.g, cCenter.b];
-  const indices = [];
-
-  for (let k = 0; k < 6; k++) {
-    const a = (Math.PI / 3) * k + Math.PI / 6;
-    const cosA = Math.cos(a), sinA = Math.sin(a);
-    positions.push(cosA * midR, sinA * midR, -0.007);
-    colors.push(cMid.r, cMid.g, cMid.b);
-    positions.push(cosA * outerR, sinA * outerR, 0.008);
-    colors.push(cRim.r, cRim.g, cRim.b);
-  }
-
-  for (let k = 0; k < 6; k++) {
-    const kNext = (k + 1) % 6;
-    const m0 = 1 + k * 2;
-    const r0 = m0 + 1;
-    const m1 = 1 + kNext * 2;
-    const r1 = m1 + 1;
-    indices.push(0, m0, m1);
-    indices.push(m0, r0, r1);
-    indices.push(m0, r1, m1);
-  }
-
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-  geo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-  geo.setIndex(indices);
-  geo.computeVertexNormals();
-  return geo;
-}
-
-/**
- * Builds a single genuine 3D irregular broken honeycomb chunk where interior hex mosaics
- * extend all the way to the fractured stepped perimeter (zero biscuit flange!), backed cleanly
- * inside by an inset septum and filled with silky concave amber honey meniscus pools.
- */
-function createBrokenCombChunk({
-  contour,
-  cellR = 0.068,
-  depthFront = 0.095,
-  depthBack = 0.062,
-  septumHalfZ = 0.022,
-  honeyIntensity = 0.78,
-  zTilt = 0.012,
-  materials,
-  simplified = false,
-} = {}) {
-  const chunkGroup = new THREE.Group();
-
-  // 1. Interior reinforcing wax midrib inset well inside outer mosaic ring (zero outside rim flange!)
-  const innerPoly = insetPoly(contour, cellR * 0.55);
-  const shape = new THREE.Shape();
-  innerPoly.forEach(([x, y], idx) => {
-    if (idx === 0) shape.moveTo(x, y);
-    else shape.lineTo(x, y);
-  });
-  shape.closePath();
-
-  const septumGeo = new THREE.ExtrudeGeometry(shape, {
-    depth: septumHalfZ * 1.4,
-    bevelEnabled: false,
-    curveSegments: 1,
-  });
-  septumGeo.translate(0, 0, -septumHalfZ * 0.7);
-  const sPos = septumGeo.attributes.position;
-  for (let i = 0; i < sPos.count; i++) {
-    const sx = sPos.getX(i);
-    const sy = sPos.getY(i);
-    const sz = sPos.getZ(i);
-    sPos.setZ(i, sz + Math.sin(sx * 2.8 + sy * 2.1) * zTilt);
-  }
-  septumGeo.computeVertexNormals();
-  chunkGroup.add(new THREE.Mesh(septumGeo, materials.septumMat));
-
-  // 2. Watertight vertex-colored fractured hexagonal beeswax cell walls front & back + outer skirts
-  const { wallGeo, openCells, sealedCells } = buildFracturedCombCellsGeometry({
-    contour,
-    cellR,
-    depthFront,
-    depthBack,
-    septumHalfZ: septumHalfZ * 0.72,
-    zTilt,
-  });
-  chunkGroup.add(new THREE.Mesh(wallGeo, materials.wallMat));
-
-  // 3. Silky concave shimmering golden-amber liquid meniscus pools inside open uncapped cells
-  const dummy = new THREE.Object3D();
-  const cColor = new THREE.Color();
-  if (openCells.length) {
-    const poolGeo = createConcaveHoneyPoolGeometry(cellR);
-    const frontAndBack = simplified ? 1 : 2;
-    const poolInst = new THREE.InstancedMesh(poolGeo, materials.cellHoneyMat, openCells.length * frontAndBack);
-    let pIdx = 0;
-    openCells.forEach((cell) => {
-      const clusterGlow = Math.sin(cell.cx * 3.8 + cell.cy * 2.9) * 0.5 + 0.5;
-      const depthBias = cell.rnd < 0.25 ? 0.16 : 0.30 + cell.rnd * 0.44 * honeyIntensity;
-      const zFill = septumHalfZ * 0.66 + depthFront * depthBias + cell.undulation;
-      dummy.position.set(cell.cx, cell.cy, zFill);
-      dummy.rotation.set(0, 0, 0);
-      dummy.scale.set(1, 1, 1);
-      dummy.updateMatrix();
-      poolInst.setMatrixAt(pIdx, dummy.matrix);
-      const luma = THREE.MathUtils.clamp(0.56 + cell.rnd * 0.20 + clusterGlow * 0.14, 0.54, 0.90);
-      cColor.setHSL(0.112 + cell.rnd * 0.015, 0.92, luma);
-      poolInst.setColorAt(pIdx, cColor);
-      pIdx++;
-
-      if (!simplified) {
-        dummy.position.set(cell.cx, cell.cy, -(septumHalfZ * 0.66 + depthBack * 0.34) + cell.undulation);
-        dummy.rotation.set(0, Math.PI, 0);
-        dummy.updateMatrix();
-        poolInst.setMatrixAt(pIdx, dummy.matrix);
-        poolInst.setColorAt(pIdx, cColor);
-        pIdx++;
-      }
-    });
-    poolInst.instanceMatrix.needsUpdate = true;
-    if (poolInst.instanceColor) poolInst.instanceColor.needsUpdate = true;
-    chunkGroup.add(poolInst);
-  }
-
-  // 4. Organic warm beeswax cappings scattered naturally in subtle sparse clusters
-  if (sealedCells.length && !simplified) {
-    const capGeo = new THREE.CylinderGeometry(cellR * 0.79, cellR * 0.85, 0.024, 6);
-    capGeo.rotateX(Math.PI / 2);
-    const capInst = new THREE.InstancedMesh(capGeo, materials.waxCapMat, sealedCells.length);
-    sealedCells.forEach((cell, idx) => {
-      dummy.position.set(cell.cx, cell.cy, septumHalfZ * 0.72 + depthFront * 0.66 + cell.undulation);
-      dummy.rotation.set((cell.rnd - 0.5) * 0.14, (cell.rnd - 0.5) * 0.14, 0);
-      dummy.scale.setScalar(0.94 + cell.rnd * 0.10);
-      dummy.updateMatrix();
-      capInst.setMatrixAt(idx, dummy.matrix);
-      cColor.setHSL(0.114 + cell.rnd * 0.008, 0.58, 0.48 + cell.rnd * 0.08);
-      capInst.setColorAt(idx, cColor);
-    });
-    capInst.instanceMatrix.needsUpdate = true;
-    if (capInst.instanceColor) capInst.instanceColor.needsUpdate = true;
-    chunkGroup.add(capInst);
-  }
-
-  return chunkGroup;
-}
-
-/**
- * Helper to compute vertex colors across a flower petal from deep saffron throat -> rich
- * buttercup gold mid -> bright luminous yellow tip so blooms show natural crisp petal relief.
- */
-function applyPetalVertexGradient(geo, radius, innerHex = '#A85201', midHex = '#EFA800', tipHex = '#FFD818') {
-  const pos = geo.attributes.position;
-  const cols = new Float32Array(pos.count * 3);
-  const cInner = new THREE.Color(innerHex);
-  const cMid = new THREE.Color(midHex);
-  const cTip = new THREE.Color(tipHex);
-  const c = new THREE.Color();
-
-  for (let i = 0; i < pos.count; i++) {
-    const x = pos.getX(i);
-    const y = pos.getY(i);
-    const t = THREE.MathUtils.clamp(Math.hypot(x, y) / Math.max(0.001, radius), 0, 1);
-    if (t < 0.38) {
-      c.copy(cInner).lerp(cMid, t / 0.38);
-    } else {
-      c.copy(cMid).lerp(cTip, (t - 0.38) / 0.62);
-    }
-    cols[i * 3] = c.r;
-    cols[i * 3 + 1] = c.g;
-    cols[i * 3 + 2] = c.b;
-  }
-  geo.setAttribute('color', new THREE.BufferAttribute(cols, 3));
-}
-
-/**
- * Builds a bushy, layered golden-yellow wildflower head with rich petal shading
- * matching the golden meadow chrysanthemum blossoms in `/home/antigravity/image.png`.
- */
-function createFluffyWildflowerHead({ radius = 0.14, petalMat, centerMat, calyxMat } = {}) {
-  const head = new THREE.Group();
-
-  const calyx = new THREE.Mesh(new THREE.ConeGeometry(radius * 0.42, radius * 0.56, 8), calyxMat);
-  calyx.rotation.x = Math.PI / 2;
-  calyx.position.z = -radius * 0.14;
-  head.add(calyx);
-
-  const rings = [
-    { count: 14, tintScale: 1.0,  tilt: 0.24, z: 0.0,           len: 1.0,  wid: 1.0 },
-    { count: 12, tintScale: 0.94, tilt: 0.50, z: radius * 0.09, len: 0.78, wid: 0.92 },
-    { count: 9,  tintScale: 0.88, tilt: 0.78, z: radius * 0.16, len: 0.54, wid: 0.80 },
-  ];
-
-  // Pointed notched strap petal geometry
-  const pShape = new THREE.Shape();
-  pShape.moveTo(0, 0);
-  pShape.bezierCurveTo(radius * 0.14, radius * 0.25, radius * 0.16, radius * 0.72, 0.04 * radius, radius * 0.98);
-  pShape.lineTo(0, radius * 0.92);
-  pShape.lineTo(-0.04 * radius, radius * 0.98);
-  pShape.bezierCurveTo(-radius * 0.16, radius * 0.72, -radius * 0.14, radius * 0.25, 0, 0);
-
-  const petalGeo = new THREE.ExtrudeGeometry(pShape, {
-    depth: 0.005,
-    bevelEnabled: false,
-    curveSegments: 6,
-  });
-  const pPos = petalGeo.attributes.position;
-  for (let i = 0; i < pPos.count; i++) {
-    const py = pPos.getY(i);
-    const t = THREE.MathUtils.clamp(py / radius, 0, 1);
-    pPos.setZ(i, pPos.getZ(i) + Math.pow(t, 1.5) * radius * 0.16);
-  }
-  petalGeo.computeVertexNormals();
-  applyPetalVertexGradient(petalGeo, radius, '#843600', '#D18200', '#F0B200');
-
-  rings.forEach((ring, rIdx) => {
-    for (let i = 0; i < ring.count; i++) {
-      const a = (i / ring.count) * Math.PI * 2 + rIdx * 0.26 + cellHash(i, rIdx) * 0.14;
-      const pHolder = new THREE.Group();
-      pHolder.rotation.z = a;
-      pHolder.position.z = ring.z;
-      const p = new THREE.Mesh(petalGeo, petalMat);
-      p.rotation.x = -ring.tilt;
-      p.scale.set(ring.wid, ring.len, 1);
-      pHolder.add(p);
-      head.add(pHolder);
-    }
-  });
-
-  const core = new THREE.Mesh(new THREE.SphereGeometry(radius * 0.24, 10, 8), centerMat);
-  core.scale.set(1, 1, 0.68);
-  core.position.z = radius * 0.14;
-  head.add(core);
-
-  return head;
-}
-
-/**
- * Builds the signature 5-petal bright buttercup-yellow blossom with shaded vein curvature
- * and saffron-tipped stamen crown nestled cleanly at the lower-right honey edge.
- */
-function createFivePetalFlower({ radius = 0.26, petalMat, centerMat, calyxMat } = {}) {
-  const flower = new THREE.Group();
-
-  const calyx = new THREE.Mesh(new THREE.CylinderGeometry(radius * 0.22, radius * 0.12, radius * 0.22, 8), calyxMat);
-  calyx.rotation.x = Math.PI / 2;
-  calyx.position.z = -radius * 0.08;
-  flower.add(calyx);
-
-  const pShape = new THREE.Shape();
-  pShape.moveTo(0, 0);
-  pShape.bezierCurveTo(radius * 0.34, radius * 0.20, radius * 0.58, radius * 0.66, radius * 0.26, radius * 0.94);
-  pShape.quadraticCurveTo(0, radius * 1.03, -radius * 0.26, radius * 0.94);
-  pShape.bezierCurveTo(-radius * 0.58, radius * 0.66, -radius * 0.34, radius * 0.20, 0, 0);
-
-  const pGeo = new THREE.ExtrudeGeometry(pShape, {
-    depth: 0.008,
-    bevelEnabled: true,
-    bevelThickness: 0.004,
-    bevelSize: 0.004,
-    bevelSegments: 2,
-    curveSegments: 12,
-  });
-  const pPos = pGeo.attributes.position;
-  for (let i = 0; i < pPos.count; i++) {
-    const px = pPos.getX(i);
-    const py = pPos.getY(i);
-    const pz = pPos.getZ(i);
-    const rN = Math.hypot(px, py) / radius;
-    const rib = Math.cos((px / (radius * 0.36)) * Math.PI) * 0.006 * rN;
-    pPos.setZ(i, pz + Math.pow(rN, 1.45) * (radius * 0.24) - (px * px) * 0.40 + rib);
-  }
-  pGeo.computeVertexNormals();
-  applyPetalVertexGradient(pGeo, radius, '#8F3C00', '#DA8D00', '#F7BC00');
-
-  for (let i = 0; i < 5; i++) {
-    const a = (i / 5) * Math.PI * 2 + 0.18;
-    const holder = new THREE.Group();
-    holder.rotation.z = a;
-    const petal = new THREE.Mesh(pGeo, petalMat);
-    petal.rotation.x = -0.14;
-    petal.position.z = (i % 2) * 0.006;
-    holder.add(petal);
-    flower.add(holder);
-  }
-
-  const pistil = new THREE.Mesh(new THREE.SphereGeometry(radius * 0.17, 12, 10), centerMat);
-  pistil.scale.set(1, 1, 0.72);
-  pistil.position.z = radius * 0.09;
-  flower.add(pistil);
-
-  const filamentGeo = new THREE.CylinderGeometry(0.0045, 0.0055, radius * 0.24, 5);
-  filamentGeo.translate(0, radius * 0.12, 0);
-  const antherGeo = new THREE.SphereGeometry(0.015, 6, 6);
-  for (let i = 0; i < 18; i++) {
-    const a = (i / 18) * Math.PI * 2;
-    const st = new THREE.Group();
-    st.rotation.z = a;
-    st.position.set(Math.cos(a) * radius * 0.12, Math.sin(a) * radius * 0.12, radius * 0.06);
-    const fil = new THREE.Mesh(filamentGeo, centerMat);
-    fil.rotation.x = 0.56 + (i % 2) * 0.18;
-    st.add(fil);
-    const ant = new THREE.Mesh(antherGeo, centerMat);
-    ant.position.set(0, Math.cos(fil.rotation.x) * radius * 0.24, Math.sin(fil.rotation.x) * radius * 0.24);
-    st.add(ant);
-    flower.add(st);
-  }
-
-  return flower;
-}
-
-/**
- * Helper to create a tapered continuous tube ribbon along a CatmullRomCurve3 so liquid
- * honey bridges neck gracefully at both chunk junctions while swelling along mid-flow.
+ * Builds a tapered continuous tube ribbon along a CatmullRomCurve3 so viscous
+ * honey bridges neck naturally under gravity while swelling smoothly at accumulation endpoints.
  */
 function createTaperedBridgeGeometry({
   points,
@@ -1255,7 +676,7 @@ function createTaperedBridgeGeometry({
   radiusMid = 0.032,
   radiusEnd = 0.046,
   tubularSegments = 32,
-  radialSegments = 12,
+  radialSegments = 14,
   flattenZ = 1.0,
 } = {}) {
   const curve = new THREE.CatmullRomCurve3(points);
@@ -1267,8 +688,8 @@ function createTaperedBridgeGeometry({
   for (let seg = 0; seg <= tubularSegments; seg++) {
     const t = seg / tubularSegments;
     curve.getPointAt(t, centerPt);
-    const bellTop = Math.pow(1.0 - THREE.MathUtils.smoothstep(t, 0.0, 0.35), 1.4);
-    const bellBot = Math.pow(THREE.MathUtils.smoothstep(t, 0.68, 1.0), 1.4);
+    const bellTop = Math.pow(1.0 - THREE.MathUtils.smoothstep(t, 0.0, 0.32), 1.45);
+    const bellBot = Math.pow(THREE.MathUtils.smoothstep(t, 0.68, 1.0), 1.45);
     const r = radiusMid + (radiusStart - radiusMid) * bellTop + (radiusEnd - radiusMid) * bellBot;
 
     for (let j = 0; j < ringCount; j++) {
@@ -1284,404 +705,19 @@ function createTaperedBridgeGeometry({
 }
 
 /**
- * Hero 3D Broken Honeycomb Composition matching `/home/antigravity/image.png`:
- *  - 3 Forefront tightly nestled fractured broken honeycomb chunks with clean sheared half-hex cups
- *  - 3 Real 3D background honeycomb chunks rendered via soft optical bokeh depth-of-field pass
- *  - 3D yellow buttercup & chrysanthemum wildflower stems wrapping naturally around the pieces
- *  - Natural golden-amber cascading honey hugging fractured shoulders down into a plump glossy
- *    hanging bottom drop belly attached directly onto the Main Slab V-apex (`spoutAnchor`).
- */
-export function createBrokenHoneycombComposition({ isMobile = false } = {}) {
-  const root = new THREE.Group();
-  const fgGroup = new THREE.Group();
-  const bgGroup = new THREE.Group();
-  root.add(fgGroup);
-
-  const waxTex = createBeeswaxTextures();
-
-  const sharedMats = {
-    septumMat: new THREE.MeshStandardMaterial({
-      map: waxTex.map,
-      bumpMap: waxTex.bumpMap,
-      bumpScale: 0.024,
-      color: new THREE.Color('#D4962A'),
-      emissive: new THREE.Color('#2E1A02'),
-      emissiveIntensity: 0.10,
-      roughness: 0.34,
-      metalness: 0.02,
-      envMapIntensity: 0.95,
-    }),
-    wallMat: new THREE.MeshStandardMaterial({
-      vertexColors: true,
-      map: waxTex.map,
-      bumpMap: waxTex.bumpMap,
-      bumpScale: 0.022,
-      color: new THREE.Color('#FFFFFF'),
-      emissive: new THREE.Color('#241200'),
-      emissiveIntensity: 0.06,
-      roughness: 0.30,
-      metalness: 0.02,
-      envMapIntensity: 0.88,
-    }),
-    waxCapMat: new THREE.MeshStandardMaterial({
-      map: waxTex.map,
-      color: new THREE.Color('#FFFFFF'),
-      emissive: new THREE.Color('#382404'),
-      emissiveIntensity: 0.06,
-      roughness: 0.50,
-      metalness: 0.02,
-      envMapIntensity: 0.78,
-    }),
-    cellHoneyMat: new THREE.MeshPhysicalMaterial({
-      vertexColors: true,
-      color: new THREE.Color('#FFFFFF'),
-      emissive: new THREE.Color('#3D1900'),
-      emissiveIntensity: 0.14,
-      roughness: 0.19,
-      metalness: 0.01,
-      clearcoat: 0.24,
-      clearcoatRoughness: 0.34,
-      envMapIntensity: 0.42,
-    }),
-  };
-
-  // Animated warm golden honey flow & hugging amber pool materials (NO red-orange tint!)
-  const bridgeFlowMat = createLiquidHoneyMaterial({
-    animatedFlow: true,
-    warmGolden: true,
-    flowAxis: 'uvx',
-    flowSpeed: 2.1,
-    pulseAmp: 0.006,
-  });
-  const glazeFlowMat = createLiquidHoneyMaterial({
-    animatedFlow: true,
-    warmGolden: true,
-    flowAxis: 'uvx',
-    flowSpeed: 1.65,
-    pulseAmp: 0.004,
-  });
-  const pocketMat = createLiquidHoneyMaterial({
-    animatedFlow: false,
-    warmGolden: true,
-  });
-
-  // ------------------------------------------------------------------
-  // 1. FOREGROUND 3 IRREGULAR BROKEN HONEYCOMB PIECES (authentic angular slabs)
-  // ------------------------------------------------------------------
-
-  // A) Upper-Center Chunk — chunky irregular broken nugget tilted gently forward
-  const upperContour = [
-    [-0.36, 0.20], [-0.20, 0.34], [0.04, 0.36], [0.22, 0.30],
-    [0.37, 0.14], [0.40, -0.06], [0.33, -0.22], [0.20, -0.34],
-    [-0.02, -0.36], [-0.22, -0.28], [-0.36, -0.14], [-0.41, 0.04],
-  ];
-  const upperChunk = createBrokenCombChunk({
-    contour: upperContour,
-    cellR: isMobile ? 0.084 : 0.072,
-    depthFront: 0.098,
-    depthBack: 0.064,
-    septumHalfZ: 0.074,
-    honeyIntensity: 0.84,
-    zTilt: 0.014,
-    materials: sharedMats,
-  });
-  upperChunk.position.set(-0.20, 0.56, 0.28);
-  upperChunk.rotation.set(0.16, 0.32, 0.12);
-  upperChunk.userData.baseRotY = 0.32;
-  fgGroup.add(upperChunk);
-
-  // B) Left Tall Narrow Vertical Chisel Bar — gently angled 3/4 view matching reference silhouette
-  const leftContour = [
-    [-0.20, 0.72], [-0.02, 0.79], [0.16, 0.74], [0.23, 0.50],
-    [0.25, 0.14], [0.26, -0.22], [0.28, -0.58], [0.18, -0.78],
-    [0.00, -0.82], [-0.18, -0.72], [-0.24, -0.42], [-0.25, -0.04],
-    [-0.22, 0.36],
-  ];
-  const leftChunk = createBrokenCombChunk({
-    contour: leftContour,
-    cellR: isMobile ? 0.076 : 0.067,
-    depthFront: 0.086,
-    depthBack: 0.056,
-    septumHalfZ: 0.066,
-    honeyIntensity: 0.90,
-    zTilt: 0.012,
-    materials: sharedMats,
-  });
-  leftChunk.position.set(-0.60, -0.45, 0.12);
-  leftChunk.rotation.set(0.06, 0.30, 0.24);
-  leftChunk.userData.baseRotY = 0.30;
-  fgGroup.add(leftChunk);
-
-  // C) Large Diagonal Main Center-Right Slab — jagged trapezoid slab with lower V-corner apex
-  const mainContour = [
-    [-0.42, 0.72], [-0.18, 0.88], [0.06, 0.94], [0.40, 0.88],
-    [0.54, 0.62], [0.51, 0.28], [0.58, -0.04], [0.50, -0.44],
-    [0.55, -0.68], [0.40, -0.84], [0.28, -0.94], [0.06, -0.90],
-    [-0.24, -0.82], [-0.45, -0.62], [-0.52, -0.28], [-0.48, 0.10],
-    [-0.53, 0.44],
-  ];
-  const mainChunk = createBrokenCombChunk({
-    contour: mainContour,
-    cellR: isMobile ? 0.072 : 0.063,
-    depthFront: 0.104,
-    depthBack: 0.062,
-    septumHalfZ: 0.074,
-    honeyIntensity: 0.76,
-    zTilt: 0.015,
-    materials: sharedMats,
-  });
-  mainChunk.position.set(0.28, -0.18, 0.12);
-  mainChunk.rotation.set(0.14, -0.24, -0.64);
-  mainChunk.userData.baseRotY = -0.24;
-  fgGroup.add(mainChunk);
-
-  // Compute exact world bottom V-apex of Main Slab so hanging drop hugs underside cleanly
-  fgGroup.updateMatrixWorld(true);
-  const dropApexLocal = new THREE.Vector3(0.26, -0.90, 0.02);
-  const dropApexWorld = dropApexLocal.clone();
-  mainChunk.localToWorld(dropApexWorld);
-  fgGroup.worldToLocal(dropApexWorld);
-
-  // ------------------------------------------------------------------
-  // 2. SOFTLY BLURRED 3D BACKGROUND CHUNKS (rendered to GPU bokeh FBO!)
-  // ------------------------------------------------------------------
-  const bgSpecs = [
-    { pos: [-1.06, 1.08, -0.85], rot: [0.20, 0.34, 0.36], scale: 0.88, contour: upperContour },
-    { pos: [0.42, 1.12, -0.95],  rot: [0.16, -0.32, -0.50], scale: 0.90, contour: leftContour },
-    { pos: [1.06, -0.76, -0.90], rot: [0.14, -0.38, 0.34], scale: 0.94, contour: upperContour },
-  ];
-  const bgChunks = [];
-  bgSpecs.forEach((spec) => {
-    const bgC = createBrokenCombChunk({
-      contour: spec.contour,
-      cellR: 0.090,
-      depthFront: 0.088,
-      depthBack: 0.044,
-      septumHalfZ: 0.070,
-      honeyIntensity: 0.88,
-      zTilt: 0.010,
-      materials: sharedMats,
-      simplified: true,
-    });
-    bgC.position.set(...spec.pos);
-    bgC.rotation.set(...spec.rot);
-    bgC.scale.setScalar(spec.scale);
-    bgGroup.add(bgC);
-    bgChunks.push({ mesh: bgC, basePos: [...spec.pos], baseRot: [...spec.rot] });
-  });
-
-  // ------------------------------------------------------------------
-  // 3. SUBTLE CREVICE HONEY BRIDGES & UNDER-CORNER HANGING DROPLET BELLY
-  // ------------------------------------------------------------------
-  const cascadeGroup = new THREE.Group();
-  fgGroup.add(cascadeGroup);
-
-  // Delicate viscous honey meniscus bridging Upper Chunk underside -> Main Slab recessed upper cleft
-  const upperToMainDripPts = [
-    new THREE.Vector3(0.01, 0.34, 0.22),
-    new THREE.Vector3(0.05, 0.22, 0.16),
-    new THREE.Vector3(0.05, 0.10, 0.11),
-  ];
-  cascadeGroup.add(new THREE.Mesh(
-    createTaperedBridgeGeometry({
-      points: upperToMainDripPts,
-      radiusStart: 0.038,
-      radiusMid: 0.024,
-      radiusEnd: 0.032,
-      tubularSegments: 16,
-      radialSegments: 14,
-      flattenZ: 0.55,
-    }),
-    bridgeFlowMat
-  ));
-
-  // Smooth bulbous U-teardrop honey belly tucked cleanly behind Main Slab's lower fractured V-apex
-  const pocketPoints = [
-    new THREE.Vector2(0.0, -0.172),
-    new THREE.Vector2(0.040, -0.152),
-    new THREE.Vector2(0.092, -0.100),
-    new THREE.Vector2(0.140, -0.026),
-    new THREE.Vector2(0.152, 0.050),
-    new THREE.Vector2(0.122, 0.112),
-    new THREE.Vector2(0.070, 0.152),
-    new THREE.Vector2(0.0, 0.162),
-  ];
-  const pocketGeo = new THREE.LatheGeometry(pocketPoints, 28);
-  pocketGeo.scale(1.18, 1.00, 0.64);
-  const collectionPocket = new THREE.Mesh(pocketGeo, pocketMat);
-  collectionPocket.position.set(dropApexWorld.x, dropApexWorld.y + 0.008, dropApexWorld.z - 0.046);
-  collectionPocket.rotation.set(0.04, -0.08, -0.03);
-  cascadeGroup.add(collectionPocket);
-
-  // Keep reference variable live for tick modulation cleanly without jellybean artifacts
-  const spoutAnchor = new THREE.Object3D();
-  spoutAnchor.position.set(0.0, -0.150, 0.0);
-  collectionPocket.add(spoutAnchor);
-
-  // ------------------------------------------------------------------
-  // 4. 3D BOTANICAL YELLOW WILDFLOWER STEMS & BLOSSOMS (vivid marigold-yellow!)
-  // ------------------------------------------------------------------
-  const flowerGroup = new THREE.Group();
-  fgGroup.add(flowerGroup);
-
-  const stemMat = new THREE.MeshStandardMaterial({
-    color: new THREE.Color('#2D4412'),
-    roughness: 0.64,
-    metalness: 0.02,
-  });
-  const calyxMat = new THREE.MeshStandardMaterial({
-    color: new THREE.Color('#405B1A'),
-    roughness: 0.58,
-  });
-  const petalVertexMat = new THREE.MeshStandardMaterial({
-    vertexColors: true,
-    color: new THREE.Color('#FFFFFF'),
-    emissive: new THREE.Color('#000000'),
-    emissiveIntensity: 0.0,
-    roughness: 0.52,
-    metalness: 0.0,
-    side: THREE.DoubleSide,
-  });
-  const fluffyCenterMat = new THREE.MeshStandardMaterial({
-    color: new THREE.Color('#E09B04'),
-    emissive: new THREE.Color('#382000'),
-    emissiveIntensity: 0.06,
-    roughness: 0.64,
-  });
-  const flowerCenterMat = new THREE.MeshStandardMaterial({
-    color: new THREE.Color('#C46C02'),
-    emissive: new THREE.Color('#2B1200'),
-    emissiveIntensity: 0.08,
-    roughness: 0.66,
-  });
-
-  // Branch 1: Delicate Arching Upper Twig (kept cleanly inside hero frame above Upper Chunk)
-  const twigCurve = new THREE.CatmullRomCurve3([
-    new THREE.Vector3(-0.04, 0.78, 0.25),
-    new THREE.Vector3(0.20, 0.88, 0.27),
-    new THREE.Vector3(0.48, 0.99, 0.28),
-    new THREE.Vector3(0.72, 1.18, 0.26),
-    new THREE.Vector3(0.88, 1.24, 0.24),
-  ]);
-  const twigMesh = new THREE.Mesh(new THREE.TubeGeometry(twigCurve, 26, 0.011, 7, false), stemMat);
-  flowerGroup.add(twigMesh);
-
-  const twigBlooms = [
-    { pos: [0.06, 0.96, 0.30], rot: [0.12, 0.16, 0.2], r: 0.125 },
-    { pos: [0.58, 1.06, 0.31], rot: [0.10, -0.14, -0.18], r: 0.13 },
-    { pos: [0.70, 1.32, 0.28], rot: [0.08, -0.18, 0.12], r: 0.14 },
-  ];
-  twigBlooms.forEach((b) => {
-    const fl = createFluffyWildflowerHead({
-      radius: b.r,
-      petalMat: petalVertexMat,
-      centerMat: fluffyCenterMat,
-      calyxMat,
-    });
-    fl.position.set(...b.pos);
-    fl.rotation.set(...b.rot);
-    flowerGroup.add(fl);
-  });
-
-  const subStem1 = new THREE.Mesh(
-    new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new THREE.Vector3(0.10, 0.84, 0.26), new THREE.Vector3(0.06, 0.96, 0.30)]), 8, 0.007, 6, false),
-    stemMat
-  );
-  const subStem2 = new THREE.Mesh(
-    new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new THREE.Vector3(0.62, 1.10, 0.27), new THREE.Vector3(0.70, 1.32, 0.28)]), 8, 0.007, 6, false),
-    stemMat
-  );
-  flowerGroup.add(subStem1, subStem2);
-  const budMesh = new THREE.Mesh(new THREE.SphereGeometry(0.023, 8, 8), fluffyCenterMat);
-  budMesh.position.set(0.88, 1.24, 0.24);
-  flowerGroup.add(budMesh);
-
-  // Branch 2: Long Vertical Slender Wildflower Stem climbing closely across Left Chunk
-  const leftStemCurve = new THREE.CatmullRomCurve3([
-    new THREE.Vector3(-0.76, -1.26, 0.25),
-    new THREE.Vector3(-0.68, -0.78, 0.31),
-    new THREE.Vector3(-0.58, -0.24, 0.34),
-    new THREE.Vector3(-0.48, 0.14, 0.33),
-    new THREE.Vector3(-0.34, 0.34, 0.29),
-  ]);
-  const leftStem = new THREE.Mesh(new THREE.TubeGeometry(leftStemCurve, 30, 0.013, 8, false), stemMat);
-  flowerGroup.add(leftStem);
-
-  const leftBlooms = [
-    { pos: [-0.79, -0.82, 0.32], rot: [0.16, 0.22, 0.35], r: 0.138 },
-    { pos: [-0.62, -0.28, 0.36], rot: [0.14, 0.12, 0.18], r: 0.148 },
-    { pos: [-0.50, 0.02, 0.34], rot: [0.12, 0.08, -0.15], r: 0.098 },
-  ];
-  leftBlooms.forEach((b) => {
-    const fl = createFluffyWildflowerHead({
-      radius: b.r,
-      petalMat: petalVertexMat,
-      centerMat: fluffyCenterMat,
-      calyxMat,
-    });
-    fl.position.set(...b.pos);
-    fl.rotation.set(...b.rot);
-    flowerGroup.add(fl);
-  });
-
-  // Flower 3: Prominent 5-Petal Buttercup Blossom nestled cleanly at Lower-Right notch of Main Slab
-  const mainBlossom = createFivePetalFlower({
-    radius: 0.26,
-    petalMat: petalVertexMat,
-    centerMat: flowerCenterMat,
-    calyxMat,
-  });
-  mainBlossom.position.set(0.48, -0.78, 0.37);
-  mainBlossom.rotation.set(0.16, -0.22, -0.18);
-  flowerGroup.add(mainBlossom);
-
-  const updateCascade = (t) => {
-    bridgeFlowMat.uniforms.uTime.value = t;
-    glazeFlowMat.uniforms.uTime.value = t;
-    pocketMat.uniforms.uTime.value = t;
-
-    const swell = 1.0 + Math.sin(t * 2.2) * 0.024;
-    collectionPocket.scale.set(swell, 1.0 + Math.cos(t * 2.2) * 0.018, swell);
-
-    twigMesh.rotation.z = Math.sin(t * 1.1) * 0.014;
-    mainBlossom.rotation.z = -0.18 + Math.sin(t * 1.35 + 0.6) * 0.030;
-
-    bgChunks.forEach((b, idx) => {
-      b.mesh.position.y = b.basePos[1] + Math.sin(t * 0.72 + idx * 1.9) * 0.028;
-      b.mesh.rotation.z = b.baseRot[2] + Math.cos(t * 0.54 + idx * 1.3) * 0.016;
-    });
-  };
-
-  return {
-    group: root,
-    fgGroup,
-    bgGroup,
-    bgChunks,
-    upperChunk,
-    leftChunk,
-    mainChunk,
-    collectionPocket,
-    spoutAnchor,
-    updateCascade,
-  };
-}
-
-
-
-/**
  * Builds a single continuous gravity-curved viscous honey column starting cleanly inside
- * a pouring spout (0, 0, 0), curving gently downward to align vertically along (dropX, y, dropZ)
- * down to `dropBottomY` with smooth neck-thinning and helical uv.y mapping (1 at spout -> 0 at bottom).
+ * a pouring spout (start), curving downward to (dropX, bottomY, dropZ) with physical
+ * gravity-thinning waist (`waistRadius`) and subtle bottom arrival flare (`bottomRadius`).
  */
 export function createGravityPourGeometry({
   start = new THREE.Vector3(0, 0, 0),
-  dropX = -0.08,
-  dropZ = 0.04,
+  dropX = 0.0,
+  dropZ = 0.0,
   bottomY = -2.2,
-  topRadius = 0.056,
-  waistRadius = 0.040,
-  bottomRadius = 0.048,
-  radialSegments = 20,
+  topRadius = 0.046,
+  waistRadius = 0.030,
+  bottomRadius = 0.036,
+  radialSegments = 24,
   heightSegments = 48,
 } = {}) {
   const curve = new THREE.CubicBezierCurve3(
@@ -1701,24 +737,23 @@ export function createGravityPourGeometry({
 
   for (let i = 0; i < pos.count; i++) {
     const x = pos.getX(i);
-    const y = pos.getY(i); // -0.5 .. +0.5
+    const y = pos.getY(i);
     const z = pos.getZ(i);
 
-    const tDown = THREE.MathUtils.clamp(0.5 - y, 0, 1); // 0 top (spout) -> 1 bottom
-    const vUp = 1.0 - tDown; // 1 top -> 0 bottom
+    const tDown = THREE.MathUtils.clamp(0.5 - y, 0, 1);
+    const vUp = 1.0 - tDown;
 
     curve.getPointAt(tDown, pt);
     curve.getTangentAt(tDown, tan).normalize();
 
-    // Stable perpendicular frame so stream cross-section stays circular
     binormal.crossVectors(tan, new THREE.Vector3(0, 0, 1));
     if (binormal.lengthSq() < 0.001) binormal.crossVectors(tan, upVec);
     binormal.normalize();
     normal.crossVectors(binormal, tan).normalize();
 
-    const neck = Math.pow(THREE.MathUtils.smoothstep(vUp, 0.72, 1.0), 1.3);
-    const flare = Math.pow(1.0 - THREE.MathUtils.smoothstep(vUp, 0.0, 0.25), 1.4);
-    const r = THREE.MathUtils.lerp(waistRadius, topRadius, neck) + (bottomRadius - waistRadius) * flare * 0.55;
+    const neck = Math.pow(THREE.MathUtils.smoothstep(vUp, 0.70, 1.0), 1.35);
+    const flare = Math.pow(1.0 - THREE.MathUtils.smoothstep(vUp, 0.0, 0.22), 1.4);
+    const r = THREE.MathUtils.lerp(waistRadius, topRadius, neck) + (bottomRadius - waistRadius) * flare * 0.50;
 
     const vx = pt.x + (binormal.x * x + normal.x * z) * r;
     const vy = pt.y + (binormal.y * x + normal.y * z) * r;
@@ -1729,3 +764,393 @@ export function createGravityPourGeometry({
   return geo;
 }
 
+/**
+ * Creates a physical teardrop droplet geometry for occasional surface-tension separation
+ * (supplements the thick continuous streams without ever replacing them).
+ */
+function createTeardropGeometry(radius = 0.032) {
+  const pts = [
+    new THREE.Vector2(0.0, -radius * 1.15),
+    new THREE.Vector2(radius * 0.65, -radius * 0.92),
+    new THREE.Vector2(radius * 1.00, -radius * 0.35),
+    new THREE.Vector2(radius * 0.92, radius * 0.25),
+    new THREE.Vector2(radius * 0.56, radius * 0.82),
+    new THREE.Vector2(radius * 0.22, radius * 1.38),
+    new THREE.Vector2(0.0, radius * 1.65),
+  ];
+  const geo = new THREE.LatheGeometry(pts, 18);
+  geo.computeVertexNormals();
+  return geo;
+}
+
+/**
+ * Real-Time 3D Hero Liquid Honey Flow System synchronized directly to the rendered
+ * bounds of `#heroHoneycombPng`:
+ *  1. Upper-comb-to-main-slab over-piece honey flow ribbon
+ *  2. Main slab lower-edge accumulation leading to a plump V-apex meniscus reservoir
+ *  3. Primary thick continuous stream stretching downward under gravity from the V-apex
+ *  4. Secondary continuous stream emerging over the lower edge of the left honeycomb bar
+ *  5. Two staggered surface-tension droplets occasionally detaching into the collector below
+ *  6. Small underside collection opening (amber collar + swirling liquid pool + spoutAnchor)
+ *  7. Continuous exit stream descending from spoutAnchor into the #journey path
+ */
+export function createHeroHoneyFlowSystem() {
+  const root = new THREE.Group();
+  const streamGroup = new THREE.Group();
+  root.add(streamGroup);
+
+  const cascadeMat = createLiquidHoneyMaterial({
+    animatedFlow: true,
+    warmGolden: true,
+    flowAxis: 'uvx',
+    flowSpeed: 1.75,
+    pulseAmp: 0.008,
+    originFeather: 0.22,
+    endFeather: 0.14,
+  });
+
+  const edgeAccumMat = createLiquidHoneyMaterial({
+    animatedFlow: true,
+    warmGolden: true,
+    flowAxis: 'uvx',
+    flowSpeed: 1.55,
+    pulseAmp: 0.007,
+    originFeather: 0.20,
+  });
+
+  const continuousStreamMat = createLiquidHoneyMaterial({
+    animatedFlow: true,
+    warmGolden: true,
+    flowAxis: 'uvx',
+    flowSpeed: 2.35,
+    pulseAmp: 0.011,
+    originFeather: 0.05,
+  });
+
+  const meniscusMat = createLiquidHoneyMaterial({
+    animatedFlow: false,
+    warmGolden: true,
+  });
+
+  const exitPourMat = createLiquidHoneyMaterial({
+    animatedFlow: true,
+    warmGolden: true,
+    flowAxis: 'uvy',
+    flowSpeed: 2.65,
+    pulseAmp: 0.075,
+    swayAmp: 0.004,
+  });
+
+  // Dynamic geometry meshes synced to PNG world rect
+  const upperCascadeMesh = new THREE.Mesh(new THREE.BufferGeometry(), cascadeMat);
+  const mainEdgeAccumMesh = new THREE.Mesh(new THREE.BufferGeometry(), edgeAccumMat);
+  const primaryStreamMesh = new THREE.Mesh(new THREE.BufferGeometry(), continuousStreamMat);
+  const leftEdgeAccumMesh = new THREE.Mesh(new THREE.BufferGeometry(), edgeAccumMat);
+  const leftStreamMesh = new THREE.Mesh(new THREE.BufferGeometry(), continuousStreamMat);
+  streamGroup.add(
+    upperCascadeMesh,
+    mainEdgeAccumMesh,
+    primaryStreamMesh,
+    leftEdgeAccumMesh,
+    leftStreamMesh
+  );
+
+  // Sculpted hanging V-apex meniscus reservoir
+  const apexPts = [
+    new THREE.Vector2(0.0, -0.095),
+    new THREE.Vector2(0.036, -0.078),
+    new THREE.Vector2(0.078, -0.038),
+    new THREE.Vector2(0.098, 0.014),
+    new THREE.Vector2(0.082, 0.058),
+    new THREE.Vector2(0.044, 0.088),
+    new THREE.Vector2(0.0, 0.098),
+  ];
+  const apexGeo = new THREE.LatheGeometry(apexPts, 24);
+  apexGeo.scale(1.16, 1.0, 0.68);
+  const apexBeadMesh = new THREE.Mesh(apexGeo, meniscusMat);
+  streamGroup.add(apexBeadMesh);
+
+  // Small refined underside collection opening catching all streams cleanly
+  const collectionGroup = new THREE.Group();
+  root.add(collectionGroup);
+
+  // Warm bronze/amber funnel aperture collar
+  const funnelPts = [
+    new THREE.Vector2(0.042, -0.072),
+    new THREE.Vector2(0.052, -0.038),
+    new THREE.Vector2(0.115, 0.002),
+    new THREE.Vector2(0.172, 0.036),
+    new THREE.Vector2(0.184, 0.052),
+    new THREE.Vector2(0.166, 0.058),
+    new THREE.Vector2(0.146, 0.042),
+    new THREE.Vector2(0.095, 0.008),
+    new THREE.Vector2(0.038, -0.036),
+    new THREE.Vector2(0.032, -0.072),
+  ];
+  const funnelGeo = new THREE.LatheGeometry(funnelPts, 32);
+  const funnelMat = new THREE.MeshStandardMaterial({
+    color: new THREE.Color('#B5731B'),
+    emissive: new THREE.Color('#331702'),
+    emissiveIntensity: 0.22,
+    metalness: 0.62,
+    roughness: 0.26,
+    envMapIntensity: 1.35,
+  });
+  const funnelMesh = new THREE.Mesh(funnelGeo, funnelMat);
+  collectionGroup.add(funnelMesh);
+
+  // Accumulated honey pool sitting inside the collection opening + subtle swirl mound
+  const poolGeo = new THREE.CylinderGeometry(0.156, 0.096, 0.042, 28);
+  const poolMesh = new THREE.Mesh(poolGeo, meniscusMat);
+  poolMesh.position.y = 0.022;
+  collectionGroup.add(poolMesh);
+
+  const poolCoilPts = [];
+  for (let i = 0; i <= 24; i++) {
+    const t = i / 24;
+    const ang = t * Math.PI * 3.4;
+    const r = THREE.MathUtils.lerp(0.008, 0.078, t);
+    const y = THREE.MathUtils.lerp(0.052, 0.032, t);
+    poolCoilPts.push(new THREE.Vector3(Math.cos(ang) * r, y, Math.sin(ang) * r));
+  }
+  const poolCoilMesh = new THREE.Mesh(
+    createTaperedBridgeGeometry({
+      points: poolCoilPts,
+      radiusStart: 0.020,
+      radiusMid: 0.016,
+      radiusEnd: 0.008,
+      tubularSegments: 24,
+      radialSegments: 10,
+    }),
+    cascadeMat
+  );
+  collectionGroup.add(poolCoilMesh);
+
+  const spoutAnchor = new THREE.Object3D();
+  spoutAnchor.position.set(0, -0.064, 0);
+  collectionGroup.add(spoutAnchor);
+
+  const exitPourMesh = new THREE.Mesh(new THREE.BufferGeometry(), exitPourMat);
+  root.add(exitPourMesh);
+
+  // Two staggered surface-tension satellite droplets supplementing the continuous streams
+  const dropletGeo = createTeardropGeometry(0.026);
+  const dropletA = new THREE.Mesh(dropletGeo, meniscusMat);
+  const dropletB = new THREE.Mesh(dropletGeo, meniscusMat);
+  root.add(dropletA, dropletB);
+
+  const layoutState = {
+    frameScale: 1.0,
+    apexBasePos: new THREE.Vector3(),
+    poolWorldY: 0,
+    dropAOrigin: new THREE.Vector3(),
+    dropBOrigin: new THREE.Vector3(),
+    poolTargetA: new THREE.Vector3(),
+    poolTargetB: new THREE.Vector3(),
+    exitBottomRadius: 0.030,
+  };
+
+  function replaceGeometry(mesh, nextGeo) {
+    if (mesh.geometry) mesh.geometry.dispose();
+    mesh.geometry = nextGeo;
+  }
+
+  /**
+   * Aligns every stream, meniscus bead, droplet anchor, collection opening, and exit pour
+   * cleanly to the actual 3D world-space bounds of `#heroHoneycombPng`.
+   */
+  function syncToPngRect(worldRect, heroBottomY) {
+    const s = THREE.MathUtils.clamp(worldRect.height / 3.4, 0.48, 1.25);
+    layoutState.frameScale = s;
+
+    const uv = (u, v, z = 0) => new THREE.Vector3(
+      worldRect.left + u * worldRect.width,
+      worldRect.top - v * worldRect.height,
+      z
+    );
+
+    // 1. Upper-chunk-to-main-slab flowing honey ribbon (accumulates onto lower comb cells)
+    replaceGeometry(upperCascadeMesh, createTaperedBridgeGeometry({
+      points: [
+        uv(0.415, 0.485, 0.03),
+        uv(0.438, 0.532, 0.05),
+        uv(0.456, 0.596, 0.055),
+        uv(0.478, 0.672, 0.045),
+        uv(0.494, 0.735, 0.02),
+      ],
+      radiusStart: 0.028 * s,
+      radiusMid: 0.022 * s,
+      radiusEnd: 0.018 * s,
+      tubularSegments: 28,
+      radialSegments: 12,
+      flattenZ: 0.52,
+    }));
+
+    // 2. Main slab lower-edge accumulation flowing down into V-apex meniscus
+    replaceGeometry(mainEdgeAccumMesh, createTaperedBridgeGeometry({
+      points: [
+        uv(0.436, 0.786, 0.02),
+        uv(0.474, 0.822, 0.048),
+        uv(0.514, 0.858, 0.058),
+        uv(0.542, 0.880, 0.060),
+      ],
+      radiusStart: 0.024 * s,
+      radiusMid: 0.032 * s,
+      radiusEnd: 0.038 * s,
+      tubularSegments: 24,
+      radialSegments: 14,
+      flattenZ: 0.65,
+    }));
+
+    const apexPos = uv(0.542, 0.880, 0.056);
+    layoutState.apexBasePos.copy(apexPos);
+    apexBeadMesh.position.copy(apexPos);
+    apexBeadMesh.scale.setScalar(s * 0.82);
+
+    // Collection opening placed directly beneath the honeycomb composition
+    const collPos = uv(0.506, 1.022, 0.036);
+    collectionGroup.position.copy(collPos);
+    collectionGroup.scale.setScalar(s * 0.96);
+    layoutState.poolWorldY = collPos.y + 0.028 * s;
+
+    // 3. Primary thick continuous gravity-stretched stream: V-apex -> collection opening
+    const primaryMidA = new THREE.Vector3(
+      THREE.MathUtils.lerp(apexPos.x, collPos.x, 0.25),
+      THREE.MathUtils.lerp(apexPos.y, collPos.y, 0.34),
+      0.052
+    );
+    const primaryMidB = new THREE.Vector3(
+      THREE.MathUtils.lerp(apexPos.x, collPos.x, 0.72),
+      THREE.MathUtils.lerp(apexPos.y, collPos.y, 0.72),
+      0.044
+    );
+    const primaryEnd = new THREE.Vector3(collPos.x + 0.020 * s, collPos.y + 0.028 * s, collPos.z + 0.005);
+    replaceGeometry(primaryStreamMesh, createTaperedBridgeGeometry({
+      points: [apexPos.clone().add(new THREE.Vector3(0, -0.04 * s, 0)), primaryMidA, primaryMidB, primaryEnd],
+      radiusStart: 0.042 * s,
+      radiusMid: 0.023 * s,
+      radiusEnd: 0.032 * s,
+      tubularSegments: 32,
+      radialSegments: 16,
+    }));
+
+    // 4. Left vertical honeycomb piece lower-edge accumulation + curved continuous tributary stream
+    replaceGeometry(leftEdgeAccumMesh, createTaperedBridgeGeometry({
+      points: [
+        uv(0.348, 0.865, 0.025),
+        uv(0.338, 0.908, 0.045),
+        uv(0.318, 0.946, 0.048),
+      ],
+      radiusStart: 0.020 * s,
+      radiusMid: 0.026 * s,
+      radiusEnd: 0.028 * s,
+      tubularSegments: 18,
+      radialSegments: 12,
+      flattenZ: 0.65,
+    }));
+
+    const leftRoot = uv(0.318, 0.944, 0.048);
+    const leftEnd = new THREE.Vector3(collPos.x - 0.036 * s, collPos.y + 0.028 * s, collPos.z);
+    replaceGeometry(leftStreamMesh, createTaperedBridgeGeometry({
+      points: [
+        leftRoot,
+        new THREE.Vector3(leftRoot.x + 0.035 * s, leftRoot.y - 0.095 * s, 0.045),
+        new THREE.Vector3(THREE.MathUtils.lerp(leftRoot.x, leftEnd.x, 0.62), leftEnd.y + 0.058 * s, 0.040),
+        leftEnd,
+      ],
+      radiusStart: 0.027 * s,
+      radiusMid: 0.015 * s,
+      radiusEnd: 0.022 * s,
+      tubularSegments: 28,
+      radialSegments: 14,
+    }));
+
+    // 5. Satellite surface-tension droplet anchors
+    layoutState.dropAOrigin.copy(uv(0.476, 0.824, 0.052));
+    layoutState.poolTargetA.set(collPos.x - 0.010 * s, collPos.y + 0.026 * s, collPos.z + 0.005);
+    layoutState.dropBOrigin.copy(uv(0.346, 0.918, 0.048));
+    layoutState.poolTargetB.set(collPos.x - 0.052 * s, collPos.y + 0.026 * s, collPos.z);
+
+    // 6. Continuous exit stream pouring vertically out of collection opening down to #journey
+    root.updateMatrixWorld(true);
+    const spoutWorld = new THREE.Vector3();
+    spoutAnchor.getWorldPosition(spoutWorld);
+    root.worldToLocal(spoutWorld);
+
+    const exitBottomRadius = 0.031 * s;
+    layoutState.exitBottomRadius = exitBottomRadius;
+    exitPourMesh.position.set(spoutWorld.x, 0, spoutWorld.z);
+    replaceGeometry(exitPourMesh, createGravityPourGeometry({
+      start: new THREE.Vector3(0, spoutWorld.y + 0.012 * s, 0),
+      dropX: 0,
+      dropZ: 0,
+      bottomY: Math.min(spoutWorld.y - 0.25, heroBottomY),
+      topRadius: 0.038 * s,
+      waistRadius: 0.026 * s,
+      bottomRadius: exitBottomRadius,
+      radialSegments: 24,
+      heightSegments: 48,
+    }));
+  }
+
+  function updateDroplet(mesh, origin, target, t, period, phaseOffset, scaleMul) {
+    const s = layoutState.frameScale * scaleMul;
+    const cycle = ((t + phaseOffset) % period) / period;
+
+    if (cycle < 0.56) {
+      // Slow pendant surface-tension swelling beneath honeycomb edge
+      const grow = THREE.MathUtils.smoothstep(cycle, 0.0, 0.56);
+      const sz = THREE.MathUtils.lerp(0.18, 0.96, grow);
+      mesh.visible = true;
+      mesh.position.set(origin.x, origin.y - sz * 0.035 * s, origin.z);
+      mesh.scale.set(s * sz, s * sz * THREE.MathUtils.lerp(0.9, 1.35, grow), s * sz);
+    } else if (cycle < 0.90) {
+      // Pinch off & gravity-driven downward acceleration (d = 0.5 * g * tau^2)
+      const fall = (cycle - 0.56) / 0.34;
+      const gFrac = fall * fall;
+      mesh.visible = true;
+      mesh.position.set(
+        THREE.MathUtils.lerp(origin.x, target.x, fall * 0.45),
+        THREE.MathUtils.lerp(origin.y - 0.034 * s, target.y, gFrac),
+        THREE.MathUtils.lerp(origin.z, target.z, fall)
+      );
+      const stretch = 1.15 + fall * 0.65;
+      const thin = 1.0 - fall * 0.22;
+      mesh.scale.set(s * thin, s * stretch, s * thin);
+    } else {
+      // Coalesce smoothly into pooled honey
+      const merge = (cycle - 0.90) / 0.10;
+      const sz = 1.0 - merge;
+      mesh.visible = sz > 0.05;
+      mesh.position.copy(target);
+      mesh.scale.set(s * (1 + merge * 0.35), s * sz * 0.45, s * (1 + merge * 0.35));
+    }
+  }
+
+  function update(t) {
+    cascadeMat.uniforms.uTime.value = t;
+    edgeAccumMat.uniforms.uTime.value = t;
+    continuousStreamMat.uniforms.uTime.value = t;
+    meniscusMat.uniforms.uTime.value = t;
+    exitPourMat.uniforms.uTime.value = t;
+
+    const s = layoutState.frameScale;
+    const pulse = 1.0 + Math.sin(t * 2.15) * 0.032;
+    apexBeadMesh.scale.set(s * 0.82 * pulse, s * 0.82 * (1.0 + Math.cos(t * 2.15) * 0.025), s * 0.82 * pulse);
+
+    poolCoilMesh.rotation.y = -t * 1.45;
+    const poolPulse = 1.0 + Math.sin(t * 2.8) * 0.03;
+    poolCoilMesh.scale.set(poolPulse, 1.0, poolPulse);
+
+    updateDroplet(dropletA, layoutState.dropAOrigin, layoutState.poolTargetA, t, 4.8, 0.4, 0.88);
+    updateDroplet(dropletB, layoutState.dropBOrigin, layoutState.poolTargetB, t, 5.9, 2.7, 0.76);
+  }
+
+  return {
+    group: root,
+    spoutAnchor,
+    getExitBottomRadius: () => layoutState.exitBottomRadius,
+    syncToPngRect,
+    update,
+  };
+}

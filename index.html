@@ -818,11 +818,12 @@
       </div>
 
       <div class="nh-hero__stage" id="heroStage">
-        <div class="nh-hero__fallback-wrap">
-          <img class="nh-hero__fallback-img"
-               src="assets/img/journey/honeycomb-hero-fallback.webp"
+        <div class="nh-hero__visual-wrap" id="heroVisualWrap">
+          <img class="nh-hero__png-img"
+               id="heroHoneycombPng"
+               src="assets/img/journey/honeycomb-hero.png"
                alt="قطع شمع نحل طبيعي مكسورة بأزهار صفراء وعسل ذهبي نقي يتدفق للأسفل"
-               width="685" height="722" decoding="async">
+               width="1370" height="1444" fetchpriority="high" decoding="async">
         </div>
       </div>
     </div>
@@ -838,8 +839,8 @@
       <svg class="nh-journey__svg" id="journeySvg" aria-hidden="true">
         <defs>
           <linearGradient id="nhHoneyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#E5A933"/>
-            <stop offset="48%" stop-color="#CC700A"/>
+            <stop offset="0%" stop-color="#EFA61C"/>
+            <stop offset="48%" stop-color="#D4760A"/>
             <stop offset="100%" stop-color="#9F4803"/>
           </linearGradient>
           <linearGradient id="nhInletCupGrad" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -848,9 +849,9 @@
             <stop offset="100%" stop-color="#DEC08A" stop-opacity="1"/>
           </linearGradient>
           <linearGradient id="nhInletHoneyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#C96807"/>
-            <stop offset="55%" stop-color="#DB8314"/>
-            <stop offset="100%" stop-color="#E5A933"/>
+            <stop offset="0%" stop-color="#EA9816"/>
+            <stop offset="55%" stop-color="#EFA61C"/>
+            <stop offset="100%" stop-color="#EB9D18"/>
           </linearGradient>
           <clipPath id="nhBoardTopClip">
             <rect x="-400" y="0" width="3200" height="9000"/>
@@ -875,7 +876,8 @@
           <path class="nh-tube-sheen" id="journeyPathSheen" d=""/>
         </g>
         <path id="journeyInletCup" fill="url(#nhInletCupGrad)" opacity="0" d=""/>
-        <path id="journeyInletHoney" fill="url(#nhHoneyGrad)" d=""/>
+        <path id="journeyInletHoney" fill="url(#nhInletHoneyGrad)" d=""/>
+        <path class="nh-tube-sheen" id="journeyInletSheen" d=""/>
       </svg>
 
       <!-- Selective transparent botanical & broken honeycomb cutouts in empty alternating margins -->

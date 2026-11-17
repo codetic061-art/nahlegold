@@ -21,6 +21,7 @@
   const pathSheen = document.getElementById('journeyPathSheen');
   const inletCup = document.getElementById('journeyInletCup');
   const inletHoney = document.getElementById('journeyInletHoney');
+  const inletSheen = document.getElementById('journeyInletSheen');
 
   const inletAnchor = document.getElementById('journeyInletMarker');
   const jarInletAnchor = document.getElementById('jarInletAnchor');
@@ -35,11 +36,12 @@
   const state = {
     samples: [],
     totalLength: 1,
-    scrollTarget: 0.03,
-    scrollSmooth: 0.03,
+    scrollTarget: 0.06,
+    scrollSmooth: 0.06,
     inletPt: { x: 0, y: 0 },
     outletPt: { x: 0, y: 0 },
     spoutClientX: null,
+    spoutRadiusPx: null,
     rafId: 0,
     activeStage: 0,
   };
@@ -108,10 +110,10 @@
     const n5 = centerRelToBoard(nodes[4], boardRect);
     const jarTop = centerRelToBoard(jarInletAnchor, boardRect);
 
-    // Top entry starts directly at y = 0 (clipped cleanly via #nhBoardTopClip + soft wall fade mask)
-    // while journeyInletHoney flares the 3D Hero pour stream smoothly into the full 2D honey width.
-    state.inletPt = { x: inlet.x, y: 0 };
-    state.outletPt = { x: jarTop.x, y: jarTop.top + 4 };
+    // Top entry of the wide tube starts cleanly at y = 24 inside the tapered inlet collar
+    // (#journeyInletHoney bridges seamlessly from exact 3D stream radius at y = -2 down to honeyW at y = 32).
+    state.inletPt = { x: inlet.x, y: 24 };
+    state.outletPt = { x: jarTop.x, y: Math.max(n5.y + 80, jarTop.top + 6) };
 
     const pts = [];
     if (!isMob) {
@@ -185,19 +187,40 @@
       pathSheen.setAttribute('stroke-width', String(sheenW));
     }
 
-    // Seamless transition collar bridging narrow 3D stream radius at y=0 cleanly into honeyW at y=24
+    // Seamless tapered inlet collar matching exact 3D stream radius at Hero-to-Journey seam (y = -2..32)
+    const liveRadius = state.spoutRadiusPx ?? (window.__NH_HERO_SPOUT__ ? window.__NH_HERO_SPOUT__.radiusPx : null);
+    const ix = state.inletPt.x;
+    const hTop = Number.isFinite(liveRadius) ? Math.max(4.0, Math.min(13.0, liveRadius)) : (isMob ? 5.5 : 8.0);
+    const hBot = honeyW * 0.50;
+
+    if (inletCup) {
+      const cTop = hTop + 3.0;
+      const cBot = cushionW * 0.50;
+      inletCup.setAttribute('opacity', '0.88');
+      inletCup.setAttribute(
+        'd',
+        `M ${(ix - cTop).toFixed(1)} 2 ` +
+        `L ${(ix + cTop).toFixed(1)} 2 ` +
+        `C ${(ix + cTop).toFixed(1)} 12, ${(ix + cBot).toFixed(1)} 18, ${(ix + cBot).toFixed(1)} 32 ` +
+        `L ${(ix - cBot).toFixed(1)} 32 ` +
+        `C ${(ix - cBot).toFixed(1)} 18, ${(ix - cTop).toFixed(1)} 12, ${(ix - cTop).toFixed(1)} 2 Z`
+      );
+    }
+
     if (inletHoney) {
-      const ix = state.inletPt.x;
-      const hTop = isMob ? 5.2 : 6.0;
-      const hBot = honeyW * 0.50;
       inletHoney.setAttribute(
         'd',
-        `M ${(ix - hTop).toFixed(1)} 0 ` +
-        `L ${(ix + hTop).toFixed(1)} 0 ` +
-        `C ${(ix + hTop).toFixed(1)} 10, ${(ix + hBot).toFixed(1)} 16, ${(ix + hBot).toFixed(1)} 28 ` +
-        `L ${(ix - hBot).toFixed(1)} 28 ` +
-        `C ${(ix - hBot).toFixed(1)} 16, ${(ix - hTop).toFixed(1)} 10, ${(ix - hTop).toFixed(1)} 0 Z`
+        `M ${(ix - hTop).toFixed(1)} -2 ` +
+        `L ${(ix + hTop).toFixed(1)} -2 ` +
+        `C ${(ix + hTop).toFixed(1)} 10, ${(ix + hBot).toFixed(1)} 18, ${(ix + hBot).toFixed(1)} 34 ` +
+        `L ${(ix - hBot).toFixed(1)} 34 ` +
+        `C ${(ix - hBot).toFixed(1)} 18, ${(ix - hTop).toFixed(1)} 10, ${(ix - hTop).toFixed(1)} -2 Z`
       );
+    }
+
+    if (inletSheen) {
+      inletSheen.setAttribute('d', `M ${ix.toFixed(1)} 0 L ${ix.toFixed(1)} 32`);
+      inletSheen.setAttribute('stroke-width', String(Math.max(2.4, sheenW * 0.85)));
     }
 
     // Sample arc lengths monotonically for smooth scroll-driven honey progression
@@ -230,7 +253,7 @@
     const focalYInBoard = window.innerHeight * 0.56 - boardRect.top;
 
     if (focalYInBoard <= state.inletPt.y + 12) {
-      state.scrollTarget = 0.04;
+      state.scrollTarget = 0.06;
       return;
     }
     if (focalYInBoard >= state.outletPt.y - 6) {
@@ -238,13 +261,13 @@
       return;
     }
 
-    let matchedS = 0.04;
+    let matchedS = 0.06;
     for (let i = 0; i < state.samples.length; i++) {
       if (state.samples[i].y <= focalYInBoard) {
         matchedS = state.samples[i].s;
       }
     }
-    state.scrollTarget = Math.min(1.0, Math.max(0.04, matchedS));
+    state.scrollTarget = Math.min(1.0, Math.max(0.06, matchedS));
   }
 
   function applyFillProgress(s) {
@@ -295,6 +318,9 @@
   window.addEventListener('honey:hero-spout', (e) => {
     if (e.detail && typeof e.detail.clientX === 'number') {
       state.spoutClientX = e.detail.clientX;
+      if (typeof e.detail.radiusPx === 'number') {
+        state.spoutRadiusPx = e.detail.radiusPx;
+      }
       rebuildPathGeometry();
     }
   });
