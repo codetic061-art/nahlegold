@@ -684,7 +684,7 @@
 <link rel="stylesheet" href="assets/css/tokens.css">
 <link rel="stylesheet" href="assets/css/base.css">
 <link rel="stylesheet" href="assets/css/navbar.css">
-<link rel="stylesheet" href="assets/css/hero.css">
+<link rel="stylesheet" href="assets/css/journey.css">
 <link rel="stylesheet" href="assets/css/sections.css">
 <link rel="stylesheet" href="assets/css/cart.css">
 
@@ -786,30 +786,320 @@
 
 <main>
   <!-- ==========================================================
-       HERO — the generated honey video is a full-bleed background
-       filling the viewport below the navbar. Never vertically
-       cropped; the honey SVG melts out of its foot into the section
-       below. Content is layered ABOVE the video.
+       1. NEW HERO SECTION — Natural Botanical Backdrop + Realistic
+          3D Irregular Broken Honeycomb Pieces, Wildflowers & Cascading Honey
        ========================================================== -->
-  <section class="hero" id="hero" aria-label="نحل الذهب">
+  <section class="nh-hero" id="hero" aria-labelledby="heroHeading">
+    <canvas class="nh-hero__canvas" id="heroDrumCanvas" aria-hidden="true"></canvas>
 
-    <div class="hero__bg" data-video-hero aria-hidden="true">
-      <video class="hero__video hero__video--intro"
-             data-video="intro"
-             muted playsinline preload="auto" autoplay
-             disablepictureinpicture
-             aria-hidden="true" tabindex="-1"></video>
-      <video class="hero__video hero__video--loop"
-             data-video="loop"
-             muted playsinline loop preload="auto"
-             disablepictureinpicture
-             aria-hidden="true" tabindex="-1"></video>
+    <div class="nh-hero__decor" aria-hidden="true">
+      <div class="nh-hero-decor__item nh-hero-decor__item--pollen">
+        <img class="nh-cutout-img nh-float-slow" src="assets/img/decor/pollen-clusters.webp" alt="" width="620" height="615" decoding="async">
+      </div>
+      <div class="nh-hero-decor__item nh-hero-decor__item--leaves">
+        <img class="nh-cutout-img nh-float-alt" src="assets/img/decor/botanical-leaves.webp" alt="" width="346" height="660" decoding="async">
+      </div>
     </div>
 
+    <div class="nh-hero__inner">
+      <div class="nh-hero__copy">
+        <span class="nh-hero__badge">من قلب المناحل المصرية المختارة</span>
+        <h1 class="nh-hero__title" id="heroHeading">
+          من رحيق الزهور...<br>
+          <span class="nh-hero__title-accent">إلى قطرة الذهب النقية</span>
+        </h1>
+        <p class="nh-hero__sub">
+          عسل نحل طبيعي خام ١٠٠٪ يُفرز بعناية دون تسخين أو إضافات، لتصلك خيرات الطبيعة الصافية من الخلية مباشرة إلى مائدتك.
+        </p>
+        <div class="nh-hero__actions">
+          <a class="nh-hero__cta-primary" href="#journey">ابدأ رحلة العسل</a>
+          <a class="nh-hero__cta-secondary" href="#products">تصفح المنتجات</a>
+        </div>
+      </div>
+
+      <div class="nh-hero__stage" id="heroStage">
+        <div class="nh-hero__visual-wrap" id="heroVisualWrap">
+          <img class="nh-hero__png-img"
+               id="heroHoneycombPng"
+               src="assets/img/journey/honeycomb-hero.png"
+               alt="قطع شمع نحل طبيعي مكسورة بأزهار صفراء وعسل ذهبي نقي يتدفق للأسفل"
+               width="1370" height="1444" fetchpriority="high" decoding="async">
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- ==========================================================
-       FEATURED CATEGORIES — three tall rounded premium cards
+       2. HONEY JOURNEY SECTION — Rich Amber Shaded 2D Winding Channel
+          & Selective Photographic Cutout Margin Assets
+       ========================================================== -->
+  <section class="nh-journey" id="journey" aria-labelledby="journeyHeading">
+    <div class="nh-journey__board" id="journeyBoard">
+
+      <svg class="nh-journey__svg" id="journeySvg" aria-hidden="true">
+        <defs>
+          <linearGradient id="nhHoneyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#EFA61C"/>
+            <stop offset="48%" stop-color="#D4760A"/>
+            <stop offset="100%" stop-color="#9F4803"/>
+          </linearGradient>
+          <linearGradient id="nhInletCupGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#DEC08A" stop-opacity="0"/>
+            <stop offset="45%" stop-color="#DEC08A" stop-opacity="0.85"/>
+            <stop offset="100%" stop-color="#DEC08A" stop-opacity="1"/>
+          </linearGradient>
+          <linearGradient id="nhInletHoneyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#EA9816"/>
+            <stop offset="55%" stop-color="#EFA61C"/>
+            <stop offset="100%" stop-color="#EB9D18"/>
+          </linearGradient>
+          <clipPath id="nhBoardTopClip">
+            <rect x="-400" y="0" width="3200" height="9000"/>
+          </clipPath>
+          <linearGradient id="nhTopFadeGrad" x1="0" y1="0" x2="0" y2="34" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="white" stop-opacity="0"/>
+            <stop offset="100%" stop-color="white" stop-opacity="1"/>
+          </linearGradient>
+          <mask id="nhTopFadeMask" maskUnits="userSpaceOnUse" x="-400" y="0" width="3200" height="9000">
+            <rect x="-400" y="0" width="3200" height="34" fill="url(#nhTopFadeGrad)"/>
+            <rect x="-400" y="34" width="3200" height="9000" fill="white"/>
+          </mask>
+        </defs>
+        <g clip-path="url(#nhBoardTopClip)">
+          <g mask="url(#nhTopFadeMask)">
+            <path class="nh-tube-cushion" id="journeyPathCushion" d=""/>
+            <path class="nh-tube-wall" id="journeyPathWall" d=""/>
+            <path class="nh-tube-core" id="journeyPathCore" d=""/>
+            <path class="nh-tube-trough" id="journeyPathTrough" d=""/>
+          </g>
+          <path class="nh-tube-honey" id="journeyPathHoney" d="" stroke="url(#nhHoneyGrad)"/>
+          <path class="nh-tube-sheen" id="journeyPathSheen" d=""/>
+        </g>
+        <path id="journeyInletCup" fill="url(#nhInletCupGrad)" opacity="0" d=""/>
+        <path id="journeyInletHoney" fill="url(#nhInletHoneyGrad)" d=""/>
+        <path class="nh-tube-sheen" id="journeyInletSheen" d=""/>
+      </svg>
+
+      <!-- Selective transparent botanical & broken honeycomb cutouts in empty alternating margins -->
+      <div class="nh-journey__decor" aria-hidden="true">
+        <div class="nh-jdecor nh-jdecor--1">
+          <img class="nh-cutout-img nh-float-slow"
+               src="assets/img/decor/comb-chunk-small.webp" alt=""
+               width="600" height="562" loading="lazy" decoding="async">
+        </div>
+
+        <div class="nh-jdecor nh-jdecor--2">
+          <img class="nh-cutout-img nh-float-alt"
+               src="assets/img/decor/wildflower-branch.webp" alt=""
+               width="397" height="700" loading="lazy" decoding="async">
+        </div>
+
+        <div class="nh-jdecor nh-jdecor--3">
+          <img class="nh-cutout-img nh-float-slow"
+               src="assets/img/decor/botanical-leaves.webp" alt=""
+               width="346" height="660" loading="lazy" decoding="async">
+        </div>
+
+        <div class="nh-jdecor nh-jdecor--4">
+          <img class="nh-cutout-img nh-float-alt"
+               src="assets/img/decor/comb-fragment.webp" alt=""
+               width="560" height="482" loading="lazy" decoding="async">
+        </div>
+
+        <div class="nh-jdecor nh-jdecor--5">
+          <img class="nh-cutout-img nh-cutout-img--pollen nh-float-slow"
+               src="assets/img/decor/pollen-clusters.webp" alt=""
+               width="620" height="615" loading="lazy" decoding="async">
+        </div>
+      </div>
+
+      <div class="nh-journey__inlet">
+        <div class="nh-journey__inlet-marker" id="journeyInletMarker" aria-hidden="true"></div>
+      </div>
+
+      <header class="nh-journey__intro-strip">
+        <span class="nh-eyebrow">رحلة العسل الطبيعية</span>
+        <h2 class="nh-journey__intro-title" id="journeyHeading">خمس محطات من الزهرة إلى البرطمان</h2>
+        <p class="nh-journey__intro-sub">تتبّع انسياب العسل عبر القناة الذهبية، ومرّر المؤشر فوق أي محطة لمعاينة تفاصيلها.</p>
+      </header>
+
+      <div class="nh-steps">
+
+        <!-- Stage 01 -->
+        <article class="nh-step nh-step--right is-active" data-stage-idx="1">
+          <div class="nh-step__cluster">
+            <button type="button" class="nh-step__node" id="node-01"
+                    data-preview-trigger data-stage="1" aria-label="المرحلة 01: من الزهور إلى النحل">01</button>
+            <div class="nh-step__copy">
+              <span class="nh-step__stage-tag">المرحلة الأولى</span>
+              <h3 class="nh-step__title" data-preview-trigger data-stage="1">من الزهور إلى النحل</h3>
+              <p class="nh-step__desc">
+                يحلّق النحل مع إشراقة الصباح فوق حقول
+                <span class="nh-highlight" data-preview-trigger data-stage="1" tabindex="0">البرسيم والموالح والأعشاب البريّة</span>
+                ليجمع أنقى قطرات <span class="nh-highlight" data-preview-trigger data-stage="1" tabindex="0">الرحيق الطبيعي</span>
+                وحبوب اللقاح الغنية دون أي تغذية صناعية.
+              </p>
+              <span class="nh-step__hint">مرّر على العنوان أو الرقم للمعاينة</span>
+              <button type="button" class="nh-step__preview-btn" aria-expanded="false" aria-controls="mobile-preview-01">معاينة المرحلة</button>
+              <div class="nh-step__mobile-preview" id="mobile-preview-01" hidden>
+                <img src="assets/img/journey/stage-01-flowers-bees.jpg" alt="نحلة تجمع الرحيق من أزهار البرسيم والموالح" loading="lazy" decoding="async" width="800" height="600">
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Stage 02 -->
+        <article class="nh-step nh-step--left" data-stage-idx="2">
+          <div class="nh-step__cluster">
+            <button type="button" class="nh-step__node" id="node-02"
+                    data-preview-trigger data-stage="2" aria-label="المرحلة 02: داخل خلية النحل">02</button>
+            <div class="nh-step__copy">
+              <span class="nh-step__stage-tag">المرحلة الثانية</span>
+              <h3 class="nh-step__title" data-preview-trigger data-stage="2">داخل خلية النحل</h3>
+              <p class="nh-step__desc">
+                تنبض <span class="nh-highlight" data-preview-trigger data-stage="2" tabindex="0">الأقراص السداسية الشمعية</span>
+                بنظام متقن داخل الخلية؛ يُستقبل الرحيق الطازج ليُوزّع بين العيون الشمعية بدقة تحفظ نقاء كل نوع زهرة.
+              </p>
+              <span class="nh-step__hint">مرّر على العنوان أو الرقم للمعاينة</span>
+              <button type="button" class="nh-step__preview-btn" aria-expanded="false" aria-controls="mobile-preview-02">معاينة المرحلة</button>
+              <div class="nh-step__mobile-preview" id="mobile-preview-02" hidden>
+                <img src="assets/img/journey/stage-02-beehive-comb.jpg" alt="أقراص شمع النحل السداسية مملوءة بالعسل الذهبي" loading="lazy" decoding="async" width="800" height="600">
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Stage 03 -->
+        <article class="nh-step nh-step--right" data-stage-idx="3">
+          <div class="nh-step__cluster">
+            <button type="button" class="nh-step__node" id="node-03"
+                    data-preview-trigger data-stage="3" aria-label="المرحلة 03: فن صناعة العسل">03</button>
+            <div class="nh-step__copy">
+              <span class="nh-step__stage-tag">المرحلة الثالثة</span>
+              <h3 class="nh-step__title" data-preview-trigger data-stage="3">فن صناعة العسل</h3>
+              <p class="nh-step__desc">
+                برفرفة أجنحته ودفء الخلية الطبيعي، ينضج النحل الرحيق ببطء حتى يكتسب قوامه المخملي ونكهته العميقة، ثم
+                <span class="nh-highlight" data-preview-trigger data-stage="3" tabindex="0">يختمه بالشمع الطبيعي</span>.
+              </p>
+              <span class="nh-step__hint">مرّر على العنوان أو الرقم للمعاينة</span>
+              <button type="button" class="nh-step__preview-btn" aria-expanded="false" aria-controls="mobile-preview-03">معاينة المرحلة</button>
+              <div class="nh-step__mobile-preview" id="mobile-preview-03" hidden>
+                <img src="assets/img/journey/stage-03-honey-making.jpg" alt="النحل يختم خلايا الشمع الممتلئة بالعسل الذهبي" loading="lazy" decoding="async" width="800" height="600">
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Stage 04 -->
+        <article class="nh-step nh-step--left" data-stage-idx="4">
+          <div class="nh-step__cluster">
+            <button type="button" class="nh-step__node" id="node-04"
+                    data-preview-trigger data-stage="4" aria-label="المرحلة 04: عملية الحصاد والعناية">04</button>
+            <div class="nh-step__copy">
+              <span class="nh-step__stage-tag">المرحلة الرابعة</span>
+              <h3 class="nh-step__title" data-preview-trigger data-stage="4">عملية الحصاد والعناية</h3>
+              <p class="nh-step__desc">
+                عند اكتمال النضج فقط تُقطف الإطارات الشمعية بـ
+                <span class="nh-highlight" data-preview-trigger data-stage="4" tabindex="0">فرز بارد وعناية يدوية</span>
+                تحفظ الإنزيمات النشطة ومضادات الأكسدة والرائحة الزهرية الأصلية من دون تسخين أو ترشيح قاسٍ.
+              </p>
+              <span class="nh-step__hint">مرّر على العنوان أو الرقم للمعاينة</span>
+              <button type="button" class="nh-step__preview-btn" aria-expanded="false" aria-controls="mobile-preview-04">معاينة المرحلة</button>
+              <div class="nh-step__mobile-preview" id="mobile-preview-04" hidden>
+                <img src="assets/img/journey/stage-04-harvest.jpg" alt="حصاد وفرز إطارات العسل الطبيعي يدوياً في المنحل" loading="lazy" decoding="async" width="800" height="600">
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Stage 05 -->
+        <article class="nh-step nh-step--right" data-stage-idx="5">
+          <div class="nh-step__cluster">
+            <button type="button" class="nh-step__node" id="node-05"
+                    data-preview-trigger data-stage="5" aria-label="المرحلة 05: عسل نقي، معبّأ بعناية">05</button>
+            <div class="nh-step__copy">
+              <span class="nh-step__stage-tag">المرحلة الخامسة</span>
+              <h3 class="nh-step__title" data-preview-trigger data-stage="5">عسل نقي، معبّأ بعناية</h3>
+              <p class="nh-step__desc">
+                يستقر الذهب السائل داخل
+                <span class="nh-highlight" data-preview-trigger data-stage="5" tabindex="0">برطمان نحل الذهب الزجاجي</span>
+                المحكم الإغلاق؛ لتدخل معنا مباشرة إلى عالم متجرنا ومنتجاتنا المختارة بعناية.
+              </p>
+              <span class="nh-step__hint">مرّر على العنوان أو الرقم للمعاينة</span>
+              <button type="button" class="nh-step__preview-btn" aria-expanded="false" aria-controls="mobile-preview-05">معاينة المرحلة</button>
+              <div class="nh-step__mobile-preview" id="mobile-preview-05" hidden>
+                <img src="assets/img/journey/stage-05-bottled-jar.jpg" alt="برطمان زجاجي محكم الإغلاق مملوء بالعسل الذهبي" loading="lazy" decoding="async" width="800" height="600">
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       3. PINNED JAR FINALE & SLOW ENTER-THE-JAR TRANSITION
+       Left-Emphasized Transparent Honeycomb & Wildflower Framing + Pinned Jar
+       ========================================================== -->
+  <section class="nh-finale" id="nhJarFinale" aria-label="اكتمال تعبئة برطمان نحل الذهب">
+    <div class="nh-jar-pin" id="nhJarPin">
+      <div class="nh-jar-inlet-anchor" id="jarInletAnchor" aria-hidden="true"></div>
+
+      <!-- Selective transparent botanical, honeycomb & pollen cutouts framing the Jar (left-emphasized) -->
+      <div class="nh-jar-decor" id="nhJarDecor" aria-hidden="true">
+        <div class="nh-jar-decor__left">
+          <div class="nh-jar-piece nh-jar-piece--comb">
+            <img class="nh-cutout-img nh-float-slow" src="assets/img/decor/comb-chunk-small.webp" alt="" width="600" height="562" loading="lazy" decoding="async">
+          </div>
+          <div class="nh-jar-piece nh-jar-piece--flower">
+            <img class="nh-cutout-img nh-float-alt" src="assets/img/decor/wildflower-branch.webp" alt="" width="397" height="700" loading="lazy" decoding="async">
+          </div>
+          <div class="nh-jar-piece nh-jar-piece--frag">
+            <img class="nh-cutout-img nh-float-slow" src="assets/img/decor/comb-fragment.webp" alt="" width="560" height="482" loading="lazy" decoding="async">
+          </div>
+          <div class="nh-jar-piece nh-jar-piece--pollen">
+            <img class="nh-cutout-img nh-cutout-img--pollen nh-float-alt" src="assets/img/decor/pollen-clusters.webp" alt="" width="620" height="615" loading="lazy" decoding="async">
+          </div>
+        </div>
+
+        <div class="nh-jar-decor__right">
+          <div class="nh-jar-piece nh-jar-piece--leaves">
+            <img class="nh-cutout-img nh-float-alt" src="assets/img/decor/botanical-leaves.webp" alt="" width="346" height="660" loading="lazy" decoding="async">
+          </div>
+          <div class="nh-jar-piece nh-jar-piece--frag-r">
+            <img class="nh-cutout-img nh-float-slow" src="assets/img/decor/comb-fragment.webp" alt="" width="560" height="482" loading="lazy" decoding="async">
+          </div>
+        </div>
+      </div>
+
+      <canvas class="nh-jar-canvas" id="jarCanvas" aria-hidden="true"></canvas>
+
+      <div class="nh-jar-fallback">
+        <img src="assets/img/journey/stage-05-bottled-jar.jpg"
+             alt="برطمان نحل الذهب مملوء بالعسل الذهبي الصافي"
+             width="800" height="600" loading="lazy" decoding="async">
+      </div>
+    </div>
+  </section>
+
+  <div class="nh-portal-veil" id="nhPortalVeil" aria-hidden="true"></div>
+
+  <div class="nh-preview" id="journeyPreview" aria-hidden="true">
+    <div class="nh-preview__card">
+      <div class="nh-preview__media">
+        <img id="journeyPreviewImg" src="assets/img/journey/stage-01-flowers-bees.jpg" alt="" width="400" height="300" decoding="async">
+      </div>
+      <div class="nh-preview__caption">
+        <span class="nh-preview__tag" id="journeyPreviewTag">01 · من الزهور إلى النحل</span>
+        <strong class="nh-preview__title" id="journeyPreviewTitle">جمع الرحيق من المراعي الطبيعية</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       ORIGINAL WEBSITE RESTORED BELOW — FEATURED CATEGORIES
+ — three tall rounded premium cards
        ========================================================== -->
   <section class="section section--cream section--drip" id="categories" aria-labelledby="cat-heading">
     <!-- honey edge: the hero's own footage melts into this section -->
@@ -821,7 +1111,7 @@
     <div class="container">
       <header class="section__head">
         <span class="eyebrow">العروض والكومبوهات</span>
-        <h1 class="section__title" id="cat-heading">عسل طبيعي مصري فاخر — منتجات نحل الذهب</h1>
+        <h2 class="section__title" id="cat-heading">عسل طبيعي مصري فاخر — منتجات نحل الذهب</h2>
         <p class="section__sub">باقات جاهزة تجمع أفضل منتجاتنا بسعر واحد أوفر، أو تصفّح عسلنا بحسب النوع: برسيم، سدر، موالح، أعشاب جبلية، ومكسرات.</p>
       </header>
 
@@ -1447,8 +1737,12 @@
   </div>
 </aside>
 
+<script src="assets/js/vendor/gsap.min.js"></script>
+<script src="assets/js/vendor/ScrollTrigger.min.js"></script>
 <script src="assets/js/navbar.js"></script>
-<script src="assets/js/video-hero.js"></script>
+<script src="assets/js/journey-ui.js"></script>
+<script src="assets/js/journey-2d.js"></script>
+<script type="module" src="assets/js/honey-scenes.js"></script>
 <script src="assets/js/page.js"></script>
 <script src="assets/js/cart.js"></script>
 </body>
